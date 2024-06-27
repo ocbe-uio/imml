@@ -1,5 +1,5 @@
 function [U,V,B] = newinit(X,W,r,viewNum)
-rand('seed',42)
+rand('twister',42)
 B = cell(viewNum,1);
 U = cell(viewNum,1);
 H = cell(viewNum,1);
