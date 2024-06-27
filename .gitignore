@@ -55,6 +55,9 @@ coverage.xml
 *.mo
 *.pot
 
+# Intellij stuff:
+.idea/*
+
 # Django stuff:
 *.log
 local_settings.py
@@ -130,6 +133,7 @@ dmypy.json
 
 # test
 test.py
+test.html
 
 # data
 imvc/datasets/data/

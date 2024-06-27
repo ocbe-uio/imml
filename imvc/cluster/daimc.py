@@ -75,15 +75,14 @@ class DAIMC(BaseEstimator, ClassifierMixin):
     >>> labels = pipeline.fit_predict(Xs)
     """
 
-    def __init__(self, n_clusters: int = 8, alpha: float = 1, beta: float = 1, random_state:int = None,
-                 engine: str ="matlab", verbose = False):
+    def __init__(self, n_clusters: int = 8, alpha: float = 1, beta: float = 1, random_state: int = None,
+                 engine: str = "matlab", verbose=False):
         self.n_clusters = n_clusters
         self.alpha = alpha
         self.beta = beta
         self.random_state = random_state
         self.engine = engine
         self.verbose = verbose
-
 
     def fit(self, Xs, y=None):
         r"""
@@ -103,12 +102,20 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         self :  Fitted estimator.
         """
         Xs = check_Xs(Xs, force_all_finite='allow-nan')
+        if isinstance(Xs[0], pd.DataFrame):
+            transformed_Xs = [X.values for X in Xs]
+        elif isinstance(Xs[0], np.ndarray):
+            transformed_Xs = Xs
+        observed_view_indicator = get_observed_view_indicator(transformed_Xs)
+        transformed_Xs = simple_view_imputer(transformed_Xs, value="zeros")
+        transformed_Xs = [X.T for X in transformed_Xs]
+        transformed_Xs = tuple(transformed_Xs)
 
-        if self.engine=="matlab":
+        if self.engine == "matlab":
             matlab_folder = dirname(__file__)
             matlab_folder = os.path.join(matlab_folder, "_daimc")
             matlab_files = ["newinit.m", "litekmeans.m", "DAIMC.m", "UpdateV_DAIMC.m"]
-            oc = oct2py.Oct2Py(temp_dir= matlab_folder)
+            oc = oct2py.Oct2Py(temp_dir=matlab_folder)
             for matlab_file in matlab_files:
                 with open(os.path.join(matlab_folder, matlab_file)) as f:
                     oc.eval(f.read())
@@ -116,26 +123,24 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             oc.eval("pkg load control")
             oc.warning("off", "Octave:possible-matlab-short-circuit-operator")
 
-            if isinstance(Xs[0], pd.DataFrame):
-                transformed_Xs = [X.values for X in Xs]
-            elif isinstance(Xs[0], np.ndarray):
-                transformed_Xs = Xs
-            observed_view_indicator = get_observed_view_indicator(transformed_Xs)
-            transformed_Xs = simple_view_imputer(transformed_Xs, value="zeros")
-            transformed_Xs = [X.T for X in transformed_Xs]
-            transformed_Xs = tuple(transformed_Xs)
-
             w = tuple([oc.diag(missing_view) for missing_view in observed_view_indicator.T])
             if self.random_state is not None:
                 oc.rand('seed', self.random_state)
             u_0, v_0, b_0 = oc.newinit(transformed_Xs, w, self.n_clusters, len(transformed_Xs), nout=3)
-            u, v, b, f, p, n = oc.DAIMC(transformed_Xs, w, u_0, v_0, b_0, None, self.n_clusters,
-                                        len(transformed_Xs), {"afa": self.alpha, "beta": self.beta}, nout=6)
+            return u_0, v_0, b_0
+            # u, v, b, f, p, n = oc.DAIMC(transformed_Xs, w, u_0, v_0, b_0, None, self.n_clusters,
+            #                             len(transformed_Xs), {"afa": self.alpha, "beta": self.beta}, nout=6)
+        elif self.engine == "python":
+            # Here the code which is the strict translation from MATLAB
+
+            w = tuple([np.diag(missing_view) for missing_view in observed_view_indicator.T])
+            u_0, v_0, b_0 = self._newInit(transformed_Xs, w, self.n_clusters, len(transformed_Xs))
+            return u_0, v_0, b_0
         else:
             raise ValueError("Only engine=='matlab' is currently supported.")
 
-        model = KMeans(n_clusters= self.n_clusters, random_state= self.random_state)
-        self.labels_ = model.fit_predict(X= v)
+        model = KMeans(n_clusters=self.n_clusters, random_state=self.random_state)
+        self.labels_ = model.fit_predict(X=v)
         self.U_ = u
         self.V_ = v
         self.B_ = b
@@ -160,7 +165,6 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         """
         return self.labels_
 
-
     def fit_predict(self, Xs, y=None):
         r"""
         Fit the model and return clustering results.
@@ -181,4 +185,50 @@ class DAIMC(BaseEstimator, ClassifierMixin):
 
         labels = self.fit(Xs)._predict(Xs)
         return labels
+
+    # Example function where random state is set for KMeans
+    def _newInit(self, X, W, r, viewNum, random_state=42):
+        np.random.seed(random_state)
+
+        B = [None] * viewNum
+        U = [None] * viewNum
+        H = [None] * viewNum
+        XX = [None] * viewNum
+
+        for i in range(viewNum):
+            item = np.diag(W[i])
+            temp = np.where(item == 0)[0]
+            XX[i] = X[i].copy()
+            XX[i] = np.delete(XX[i], temp, axis=1)
+            Mx = np.mean(XX[i], axis=1, keepdims=True)
+            X[i][:, temp] = np.tile(Mx, (1, len(temp)))
+
+        sumH = 0
+        for i in range(viewNum):
+            d, n = X[i].shape
+            kmeans = KMeans(n_clusters=r, n_init=20, random_state=random_state)
+            ilabels = kmeans.fit_predict(X[i].T)
+            C = kmeans.cluster_centers_
+            U[i] = C.T + 0.1 * np.ones((d, r))
+            G = np.zeros((n, r))
+            for j in range(r):
+                G[:, j] = (ilabels == j).astype(float)
+            H[i] = G + 0.1 * np.ones((n, r))
+            sumH += H[i]
+
+        V = sumH / viewNum
+        Q = np.diag(np.ones((V.shape[0],)) @ V)
+        V = V @ np.linalg.inv(Q)
+        for i in range(viewNum):
+            U[i] = U[i] @ Q
+
+        lamda = 1e-5
+        for i in range(viewNum):
+            d = U[i].shape[0]
+            invI = np.diag(1.0 / np.diag(lamda * np.eye(d)))
+            U_i_T = U[i].T
+            term = U_i_T @ invI @ U[i] + np.eye(r)
+            B[i] = (invI - invI @ U[i] @ np.linalg.inv(term) @ U_i_T @ invI) @ U[i]
+
+        return U, V, B
 
