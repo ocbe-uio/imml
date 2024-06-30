@@ -80,7 +80,7 @@ function [label, center, bCon, sumD, D] = litekmeans(X, k, varargin)
 %
 %   Written by Deng Cai (dengcai AT gmail.com)
 
-rand('seed',42)
+rand('twister',42)
 if nargin < 2
     error('litekmeans:TooFewInputs','At least two input arguments required.');
 end
