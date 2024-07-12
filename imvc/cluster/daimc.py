@@ -104,7 +104,19 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         -------
         self :  Fitted estimator.
         """
-        Xs = check_Xs(Xs, force_all_finite='allow-nan', copy=True)
+
+        def _processing_Xs(Xs):
+            if isinstance(Xs[0], pd.DataFrame):
+                transformed_Xs = [X.values for X in Xs]
+            elif isinstance(Xs[0], np.ndarray):
+                transformed_Xs = Xs
+            observed_view_indicator = get_observed_view_indicator(transformed_Xs)
+            transformed_Xs = simple_view_imputer(transformed_Xs, value="zeros")
+            transformed_Xs = [X.T for X in transformed_Xs]
+            transformed_Xs = tuple(transformed_Xs)
+            return transformed_Xs, observed_view_indicator
+
+        Xs = check_Xs(Xs, force_all_finite='allow-nan')
 
         if self.engine == "matlab":
             matlab_folder = dirname(__file__)
@@ -131,12 +143,12 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             if self.random_state is not None:
                 oc.rand('twister', self.random_state)
 
-            u_0, v_0, b_0 = oc.newinit(transformed_Xs, w, self.n_clusters, len(transformed_Xs), nout=3)
+            u_0, v_0, b_0 = oc.newinit(transformed_Xs, w, self.n_clusters, len(transformed_Xs), self.random_state,
+                                       nout=3)
             u, v, b, f, p, n = oc.DAIMC(transformed_Xs, w, u_0, v_0, b_0, None, self.n_clusters,
                                         len(transformed_Xs), {"afa": self.alpha, "beta": self.beta}, nout=6)
-        elif self.engine == "python":
-            # Here the code which is the strict translation from MATLAB
 
+        elif self.engine == "python":
             if isinstance(Xs[0], pd.DataFrame):
                 transformed_Xs = [X.values for X in Xs]
             elif isinstance(Xs[0], np.ndarray):
@@ -148,8 +160,9 @@ class DAIMC(BaseEstimator, ClassifierMixin):
 
             w = tuple([np.diag(missing_view) for missing_view in observed_view_indicator.T])
             u_0, v_0, b_0 = self._newInit(transformed_Xs, w, self.n_clusters, len(transformed_Xs))
-            u, v, b, f, p, n = self._DAIMC(transformed_Xs, w, u_0, v_0, b_0, None, self.n_clusters,
+            u, v, b, f, p, n = self._DAIMC(transformed_Xs, w, u_0, v_0, b_0, self.n_clusters,
                                            len(transformed_Xs), {"afa": self.alpha, "beta": self.beta})
+
         else:
             raise ValueError("Only engine=='matlab' and 'python' are currently supported.")
 
@@ -201,6 +214,27 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         return labels
 
     def _newInit(self, X, W, r, viewNum, random_state=42):
+        r"""
+        It is the fist step of the DAIMC algorithm. The goal is to initiate the
+        first variables.
+
+        Parameters
+        ----------
+        X : list of array-likes
+            - X length: n_views
+            - X[i] shape: (n_samples, n_features_i)
+            A list of different views.
+        W : ?
+        r : number of clusters
+        viewNum : number of views (X length)
+        random_state : random_state for seed initialization
+
+        Returns
+        -------
+        U : array of shape (n_samples, n_clusters)
+        V : array of shape (n_samples, n_clusters)
+        B : array of shape (n_samples, n_clusters)
+        """
         np.random.seed(random_state)
 
         B = [None] * viewNum
@@ -224,28 +258,50 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             C = kmeans.cluster_centers_
             U[i] = C.T + (0.1 * np.ones((d, r)))
             G = np.zeros((n, r))
-            for j in range(r):
-                G[:, j] = (ilabels == j).astype(float)
+            for j in range(1, r+1):
+                G[:, j-1] = (ilabels == j*np.ones(shape=(n, )))
             H[i] = G + 0.1 * np.ones((n, r))
             sumH += H[i]
 
         V = sumH / viewNum
-        Q = np.diag(np.ones((V.shape[0],)) @ V)
-        V = V @ np.linalg.inv(Q)
+        Q = np.diag(np.matmul(np.ones((V.shape[0],)), V))
+        V = np.matmul(V, np.linalg.inv(Q))
         for i in range(viewNum):
-            U[i] = U[i] @ Q
+            U[i] = np.matmul(U[i], Q)
 
         lamda = 1e-5
         for i in range(viewNum):
             d = U[i].shape[0]
-            invI = np.diag(1.0 / np.diag(lamda * np.eye(d)))
-            U_i_T = U[i].T
-            term = U_i_T @ invI @ U[i] + np.eye(r)
-            B[i] = (invI - invI @ U[i] @ np.linalg.inv(term) @ U_i_T @ invI) @ U[i]
-
+            invI = np.diag(1.0/np.diag(lamda * np.eye(d)))
+            B[i] = np.matmul((invI - np.matmul(np.matmul(np.matmul(np.matmul(invI, U[i]), np.linalg.inv(np.matmul(np.matmul(U[i].T, invI), U[i]) + np.eye(r))), U[i].T), invI)), U[i])
         return U, V, B
 
-    def _DAIMC(self, X, W, U, V, B, label, r, viewNum, options):
+    def _DAIMC(self, X, W, U, V, B, r, viewNum, options):
+        r"""
+
+        Parameters
+        ----------
+        X : list of array-likes
+            - X length: n_views
+            - X[i] shape: (n_samples, n_features_i)
+            A list of different views.
+        W : ?
+        U : array of shape (n_samples, n_clusters)
+        V : array of shape (n_samples, n_clusters)
+        B : array of shape (n_samples, n_clusters)
+        r : number of clusters
+        viewNum : number of views
+        options : options parameters
+
+        Returns
+        -------
+        U
+        V
+        B
+        F
+        P
+        N
+        """
         eta = 1e-10
         F = 0
         P = 0
@@ -261,25 +317,25 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         while True:
             time = time + 1
             for i in range(viewNum):
-                tmp1 = options['afa'] * B[i] @ B[i].T
-                tmp2 = V.T @ W[i] @ V
-                tmp3 = X[i] @ W[i] @ V + options['afa'] * B[i]
+                tmp1 = options['afa'] * np.matmul(B[i], B[i].T)
+                tmp2 = np.matmul(np.matmul(V.T, W[i]), V)
+                tmp3 = np.matmul(np.matmul(X[i], W[i]), V) + options['afa'] * B[i]
                 U[i] = lyap(tmp1, tmp2, -tmp3)
 
             V = self._UpdateV_DAIMC(X, W, U, V, viewNum)
-            Q = np.diag(np.ones(V.shape[0], ) @ V)
-            V = V @ np.linalg.inv(Q)
+            Q = np.diag(np.matmul(np.ones(V.shape[0], ), V))
+            V = np.matmul(V, np.linalg.inv(Q))
             for i in range(viewNum):
-                U[i] = U[i] @ Q
+                U[i] = np.matmul(U[i], Q)
                 invD = np.diag(1. / np.diag(0.5 * options['beta'] * D[i]))
-                B[i] = (invD - invD @ U[i] @ np.linalg.inv(U[i].T @ invD @ U[i] + np.eye(r)) @ U[i].T @ invD) @ U[i]
+                B[i] = np.matmul((invD - np.matmul(np.matmul(np.matmul(np.matmul(invD, U[i]), np.linalg.inv(np.matmul(np.matmul(U[i].T, invD), U[i]) + np.eye(r))), U[i].T), invD)), U[i])
                 for k in range(B[i].shape[0]):
                     D[i][k, k] = 1 / np.sqrt(np.linalg.norm(B[i][k, :], 2) ** 2 + eta)
 
             ff = 0
             for i in range(viewNum):
-                tmp1 = (X[i] - U[i] @ V.T) @ W[i]
-                tmp2 = B[i].T @ U[i] - np.eye(r)
+                tmp1 = np.matmul((X[i] - np.matmul(U[i], V.T)), W[i])
+                tmp2 = np.matmul(B[i].T, U[i]) - np.eye(r)
                 tmp3 = np.sum(1. / np.diag(D[i]))
                 ff = ff + np.sum(np.sum(tmp1 ** 2)) + options['afa'] * np.sum(np.sum(tmp2 ** 2)) + options[
                     'beta'] * tmp3
@@ -291,6 +347,24 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         return U, V, B, F, P, N
 
     def _UpdateV_DAIMC(self, X, W, U, V, viewNum):
+        r"""
+        Udpate V parameters.
+
+        Parameters
+        ----------
+        X : list of array-likes
+            - X length: n_views
+            - X[i] shape: (n_samples, n_features_i)
+            A list of different views.
+        W : ?
+        U : array of shape (n_samples, n_clusters)
+        V : array of shape (n_samples, n_clusters)
+        viewNum : number of views
+
+        Returns
+        -------
+        V : array of shape (n_samples, n_clusters)
+        """
         time = 0
         f = 0
         while True:
@@ -301,27 +375,27 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             sumXUplus = 0
 
             for i in range(viewNum):
-                XU = X[i].T @ U[i]
+                XU = np.matmul(X[i].T, U[i])
                 absXU = np.abs(XU)
                 XUplus = (absXU + XU) / 2
                 XUminus = (absXU - XU) / 2
 
-                UU = U[i].T @ U[i]
+                UU = np.matmul(U[i].T, U[i])
                 absUU = np.abs(UU)
                 UUplus = (absUU + UU) / 2
                 UUminus = (absUU - UU) / 2
 
-                sumXUminus = sumXUminus + W[i] @ XUminus
-                sumXUplus = sumXUplus + W[i] @ XUplus
+                sumXUminus = sumXUminus + np.matmul(W[i], XUminus)
+                sumXUplus = sumXUplus + np.matmul(W[i], XUplus)
 
-                sumVUUplus = sumVUUplus + W[i] @ V @ UUplus
-                sumVUUminus = sumVUUminus + W[i] @ V @ UUminus
+                sumVUUplus = sumVUUplus + np.matmul(np.matmul(W[i], V), UUplus)
+                sumVUUminus = sumVUUminus + np.matmul(np.matmul(W[i], V), UUminus)
 
             V = V * np.sqrt((sumXUplus + sumVUUminus) / (np.maximum(sumXUminus + sumVUUplus, 1e-10)))
             ff = 0
 
             for i in range(viewNum):
-                tmp = (X[i] - U[i] @ V.T) @ W[i]
+                tmp = np.matmul((X[i] - np.matmul(U[i], V.T)), W[i])
                 ff = ff + np.sum(np.sum(tmp ** 2))
 
             if (np.abs((ff - f) / f) < 1e-4) | (np.abs(ff - f) > 1e100) | (time == 30):
@@ -329,3 +403,4 @@ class DAIMC(BaseEstimator, ClassifierMixin):
 
             f = ff
         return V
+
