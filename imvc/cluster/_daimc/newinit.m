@@ -1,5 +1,5 @@
-function [U,V,B] = newinit(X,W,r,viewNum)
-rand('twister',42)
+function [U,V,B] = newinit(X,W,r,viewNum, random_state)
+rand('twister', random_state)
 B = cell(viewNum,1);
 U = cell(viewNum,1);
 H = cell(viewNum,1);
@@ -14,25 +14,26 @@ for i = 1:viewNum
     X{i}(:,temp)= repmat(Mx,1,length(temp));
 end
 
-
 sumH = 0;
 for i = 1:viewNum
     [d,n] = size(X{i});
-    [ilabels,C] = litekmeans(X{i}', r, 'Replicates', 20);
-    U{i} = C' + 0.1*ones(d,r);  
+    [ilabels,C] = litekmeans(X{i}', r, random_state,'Replicates', 20);
+    U{i} = C' + 0.1*ones(d,r);
     G = zeros(n,r);
     for j=1:r
         G(:,j)=(ilabels == j*ones(n,1));
-    end 
+    end
     H{i}=G+0.1*ones(n,r);
     sumH = sumH + H{i};    
 end
+
 V = sumH/viewNum;
 Q = diag(ones(1,size(V,1))*V);
 V = V * inv(Q);
 for i = 1:viewNum
     U{i} = U{i}*Q;
 end
+
 lamda = 1e-5;
 for i = 1:viewNum
     [d,~] = size(U{i});
@@ -40,5 +41,3 @@ for i = 1:viewNum
     B{i} = (invI - invI * U{i} * inv(U{i}'*invI*U{i} + eye(r)) * U{i}' * invI) * U{i};
 end
 end
-
-
