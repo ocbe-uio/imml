@@ -2,6 +2,7 @@ import logging
 import os
 from os.path import dirname
 import numpy as np
+import oct2py
 import pandas as pd
 
 from control.matlab import lyap
