@@ -1,8 +1,6 @@
 import os
 from os.path import dirname
-
 import numpy as np
-import oct2py
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.cluster import KMeans
@@ -60,9 +58,9 @@ class IMSR(BaseEstimator, ClassifierMixin):
     >>> from imvc.cluster import IMSR
     >>> from imvc.preprocessing import NormalizerNaN, MultiViewTransformer
     >>> Xs = LoadDataset.load_dataset(dataset_name="nutrimouse")
-    >>> normalizer = NormalizerNaN()
+    >>> normalizer = NormalizerNaN().set_output(transform="pandas")
     >>> estimator = IMSR(n_clusters = 2)
-    >>> pipeline = make_pipeline(MultiViewTransformer(NormalizerNaN), estimator)
+    >>> pipeline = make_pipeline(MultiViewTransformer(normalizer), estimator)
     >>> labels = pipeline.fit_predict(Xs)
     """
 
@@ -104,6 +102,7 @@ class IMSR(BaseEstimator, ClassifierMixin):
         Xs = check_Xs(Xs, force_all_finite='allow-nan')
 
         if self.engine=="matlab":
+            import oct2py
             matlab_folder = dirname(__file__)
             matlab_folder = os.path.join(matlab_folder, "_imsr")
             matlab_files = ["IMSC.m", "update_Z.m", "update_X.m", "update_F.m", "init_Z.m",

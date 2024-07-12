@@ -1,9 +1,7 @@
 import os
 from os.path import dirname
-
 import numpy as np
 from sklearn.gaussian_process import kernels
-import oct2py
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.cluster import KMeans
 
@@ -56,10 +54,15 @@ class LFIMVC(BaseEstimator, ClassifierMixin):
 
     Examples
     --------
+    >>> from sklearn.pipeline import make_pipeline
     >>> from imvc.datasets import LoadDataset
     >>> from imvc.cluster import LFIMVC
+    >>> from sklearn.preprocessing import StandardScaler
+    >>> from imvc.preprocessing import MultiViewTransformer
     >>> Xs = LoadDataset.load_dataset(dataset_name="nutrimouse")
+    >>> normalizer = StandardScaler().set_output(transform="pandas")
     >>> estimator = LFIMVC(n_clusters = 2)
+    >>> pipeline = make_pipeline(MultiViewTransformer(normalizer), estimator)
     >>> labels = estimator.fit_predict(Xs)
     """
 
@@ -95,6 +98,7 @@ class LFIMVC(BaseEstimator, ClassifierMixin):
         Xs = check_Xs(Xs, force_all_finite='allow-nan')
 
         if self.engine=="matlab":
+            import oct2py
             matlab_folder = dirname(__file__)
             matlab_folder = os.path.join(matlab_folder, "_lfimvc")
             matlab_files = ['IncompleteMultikernelLatefusionclusteringV1Hv.m', 'updateHPabsentClusteringV1.m',

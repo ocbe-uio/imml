@@ -1,6 +1,8 @@
 import copy
 import os
 import contextlib
+import tempfile
+
 import pandas as pd
 import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
@@ -70,7 +72,7 @@ class MOFA(TransformerMixin, BaseEstimator):
     --------
     >>> from imvc.datasets import LoadDataset
     >>> from imvc.decomposition import MOFA
-    >>> Xs = LoadDataset.load_incomplete_nutrimouse(p = 0.2)
+    >>> Xs = LoadDataset.load_dataset(dataset_name="nutrimouse")
     >>> pipeline = MOFA().fit(Xs)
     >>> transformed_Xs = pipeline.transform(Xs)
     """
@@ -121,15 +123,15 @@ class MOFA(TransformerMixin, BaseEstimator):
         else:
             with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):
                 self._run_mofa(data = [[X] for X in Xs])
-        outfile = "tmp.hdf5"
         with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):
-            self.mofa_.save(outfile=outfile, save_data=True, save_parameters=False, expectations=None)
-        model = mfx.mofa_model(outfile)
-        self.weights_ = model.get_weights(concatenate_views= False)
-        self.factors_ = model.get_factors(concatenate_groups= False)
-        self._columns = model._check_factors(np.arange(self.factors).tolist())[1]
-        model.close()
-        os.remove(outfile)
+            with tempfile.TemporaryDirectory() as tmp:
+                outfile = os.path.join(tmp, 'tmp.hdf5')
+                self.mofa_.save(outfile=outfile, save_data=True, save_parameters=False, expectations=None)
+                model = mfx.mofa_model(outfile)
+                self.weights_ = model.get_weights(concatenate_views= False)
+                self.factors_ = model.get_factors(concatenate_groups= False)
+                self._columns = model._check_factors(np.arange(self.factors).tolist())[1]
+                model.close()
         return self
 
 

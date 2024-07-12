@@ -73,6 +73,7 @@ class SumoSolver(ABC):
 
     def __init__(self, graph: MultiplexNet, nbins: int, bin_size: int = None, rseed: int = None):
 
+        #todo fix random seed
         if rseed is not None:
             np.random.seed(rseed)
             seed(rseed)

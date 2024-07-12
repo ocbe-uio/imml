@@ -20,7 +20,7 @@ class RunClustering:
     @staticmethod
     def run_iteration(idx, results, Xs, y, n_clusters, algorithms, incomplete_algorithms,
                       random_state, subresults_path, logs_file, error_file):
-        errors_dict = defaultdict(int)
+        errors_dict = {}
         row = results.loc[[idx]]
         try:
             with open(logs_file, "a") as f:
@@ -85,10 +85,12 @@ class RunClustering:
             row[dict_results.columns] = dict_results
             row[["finished", "completed"]] = True
         except Exception as exception:
-            errors_dict[f"{type(exception).__name__}: {exception}"] += 1
+            exception_name = type(exception).__name__
+            errors_dict[f"{exception_name}"] = exception
             row[["finished", "comments"]] = True, [dict(errors_dict)]
             with open(error_file, "a") as f:
-                f.write(f'\n {row.drop(columns=row.columns).reset_index().to_dict(orient="records")[0]} \t {errors_dict} \t {datetime.now()}')
+                f.write(f'\n {row.drop(columns=row.columns).reset_index().to_dict(orient="records")[0]} \t'
+                        f'  {exception_name}: {exception}  \t {datetime.now()}')
 
         row.to_csv(os.path.join(subresults_path, f"{'_'.join([str(i) for i in idx])}.csv"))
         return row

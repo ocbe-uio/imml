@@ -94,7 +94,7 @@ while flag
 
     %% update alpha
     for iv = 1:num_view
-        avoiding_zero = norm(B{iv}+E{iv}*N{iv},'fro') + eps
+        avoiding_zero = norm(B{iv}+E{iv}*N{iv},'fro') + eps;
         alpha(iv)=sqrt(1/avoiding_zero);
     end
 

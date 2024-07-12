@@ -26,6 +26,7 @@ class initModel(object):
             likelihood for each view, choose from ('gaussian','poisson','bernoulli')
         """
 
+        #todo fix random seed
         # Set seed
         np.random.seed(seed)
 

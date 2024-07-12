@@ -308,6 +308,7 @@ class SUMO(BaseEstimator, ClassifierMixin):
             quality (float): assessed quality of cluster structure
             outfile (str): path to .npz output file with results of factorization
         """
+        #todo fix random seed
         if sumo_run.random_state is not None:
             np.random.seed(sumo_run.random_state)
 

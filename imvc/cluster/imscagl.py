@@ -1,14 +1,16 @@
 import os
 from os.path import dirname
+
+import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.cluster import KMeans
 
 from ..impute import get_observed_view_indicator
-from ..utils import check_Xs
+from ..utils import check_Xs, DatasetUtils
 
 
-class PIMVC(BaseEstimator, ClassifierMixin):
+class IMSCAGL(BaseEstimator, ClassifierMixin):
     r"""
     Projective Incomplete Multi-View Clustering (PIMVC).
 
@@ -115,20 +117,22 @@ class PIMVC(BaseEstimator, ClassifierMixin):
             import oct2py
             matlab_folder = dirname(__file__)
             matlab_folder = os.path.join(matlab_folder, "_pimvc")
-            matlab_files = ["PIMVC.m", "constructW.m", "EuDist2.m", "PCA1.m", "mySVD.m"]
+            matlab_files = ["IMSAGL.m", "constructW.m", "EuDist2.m", "PCA1.m", "mySVD.m"]
             oc = oct2py.Oct2Py(temp_dir= matlab_folder)
             for matlab_file in matlab_files:
                 with open(os.path.join(matlab_folder, matlab_file)) as f:
                     oc.eval(f.read())
 
-            observed_view_indicator = get_observed_view_indicator(Xs)
-            if isinstance(observed_view_indicator, pd.DataFrame):
-                observed_view_indicator = observed_view_indicator.values
+            incomplete_samples = DatasetUtils.get_missing_samples_by_view(Xs=Xs, return_as_list=True)
+            w = [pd.DataFrame(np.eye(len(X)), index=X.index, columns=X.index) for X in Xs]
+            w = [eye.loc[samples,:].values for eye, samples in zip(w, incomplete_samples)]
+            w = tuple(w)
+
             transformed_Xs = tuple([X.T for X in Xs])
 
             if self.random_state is not None:
                 oc.rand('seed', self.random_state)
-            v, loss = oc.PIMVC(transformed_Xs, self.n_clusters, observed_view_indicator, self.lamb, self.beta,
+            v, loss = oc.IMSAGL(transformed_Xs, w, self.n_clusters, observed_view_indicator, self.lamb, self.beta,
                                self.max_iter,
                                {"NeighborMode": self.neighbor_mode, "WeightMode": self.weight_mode, "k": self.k}, nout=2)
         else:

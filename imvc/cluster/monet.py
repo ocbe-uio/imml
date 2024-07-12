@@ -255,6 +255,7 @@ class MONET(BaseEstimator, ClassifierMixin):
         r"""
 
         """
+        #todo fix random seed
         if random_state is not None:
             np.random.seed(random_state)
             random.seed(random_state)

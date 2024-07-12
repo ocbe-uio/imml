@@ -26,6 +26,12 @@ for dataset_name in datasets:
     Xs, y, n_clusters = CommonOperations.load_Xs_y(dataset_name=dataset_name)
 
     for prob, amputation_mechanism, run_n in itertools.product(probs, amputation_mechanisms, runs_per_alg):
+        if prob == 0:
+            if amputation_mechanism == "EDM":
+                amputation_mechanism = "No"
+            else:
+                continue
+
         path = f"{dataset_name}_{prob}_{amputation_mechanism}_{run_n}.json"
         path = os.path.join(PROFILES_PATH, path)
         if os.path.exists(path):

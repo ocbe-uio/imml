@@ -1,4 +1,4 @@
-function Clu_result = OPIMC(X, W, option, block_size)
+function Clu_result = OPIMC(X, W, option, ind)
 % If you use the code, please cite the following papers:
 % [1] Hu M, Chen S. One-pass incomplete multi-view clustering[C]//Proceedings of the AAAI conference on artificial intelligence. 2019, 33(01): 3838-3845.
 % [2] Jie Wen, Zheng Zhang, Lunke Fei, Bob Zhang, Yong Xu, Zhao Zhang, Jinxing Li, A Survey on Incomplete Multi-view Clustering, IEEE TRANSACTIONS ON SYSTEMS, MAN, AND CYBERNETICS: SYSTEMS, 2022.
@@ -10,12 +10,19 @@ function Clu_result = OPIMC(X, W, option, block_size)
     total = size(X{1}, 2);                  
     block_size = option.block_size;
     alpha = option.alpha;
-    
+
     skip_loss = option.loss;
     maxIter = option.maxiter;
     
     k = option.k;                           
     tol = option.tol;
+
+    index = randperm(total);
+    for i = 1:num_views
+        X{i} = X{i}(:,index);
+        W{i} = ind(index,i);
+    end
+
     num_feature = zeros(num_views,1);
     U = cell(num_views,1);
     for i = 1:num_views
@@ -101,7 +108,7 @@ function Clu_result = OPIMC(X, W, option, block_size)
                     tmp1 = T{i} + V'*W_block{i}*V + alpha*eye(k);
                     tmp2 = R{i} + X_block{i}*V;                    
                     U_new = tmp2/tmp1;                            
-                    if pass == 1 & block_index == 1 
+                    if pass == 1 && block_index == 1
                         U_new(:,find(diag(V'*W_block{i}*V)==0)) = repmat(mean(X_block{i},2),1,length(find(diag(V'*W_block{i}*V)==0)));
                         U{i} = U_new;
                     else

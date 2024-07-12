@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-from rpy2.robjects.packages import importr
-import rpy2.robjects as ro
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from ..utils import check_Xs, _convert_df_to_r_object
@@ -148,6 +146,7 @@ class jNMF(TransformerMixin, BaseEstimator):
         samples = Xs[0].index
 
         if self.engine=="r":
+            from rpy2.robjects.packages import importr
             nnTensor = importr("nnTensor")
             transformed_Xs, transformed_mask, beta_loss, init_W, init_V, init_H, weights = self._prepare_variables(
                 Xs=Xs, beta_loss=self.beta_loss, init_W=self.init_W, init_V=self.init_V, init_H=self.init_H,
@@ -195,20 +194,22 @@ class jNMF(TransformerMixin, BaseEstimator):
         Xs = check_Xs(Xs, force_all_finite='allow-nan')
         samples = Xs[0].index
 
-        nnTensor = importr("nnTensor")
-        transformed_Xs, transformed_mask, beta_loss, init_W, init_V, init_H, weights = self._prepare_variables(
-            Xs=Xs, beta_loss=self.beta_loss, init_W=self.init_W, init_V=self.V_, init_H=self.H_, weights=self.weights)
-        if self.random_state is not None:
-            base = importr("base")
-            base.set_seed(self.random_state)
+        if self.engine == "r":
+            from rpy2.robjects.packages import importr
+            nnTensor = importr("nnTensor")
+            transformed_Xs, transformed_mask, beta_loss, init_W, init_V, init_H, weights = self._prepare_variables(
+                Xs=Xs, beta_loss=self.beta_loss, init_W=self.init_W, init_V=self.V_, init_H=self.H_, weights=self.weights)
+            if self.random_state is not None:
+                base = importr("base")
+                base.set_seed(self.random_state)
 
-        transformed_X = nnTensor.jNMF(X= transformed_Xs, M=transformed_mask, J=self.n_components,
-                                      initW=init_W, initV=init_V, initH=_convert_df_to_r_object(self.H_),
-                                      fixW=False, fixV=False, fixH=True,
-                                      L1_W=self.l1_W, L1_V=self.l1_V, L1_H=self.l1_H,
-                                      L2_W=self.l2_W, L2_V= self.l2_V, L2_H=self.l2_H,
-                                      w=weights, algorithm=beta_loss, p=self.p, thr = self.tol, num_iter=self.max_iter,
-                                      verbose=self.verbose)[0]
+            transformed_X = nnTensor.jNMF(X= transformed_Xs, M=transformed_mask, J=self.n_components,
+                                          initW=init_W, initV=init_V, initH=_convert_df_to_r_object(self.H_),
+                                          fixW=False, fixV=False, fixH=True,
+                                          L1_W=self.l1_W, L1_V=self.l1_V, L1_H=self.l1_H,
+                                          L2_W=self.l2_W, L2_V= self.l2_V, L2_H=self.l2_H,
+                                          w=weights, algorithm=beta_loss, p=self.p, thr = self.tol, num_iter=self.max_iter,
+                                          verbose=self.verbose)[0]
 
         transformed_X = np.array(transformed_X)
         if self.transform_ == "pandas":
@@ -222,15 +223,16 @@ class jNMF(TransformerMixin, BaseEstimator):
         return self
 
 
-    @staticmethod
-    def _prepare_variables(Xs, beta_loss, init_W, init_V, init_H, weights):
-        mask = [X.notnull().astype(int) for X in Xs]
-        transformed_Xs, transformed_mask = _convert_df_to_r_object(Xs), _convert_df_to_r_object(mask)
-        if beta_loss is not None:
-            beta_loss = ro.vectors.StrVector(beta_loss)
-        init_W = ro.NULL if init_W is None else init_W
-        init_V = ro.NULL if init_V is None else init_V
-        init_H = ro.NULL if init_H is None else init_H
-        weights = ro.NULL if weights is None else weights
+    def _prepare_variables(self, Xs, beta_loss, init_W, init_V, init_H, weights):
+        if self.engine == "r":
+            import rpy2.robjects as ro
+            mask = [X.notnull().astype(int) for X in Xs]
+            transformed_Xs, transformed_mask = _convert_df_to_r_object(Xs), _convert_df_to_r_object(mask)
+            if beta_loss is not None:
+                beta_loss = ro.vectors.StrVector(beta_loss)
+            init_W = ro.NULL if init_W is None else init_W
+            init_V = ro.NULL if init_V is None else init_V
+            init_H = ro.NULL if init_H is None else init_H
+            weights = ro.NULL if weights is None else weights
         return transformed_Xs, transformed_mask, beta_loss, init_W, init_V, init_H, weights
 

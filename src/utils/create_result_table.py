@@ -51,26 +51,27 @@ class CreateResultTable:
     @staticmethod
     def collect_subresults(results, subresults_path, indexes_names):
         # get paths to all subresult files
-        subresults_files = pd.Series(os.listdir(subresults_path)).apply(lambda x: os.path.join(subresults_path, x))
-        # filter folders
-        subresults_files = subresults_files[subresults_files.apply(os.path.isfile)]
-        # if there are files
-        if len(subresults_files) > 0:
-            # read files and concat them
-            subresults_files = pd.concat(subresults_files.apply(pd.read_csv).to_list())
-            # put same format as result df
-            subresults_files = subresults_files.set_index(indexes_names)
-            # include only those finished
-            subresults_files = subresults_files[subresults_files["finished"]]
-            # add them to our result df
-            results.loc[subresults_files.index, subresults_files.columns] = subresults_files
-        drop_columns = "comments"
-        # fix nan values
-        results_ = results.select_dtypes(object).drop(columns=drop_columns).replace(np.nan, "np.nan")
-        try:
-            results[results_.columns] = results_.parallel_applymap(lambda x: eval(str(x)))
-        except:
-            results[results_.columns] = results_.applymap(lambda x: eval(str(x)))
+        if os.path.exists(subresults_path):
+            subresults_files = pd.Series(os.listdir(subresults_path)).apply(lambda x: os.path.join(subresults_path, x))
+            # filter folders
+            subresults_files = subresults_files[subresults_files.apply(os.path.isfile)]
+            # if there are files
+            if len(subresults_files) > 0:
+                # read files and concat them
+                subresults_files = pd.concat(subresults_files.apply(pd.read_csv).to_list())
+                # put same format as result df
+                subresults_files = subresults_files.set_index(indexes_names)
+                # include only those finished
+                subresults_files = subresults_files[subresults_files["finished"]]
+                # add them to our result df
+                results.loc[subresults_files.index, subresults_files.columns] = subresults_files
+            drop_columns = "comments"
+            # fix nan values
+            results_ = results.select_dtypes(object).drop(columns=drop_columns).replace(np.nan, "np.nan")
+            try:
+                results[results_.columns] = results_.parallel_applymap(lambda x: eval(str(x)))
+            except:
+                results[results_.columns] = results_.applymap(lambda x: eval(str(x)))
         return results
 
 

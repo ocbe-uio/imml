@@ -3,10 +3,9 @@ import torch
 import torch.nn
 from sklearn.decomposition import FastICA
 import numpy as np
-import lightning.pytorch as pl
+import lightning as pl
 
-from imvc.decomposition._deepmf.sparselinear import _SparseLinear
-from imvc.utils import check_Xs
+from ._deepmf.sparselinear import _SparseLinear
 
 
 class DeepMFDataset(torch.utils.data.Dataset):
@@ -42,7 +41,8 @@ class DeepMF(pl.LightningModule):
     feature-associated and sample-associated latent matrices, and is robust to noisy and missing values. It only accepts
     a single view as input, so multi-view datasets should be concatenated before.
 
-    It should be used with PyTorch Lightning.
+    It should be used with PyTorch Lightning. The class DeepMFDataset provides a Dataset class for this algorithm. X has
+    dimensions MxN, where M is the number of features and N is the number of samples.
 
     Parameters
     ----------
@@ -82,41 +82,40 @@ class DeepMF(pl.LightningModule):
     #todo
     >>> from imvc.datasets import LoadDataset
     >>> from imvc.decomposition import DeepMF, DeepMFDataset
-    >>> from imvc.preprocessing import MultiViewTransformer
+    >>> from imvc.preprocessing import MultiViewTransformer, ConcatenateViews
     >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn.preprocessing import StandardScaler, FunctionTransformer
     >>> from sklearn.cluster import KMeans
+    >>> from torch.utils.data import DataLoader
+    >>> from pytorch_lightning import Trainer
+
     >>> Xs = LoadDataset.load_dataset(dataset_name="nutrimouse")
-    >>> dfmf = DFMF(n_components = 5)
-    >>> estimator = KMeans(n_clusters = 3)
-    >>> pipeline = make_pipeline(MultiViewTransformer(StandardScaler().set_output(transform="pandas")), dfmf, estimator)
-    >>> labels = pipeline.fit_predict(Xs)
+    >>> pipeline = make_pipeline(ConcatenateViews(), StandardScaler(), FunctionTransformer(lambda x: torch.from_numpy(x).float().cuda().t()))
+    >>> transformed_X = pipeline.fit_transform(Xs)
+    >>> train_data = DeepMFDataset(X= transformed_X)
+    >>> train_dataloader = DataLoader(dataset= train_data, batch_size= 50, shuffle=True)
+    >>> trainer = Trainer(max_epochs=10, logger=False, enable_checkpointing=False)
+    >>> model = DeepMF(X=transformed_X)
+    >>> trainer.fit(model, train_dataloader)
+    >>> train_dataloader = DataLoader(dataset= train_data, batch_size= 50, shuffle=False)
+    >>> transformed_X = model.transform(transformed_X)
+    >>> pipeline = make_pipeline(FunctionTransformer(lambda x: x.cpu().detach().numpy()), StandardScaler(), KMeans(n_clusters=3))
+    >>> labels = pipeline.fit_predict(transformed_X)
     """
 
-    def __init__(self, X, latent_dim: int =10, n_layers: int = 3, learning_rate: float = 1e-2, alpha: float = 0.01,
+    def __init__(self, X = None, latent_dim: int =10, n_layers: int = 3, learning_rate: float = 1e-2, alpha: float = 0.01,
                  neighbor_proximity='Lap', loss_fun = torch.nn.MSELoss(), sigmoid: bool = False):
         super().__init__()
-        self.M, self.N = X.shape
         self.n_layers = n_layers
+        self.latent_dim = latent_dim
         self.learning_rate = learning_rate
         self.alpha = alpha
         self.neighbor_proximity = neighbor_proximity
         self.loss_fun = loss_fun
         self.sigmoid = sigmoid
-
-        layers = [_SparseLinear(self.M, latent_dim)]
-        for i in range(n_layers):
-            layers.append(torch.nn.Linear(latent_dim, latent_dim))
-            if n_layers > 1:
-                layers.append(torch.nn.ReLU())
-        layers.append(torch.nn.Linear(latent_dim, self.N))
-        if sigmoid:
-            layers.append(torch.nn.Sigmoid())
-
-        self.model_ = torch.nn.Sequential(*layers)
-        self.Su, self.Du = self._get_similarity(X, 'row')
-        self.Sv, self.Dv = self._get_similarity(X, 'col')
-
+        self.transform_ = None
+        if X is not None:
+            self._init_model(X)
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.model_.parameters(), lr=self.learning_rate, weight_decay=0.0001)
@@ -170,7 +169,7 @@ class DeepMF(pl.LightningModule):
         if not n:
             n = int(N / self.K)
         cutoff = D[range(N), torch.argsort(D, dim=1)[:, n-1]]
-        Indicator = torch.zeros(N, N, dtype=torch.float)
+        Indicator = torch.zeros(N, N, dtype=torch.float).to(S.device)
         for i in range(N):
             for j in range(N):
                 if D[i, j] <= cutoff[i] or D[i, j] <= cutoff[j]:
@@ -184,15 +183,15 @@ class DeepMF(pl.LightningModule):
     def _get_distance(self, data, row_or_col):
         M, N = data.shape
         if row_or_col == 'row':
-            G = torch.mm(data, data.t_())
+            G = torch.mm(data, data.t())
         else:
-            G = torch.mm(data.t_(), data)
+            G = torch.mm(data.t(), data)
         g = torch.diag(G)
         if row_or_col == 'row':
             x = g.repeat(M, 1)
         else:
             x = g.repeat(N, 1)
-        D = x + x.t_() - 2 * G
+        D = x + x.t() - 2*G
         return D
 
 
@@ -209,7 +208,7 @@ class DeepMF(pl.LightningModule):
             penalty = torch.max(data) * 1.0 / M
         if penalty == 0:
             penalty = 1
-        nan_penalty = penalty * (row_or_col_nan + row_or_col_nan.t_())
+        nan_penalty = penalty * (row_or_col_nan + row_or_col_nan.t())
         nan_penalty = nan_penalty.float()
         D = D + nan_penalty - torch.diag(torch.diag(nan_penalty))
 
@@ -254,16 +253,12 @@ class DeepMF(pl.LightningModule):
         self.model_[0].weight.data = U.t()
         self.model_[-1].weight.data = V
 
+
     def _load_U_V(self):
-        U = self.model_[0].weight.t_()
-        V = self.model_[-1].weight.t_()
+        U = self.model_[0].weight.t()
+        V = self.model_[-1].weight.t()
         return U, V
 
-    def _save_U_V(self):
-        U, V = self._load_U_V()
-        U = U.data.cpu().detach().numpy()
-        V = V.data.cpu().detach().numpy()
-        return U, V
 
     def _clean_y(self, y_pred, y):
         y_pred[torch.isnan(y)] = 0
@@ -277,7 +272,7 @@ class DeepMF(pl.LightningModule):
 
         Parameters
         ----------
-        X : array-likes of shape (n_samples, latent_dim)
+        X : array-likes of shape (n_samples, n_features)
                 New data to transform.
 
         Returns
@@ -285,14 +280,35 @@ class DeepMF(pl.LightningModule):
         transformed_X : array-like of shape (n_samples, latent_dim)
             The projected data.
         """
-
-        X = check_Xs(X, force_all_finite='allow-nan')
-        transformed_X = self.model(X)
+        transformed_X = torch.mm(X.T, self.U_)
         if self.transform_ == "pandas":
-            transformed_X = pd.DataFrame(transformed_X, index= X.index)
+            transformed_X = pd.DataFrame(transformed_X.numpy(), index= X.index)
         return transformed_X
 
 
     def set_output(self, *, transform=None):
         self.transform_ = "pandas"
         return self
+
+    def set_params(self, **parameters):
+        for parameter, value in parameters.items():
+            setattr(self, parameter, value)
+        if "X" in parameters.keys():
+            self._init_model(parameters["X"])
+        return self
+
+
+    def _init_model(self, X):
+        self.M, self.N = X.shape
+        layers = [_SparseLinear(self.M, self.latent_dim)]
+        for i in range(self.n_layers):
+            layers.append(torch.nn.Linear(self.latent_dim, self.latent_dim))
+            if self.n_layers > 1:
+                layers.append(torch.nn.ReLU())
+        layers.append(torch.nn.Linear(self.latent_dim, self.N))
+        if self.sigmoid:
+            layers.append(torch.nn.Sigmoid())
+
+        self.model_ = torch.nn.Sequential(*layers)
+        self.Su, self.Du = self._get_similarity(X, 'row')
+        self.Sv, self.Dv = self._get_similarity(X, 'col')

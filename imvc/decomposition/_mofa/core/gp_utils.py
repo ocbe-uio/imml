@@ -138,6 +138,7 @@ def set_inducing_points(
     nonmissing_samples = np.where(missing_sample_per_view.sum(axis=1) != dims["M"])[0]
     N_nonmissing = len(nonmissing_samples)
     n_inducing = min(n_inducing, N_nonmissing)
+    # todo fix random seed
     if random:
         if not seed_inducing is None:
             np.random.seed(int(seed_inducing))

@@ -98,9 +98,9 @@ class MRGCN(pl.LightningModule):
         cluster_layer = torch.tensor(self.kmeans.cluster_centers_).to(z.device)
         q = 1.0 / (1.0 + torch.sum(torch.pow(z.unsqueeze(1) - cluster_layer, 2), 2))
         q = q.pow(1)
-        q = (q.t_() / torch.sum(q, 1)).t_()
+        q = torch.t(torch.t(q) / torch.sum(q, 1))
         weight = q ** 2 / q.sum(0)
-        p = (weight.t_() / weight.sum(1)).t_()
+        p = torch.t(torch.t(weight) / weight.sum(1))
         loss_kl = F.kl_div(q.log(), p, reduction='batchmean')
 
         loss = loss_x + self.reg2 * loss_a + self.reg3 * loss_kl

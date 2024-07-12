@@ -1,9 +1,7 @@
 import logging
 import os
 from os.path import dirname
-
 import numpy as np
-import oct2py
 import pandas as pd
 
 from control.matlab import lyap
@@ -72,9 +70,9 @@ class DAIMC(BaseEstimator, ClassifierMixin):
     >>> from imvc.cluster import DAIMC
     >>> from imvc.preprocessing import NormalizerNaN, MultiViewTransformer
     >>> Xs = LoadDataset.load_dataset(dataset_name="nutrimouse")
-    >>> normalizer = NormalizerNaN()
+    >>> normalizer = NormalizerNaN().set_output(transform="pandas")
     >>> estimator = DAIMC(n_clusters = 2)
-    >>> pipeline = make_pipeline(MultiViewTransformer(NormalizerNaN), estimator)
+    >>> pipeline = make_pipeline(MultiViewTransformer(normalizer), estimator)
     >>> labels = pipeline.fit_predict(Xs)
     """
 
@@ -118,6 +116,7 @@ class DAIMC(BaseEstimator, ClassifierMixin):
 
         Xs = check_Xs(Xs, force_all_finite='allow-nan')
 
+
         if self.engine == "matlab":
             matlab_folder = dirname(__file__)
             matlab_folder = os.path.join(matlab_folder, "_daimc")
@@ -130,14 +129,7 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             oc.eval("pkg load control")
             oc.warning("off", "Octave:possible-matlab-short-circuit-operator")
 
-            if isinstance(Xs[0], pd.DataFrame):
-                transformed_Xs = [X.values for X in Xs]
-            elif isinstance(Xs[0], np.ndarray):
-                transformed_Xs = Xs
-            observed_view_indicator = get_observed_view_indicator(transformed_Xs)
-            transformed_Xs = simple_view_imputer(transformed_Xs, value="zeros")
-            transformed_Xs = [X.T for X in transformed_Xs]
-            transformed_Xs = tuple(transformed_Xs)
+            transformed_Xs, observed_view_indicator = _processing_Xs(Xs)
 
             w = tuple([oc.diag(missing_view) for missing_view in observed_view_indicator.T])
             if self.random_state is not None:
@@ -149,15 +141,7 @@ class DAIMC(BaseEstimator, ClassifierMixin):
                                         len(transformed_Xs), {"afa": self.alpha, "beta": self.beta}, nout=6)
 
         elif self.engine == "python":
-            if isinstance(Xs[0], pd.DataFrame):
-                transformed_Xs = [X.values for X in Xs]
-            elif isinstance(Xs[0], np.ndarray):
-                transformed_Xs = Xs
-            observed_view_indicator = get_observed_view_indicator(transformed_Xs)
-            transformed_Xs = simple_view_imputer(transformed_Xs, value="zeros")
-            transformed_Xs = [X.T for X in transformed_Xs]
-            transformed_Xs = tuple(transformed_Xs)
-
+            transformed_Xs, observed_view_indicator = _processing_Xs(Xs)
             w = tuple([np.diag(missing_view) for missing_view in observed_view_indicator.T])
             u_0, v_0, b_0 = self._newInit(transformed_Xs, w, self.n_clusters, len(transformed_Xs))
             u, v, b, f, p, n = self._DAIMC(transformed_Xs, w, u_0, v_0, b_0, self.n_clusters,

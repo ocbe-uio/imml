@@ -1,8 +1,6 @@
 import os
 from os.path import dirname
-
 import numpy as np
-import oct2py
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.cluster import KMeans
@@ -64,11 +62,17 @@ class MKKMIK(BaseEstimator, ClassifierMixin):
 
     Examples
     --------
+    >>> from sklearn.pipeline import make_pipeline
     >>> from imvc.datasets import LoadDataset
     >>> from imvc.cluster import MKKMIK
+    >>> from sklearn.preprocessing import StandardScaler
+    >>> from imvc.preprocessing import MultiViewTransformer
     >>> Xs = LoadDataset.load_dataset(dataset_name="nutrimouse")
+    >>> normalizer = StandardScaler().set_output(transform="pandas")
     >>> estimator = MKKMIK(n_clusters = 2)
+    >>> pipeline = make_pipeline(MultiViewTransformer(normalizer), estimator)
     >>> labels = estimator.fit_predict(Xs)
+
     """
 
     def __init__(self, n_clusters: int = 8, normalize: bool = True, kernel_initialization: str = "zeros",
@@ -110,6 +114,7 @@ class MKKMIK(BaseEstimator, ClassifierMixin):
         Xs = check_Xs(Xs, force_all_finite='allow-nan')
 
         if self.engine == "matlab":
+            import oct2py
             matlab_folder = dirname(__file__)
             matlab_folder = os.path.join(matlab_folder, "_mkkm_ik")
             matlab_files = ['absentKernelImputation.m', 'mycombFun.m', 'mykernelkmeans.m', 'calObjV2.m',
