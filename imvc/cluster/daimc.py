@@ -243,8 +243,6 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         V = sumH / viewNum
         Q = np.diag(np.matmul(np.ones((V.shape[0],)), V))
         V = np.matmul(V, np.linalg.inv(Q))
-        # for i in range(viewNum):
-        #     U[i] = np.matmul(U[i], Q)
 
         U = [np.matmul(U[i], Q) for i in range(viewNum)]
 
