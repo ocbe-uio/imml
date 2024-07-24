@@ -16,6 +16,7 @@ from ..impute import get_observed_view_indicator, simple_view_imputer
 from ..utils import check_Xs
 from ..utils import daimc_jax_functions as jaxdaimc
 
+
 class DAIMC(BaseEstimator, ClassifierMixin):
     r"""
     Doubly Aligned Incomplete Multi-view Clustering (DAIMC).
@@ -135,7 +136,7 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         elif self.engine == "python":
             transformed_Xs, observed_view_indicator = self._processing_xs(Xs)
             w = tuple([np.diag(missing_view) for missing_view in observed_view_indicator.T])
-            u_0, v_0, b_0 = self._newInit(transformed_Xs, w, self.n_clusters, len(transformed_Xs))
+            u_0, v_0, b_0 = self._new_init(transformed_Xs, w, self.n_clusters, len(transformed_Xs))
             u, v, b, f, p, n = self._daimc(transformed_Xs, w, u_0, v_0, b_0, self.n_clusters,
                                            len(transformed_Xs), {"afa": self.alpha, "beta": self.beta})
         else:
@@ -188,7 +189,8 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         labels = self.fit(Xs)._predict(Xs)
         return labels
 
-    def _newInit(self, X, W, n_clusters, viewNum, random_state=42):
+    @staticmethod
+    def _new_init(X, W, n_clusters, viewNum, random_state=42):
         r"""
         It is the fist step of the DAIMC algorithm. The goal is to initiate the
         first variables.
@@ -235,8 +237,8 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             C = kmeans.cluster_centers_
             U[i] = C.T + (0.1 * np.ones((d, n_clusters)))
             G = np.zeros((n, n_clusters))
-            for j in range(1, n_clusters+1):
-                G[:, j-1] = (ilabels == j*np.ones(shape=(n, )))
+            for j in range(1, n_clusters + 1):
+                G[:, j - 1] = (ilabels == j * np.ones(shape=(n,)))
             H[i] = G + 0.1 * np.ones((n, n_clusters))
             sumH += H[i]
 
@@ -249,7 +251,7 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         lamda = 1e-5
         for i in range(viewNum):
             d = U[i].shape[0]
-            invI = np.diag(1.0/np.diag(lamda * np.eye(d)))
+            invI = np.diag(1.0 / np.diag(lamda * np.eye(d)))
             B[i] = np.matmul((invI - np.matmul(np.matmul(np.matmul(np.matmul(invI, U[i]), np.linalg.inv(np.matmul(
                 np.matmul(U[i].T, invI), U[i]) + np.eye(n_clusters))), U[i].T), invI)), U[i])
         return U, V, B
