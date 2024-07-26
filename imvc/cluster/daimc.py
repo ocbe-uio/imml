@@ -137,8 +137,8 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             transformed_Xs, observed_view_indicator = self._processing_xs(Xs)
             w = tuple([np.diag(missing_view) for missing_view in observed_view_indicator.T])
             u_0, v_0, b_0 = self._new_init(transformed_Xs, w, self.n_clusters, len(transformed_Xs))
-            u, v, b, f, p, n = self._daimc(transformed_Xs, w, u_0, v_0, b_0, self.n_clusters,
-                                           len(transformed_Xs), {"afa": self.alpha, "beta": self.beta})
+            u, v, b, f = self._daimc(transformed_Xs, w, u_0, v_0, b_0, self.n_clusters,
+                                     len(transformed_Xs), {"afa": self.alpha, "beta": self.beta})
         else:
             raise ValueError("Only engine=='matlab' and 'python' are currently supported.")
 
@@ -198,10 +198,12 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         Parameters
         ----------
         X : list of array-likes
-            - X length: n_views
+            - X length: viewNum
             - X[i] shape: (n_samples, n_features_i)
             A list of different views.
-        W : ?
+        W : tuple of array
+            - W length : viewNum
+            - W[i] shape : (n_samples, n_samples)
         n_clusters : int, default=8
             The number of clusters to generate.
         viewNum : numbers of views (X length)
@@ -210,21 +212,25 @@ class DAIMC(BaseEstimator, ClassifierMixin):
 
         Returns
         -------
-        U : array of shape (n_samples, n_clusters)
+        U : list of array :
+            - U length: viewNum
+            - U[i] shape: (n_features_i, n_clusters)
         V : array of shape (n_samples, n_clusters)
-        B : array of shape (n_samples, n_clusters)
+        B : list of array :
+            - B length: n_clusters
+            - B[i] shape: (n_features_i, n_clusters)
         """
         np.random.seed(random_state)
 
-        B = [None] * viewNum
-        U = [None] * viewNum
-        H = [None] * viewNum
-        XX = [None] * viewNum
+        B = []
+        U = []
+        H = []
+        XX = []
 
         for i in range(viewNum):
             item = np.diag(W[i])
             temp = np.where(item == 0)
-            XX[i] = X[i].copy()
+            XX.append(X[i].copy())
             XX[i] = np.delete(XX[i], temp, axis=1)
             Mx = np.mean(XX[i], axis=1, keepdims=True)
             X[i][:, temp[0]] = np.tile(Mx, (1, len(temp)))
@@ -235,11 +241,11 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             kmeans = KMeans(n_clusters=n_clusters, n_init=20, random_state=random_state)
             ilabels = kmeans.fit_predict(X[i].T)
             C = kmeans.cluster_centers_
-            U[i] = C.T + (0.1 * np.ones((d, n_clusters)))
+            U.append(C.T + (0.1 * np.ones((d, n_clusters))))
             G = np.zeros((n, n_clusters))
             for j in range(1, n_clusters + 1):
                 G[:, j - 1] = (ilabels == j * np.ones(shape=(n,)))
-            H[i] = G + 0.1 * np.ones((n, n_clusters))
+            H.append(G + 0.1 * np.ones((n, n_clusters)))
             sumH += H[i]
 
         V = sumH / viewNum
@@ -252,8 +258,9 @@ class DAIMC(BaseEstimator, ClassifierMixin):
         for i in range(viewNum):
             d = U[i].shape[0]
             invI = np.diag(1.0 / np.diag(lamda * np.eye(d)))
-            B[i] = np.matmul((invI - np.matmul(np.matmul(np.matmul(np.matmul(invI, U[i]), np.linalg.inv(np.matmul(
-                np.matmul(U[i].T, invI), U[i]) + np.eye(n_clusters))), U[i].T), invI)), U[i])
+            B.append(np.matmul((invI - np.matmul(np.matmul(np.matmul(np.matmul(invI, U[i]), np.linalg.inv(np.matmul(
+                np.matmul(U[i].T, invI), U[i]) + np.eye(n_clusters))), U[i].T), invI)), U[i]))
+
         return U, V, B
 
     def _daimc(self, X, W, U, V, B, n_clusters, viewNum, options):
@@ -265,10 +272,16 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             - X length: n_views
             - X[i] shape: (n_samples, n_features_i)
             A list of different views.
-        W : ?
-        U : array of shape (n_samples, n_clusters)
+        W : tuple of array
+            - W length : viewNum
+            - W[i] shape : (n_samples, n_samples)
+        U : list of array :
+            - U length: viewNum
+            - U[i] shape: (n_features_i, n_clusters)
         V : array of shape (n_samples, n_clusters)
-        B : array of shape (n_samples, n_clusters)
+        B : list of array :
+            - B length: n_clusters
+            - B[i] shape: (n_features_i, n_clusters)
         n_clusters : int, default=8
             The number of clusters to generate.
         viewNum : numbers of views (X length)
@@ -276,12 +289,15 @@ class DAIMC(BaseEstimator, ClassifierMixin):
 
         Returns
         -------
-        U
-        V
-        B
-        F
-        P
-        N
+        U : list of array :
+            - U length: viewNum
+            - U[i] shape: (n_features_i, n_clusters)
+        V : array of shape (n_samples, n_clusters)
+        B : list of array :
+            - B length: n_clusters
+            - B[i] shape: (n_features_i, n_clusters)
+        F : float
+            calculated from “ff” which is a loop stop condition
         """
         eta = 1e-10
         F = 0
@@ -326,7 +342,8 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             if (np.abs(ff - f) / f < 1e-4) or (np.abs(ff - f) > 1e100) | (time == 30):
                 break
             f = ff
-        return U, V, B, F, P, N
+        print(N)
+        return U, V, B, F
 
     @staticmethod
     def _update_v_daimc(X, W, U, V, viewNum):
@@ -339,8 +356,12 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             - X length: n_views
             - X[i] shape: (n_samples, n_features_i)
             A list of different views.
-        W : ?
-        U : array of shape (n_samples, n_clusters)
+        W : tuple of array
+            - W length : viewNum
+            - W[i] shape : (n_samples, n_samples)
+        U : list of array :
+            - U length: viewNum
+            - U[i] shape: (n_features_i, n_clusters)
         V : array of shape (n_samples, n_clusters)
         viewNum : numbers of views (X length)
 
