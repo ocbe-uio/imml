@@ -144,6 +144,7 @@ class DAIMC(BaseEstimator, ClassifierMixin):
 
         model = KMeans(n_clusters=self.n_clusters, random_state=self.random_state)
         self.labels_ = model.fit_predict(X=v)
+        self.embedding = v
         self.U_ = u
         self.V_ = v
         self.B_ = b
