@@ -343,7 +343,7 @@ class DAIMC(BaseEstimator, ClassifierMixin):
             if (np.abs(ff - f) / f < 1e-4) or (np.abs(ff - f) > 1e100) | (time == 30):
                 break
             f = ff
-        print(N)
+
         return U, V, B, F
 
     @staticmethod
