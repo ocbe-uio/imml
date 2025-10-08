@@ -7,7 +7,7 @@ try:
     deepmodule_installed = True
 except ImportError:
     deepmodule_installed = False
-    deepmodule_error = "Module 'Deep' needs to be installed."
+    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
 
 nnModuleBase = nn.Module if deepmodule_installed else object
 

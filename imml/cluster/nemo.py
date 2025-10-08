@@ -21,7 +21,7 @@ try:
     rmodule_installed = True
 except ImportError:
     rmodule_installed = False
-    rmodule_error = "Module 'r' needs to be installed to use r engine."
+    rmodule_error = "Module 'r' needs to be installed to use r engine. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
 
 if rmodule_installed:
     rbase = importr("base")

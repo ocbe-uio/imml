@@ -13,7 +13,7 @@ from ..impute import get_observed_mod_indicator
 from ..utils import check_Xs
 
 matlabmodule_installed = False
-oct2py_module_error = "Module 'matlab' needs to be installed."
+oct2py_module_error = "Module 'matlab' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
 try:
     import oct2py
     matlabmodule_installed = True

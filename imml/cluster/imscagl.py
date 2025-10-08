@@ -12,7 +12,7 @@ from ..utils import check_Xs
 from ..preprocessing import remove_missing_samples_by_mod
 
 matlabmodule_installed = False
-oct2py_module_error = "Module 'matlab' needs to be installed."
+oct2py_module_error = "Module 'matlab' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
 try:
     import oct2py
     matlabmodule_installed = True
