@@ -36,7 +36,8 @@ Version 0.1.1
 
 Updates in this release:
 
-- |Enhancement| Improve documentation of several methods, overview and installation.
+- |Enhancement| Improving documentation of several methods.
+- |Enhancement| Improving documentation of installation and extra dependencies.
 - |Enhancement| Adding guidelines on how to choose an algorithm.
 - |Enhancement| Adding license to all files.
 
