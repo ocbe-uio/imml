@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import operator
 import networkx as nx
 import numpy as np

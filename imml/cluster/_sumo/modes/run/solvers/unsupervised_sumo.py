@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import numpy as np
 
 from ....._sumo.modes.run.solver import SumoSolver, SumoNMFResults

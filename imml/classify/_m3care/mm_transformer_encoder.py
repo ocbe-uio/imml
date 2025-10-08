@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from .nmt import PositionalEncoding, MultiHeadedAttention, SublayerConnection, PositionwiseFeedForward
 
 try:

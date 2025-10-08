@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from .basic_distributions import Distribution
 from .bernoulli import Bernoulli
 from .univariate_gaussian import UnivariateGaussian

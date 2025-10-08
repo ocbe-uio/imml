@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from itertools import product
 from collections import defaultdict
 

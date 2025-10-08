@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import numpy as np
 import pandas as pd
 from sklearn.utils import check_array

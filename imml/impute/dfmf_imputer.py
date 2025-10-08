@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import pandas as pd
 
 from ..decomposition import DFMF

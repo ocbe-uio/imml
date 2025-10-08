@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import os
 from os.path import dirname
 import numpy as np

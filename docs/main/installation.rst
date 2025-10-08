@@ -114,7 +114,9 @@ where 'keyword' is from the list above. For example:
 .. code:: bash
 
     pip install imml[deep] # to install "deep" module
+
     pip install imml[matlab] # to install "matlab" module
+
     pip install imml[r] # to install "r" module
 
 To install all possible dependencies:

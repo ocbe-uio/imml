@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import copy
 import math
 from collections import Counter

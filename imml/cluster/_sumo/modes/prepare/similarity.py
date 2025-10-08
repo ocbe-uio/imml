@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from math import sqrt
 from scipy.spatial.distance import cosine
 from scipy.stats import pearsonr, spearmanr

@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 """
 ============================================
 Data Fusion by Matrix Factorization (`dfmf`)

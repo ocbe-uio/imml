@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 try:
     import torch
     DLBaseDataset = torch.utils.data.Dataset

@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 

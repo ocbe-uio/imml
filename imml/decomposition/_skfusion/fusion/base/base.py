@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from collections import defaultdict
 from abc import ABCMeta, abstractmethod
 

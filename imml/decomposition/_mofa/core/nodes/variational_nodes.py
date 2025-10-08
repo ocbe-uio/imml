@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from __future__ import division
 import scipy as s
 import numpy as np

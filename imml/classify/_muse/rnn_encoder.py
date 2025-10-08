@@ -1,4 +1,4 @@
-from typing import Tuple
+# License: BSD-3-Clause
 
 try:
     import torch

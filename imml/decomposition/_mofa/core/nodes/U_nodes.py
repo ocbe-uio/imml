@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from __future__ import division
 from .. import gpu_utils
 from ..distributions import *

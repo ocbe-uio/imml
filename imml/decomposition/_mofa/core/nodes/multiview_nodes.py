@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 """
 Module to define multi-view nodes.
 A multi-view node is simply a node that is defined for several views. For example, the weights W or the data Y, but not the latent variables Z.

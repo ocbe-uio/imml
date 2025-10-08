@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from itertools import combinations
 import numpy as np
 from cvxpy import SCS

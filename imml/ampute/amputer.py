@@ -1,4 +1,3 @@
-# Authors: The imml developers
 # License: BSD-3-Clause
 
 import copy

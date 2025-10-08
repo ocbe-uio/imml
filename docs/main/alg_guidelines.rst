@@ -33,8 +33,8 @@ task and check whether additional modules or dependencies are required.
    * - Clustering
      - DAIMC
      - Numeric
-     - matlab
-     - octave-control, octave-statistics
+     -
+     -
    * - Clustering
      - EEIMVC
      - Numeric

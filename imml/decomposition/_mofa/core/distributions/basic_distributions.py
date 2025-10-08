@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 """
 This module is used to define classes for statistical distributions
 

@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from typing import Union
 import pandas as pd
 from sklearn.base import TransformerMixin, BaseEstimator

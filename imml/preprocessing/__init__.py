@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from .compose import DropMod, ConcatenateMods, SingleMod, AddMissingMods, SortData, concatenate_mods, drop_mod,\
     single_mod, add_missing_mods, sort_data
 from .multi_mod_transformer import MultiModTransformer

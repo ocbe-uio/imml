@@ -36,9 +36,8 @@ Version 0.1.1
 
 Updates in this release:
 
-- |Enhancement| Improve documentation of several methods and installation.
+- |Enhancement| Improve documentation of several methods, overview and installation.
 - |Enhancement| Adding guidelines on how to choose an algorithm.
-- |Enhancement| Adding license to all files.
 - |Enhancement| Adding license to all files.
 
 `.github/workflows/ci_test.yml <https://github.com/ocbe-uio/imml/blob/main/.github/workflows/ci_test.yml>`_

@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from .nemo import NEMO
 from .sumo import SUMO
 from .daimc import DAIMC

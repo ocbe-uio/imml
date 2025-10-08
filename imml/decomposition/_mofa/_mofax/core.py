@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import h5py
 import numpy as np
 import pandas as pd
@@ -1158,8 +1160,8 @@ Expectations: {', '.join(self.expectations.keys())}"""
     def get_r2(
         self,
         factors: Optional[Union[int, list[int], str, list[str]]] = None,
-        groups: Optional[Union[str, int, list[str], List[int]]] = None,
-        views: Optional[Union[str, int, List[str], List[int]]] = None,
+        groups: Optional[Union[str, int, list[str], list[int]]] = None,
+        views: Optional[Union[str, int, list[str], list[int]]] = None,
         groups_df: Optional[pd.DataFrame] = None,
         group_label: Optional[str] = None,
         per_factor: Optional[bool] = None,
@@ -1298,7 +1300,7 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def _get_r2_null(
         self,
-        factors: Union[int, List[int], str, List[str]] = None,
+        factors: Union[int, list[int], str, list[str]] = None,
         n_iter: int = 100,
         groups_df: Optional[pd.DataFrame] = None,
         group_label: Optional[str] = None,
@@ -1324,9 +1326,9 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def get_sample_r2(
         self,
-        factors: Optional[Union[str, int, List[str], List[int]]] = None,
-        groups: Optional[Union[str, int, List[str], List[int]]] = None,
-        views: Optional[Union[str, int, List[str], List[int]]] = None,
+        factors: Optional[Union[str, int, list[str], list[int]]] = None,
+        groups: Optional[Union[str, int, list[str], list[int]]] = None,
+        views: Optional[Union[str, int, list[str], list[int]]] = None,
         df: bool = True,
     ) -> pd.DataFrame:
         findices, factors = self.__check_factors(factors, unique=True)
@@ -1366,7 +1368,7 @@ Expectations: {', '.join(self.expectations.keys())}"""
         self,
         data,
         view: Union[str, int] = None,
-        factors: Union[int, List[int], str, List[str]] = None,
+        factors: Union[int, list[int], str, list[str]] = None,
         df: bool = False,
         feature_intersection: bool = False,
     ):

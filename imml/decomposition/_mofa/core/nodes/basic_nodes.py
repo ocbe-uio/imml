@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 """
 Module to define general nodes in a Bayesian network
 

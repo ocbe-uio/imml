@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 """
 Module to define updates for non-conjugate matrix factorisation models.
 Reference: 'Fast Variational Bayesian Inference for Non-Conjugate Matrix Factorisation models' by Seeger and Bouchard (2012)

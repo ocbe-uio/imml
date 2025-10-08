@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import os
 import contextlib
 import tempfile

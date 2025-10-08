@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import numpy as np
 import scipy as s
 import scipy.special as special

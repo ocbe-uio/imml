@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 # command_line
 __version__ = "0.3.0"
 SUMO_COMMANDS = ["prepare", "run", "evaluate", "interpret"]

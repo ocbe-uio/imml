@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from operator import itemgetter
 
 import numpy as np

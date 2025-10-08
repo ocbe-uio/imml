@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.metrics import adjusted_rand_score, mutual_info_score
 from sklearn.metrics.cluster import entropy

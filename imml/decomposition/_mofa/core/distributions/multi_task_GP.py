@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 # import gpytorch
 # from gpytorch.constraints import Positive, GreaterThan
 # from gpytorch.lazy import DiagLazyTensor,BlockDiagLazyTensor,MatmulLazyTensor, InterpolatedLazyTensor, PsdSumLazyTensor, RootLazyTensor, KroneckerProductLazyTensor, lazify

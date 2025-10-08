@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 try:
     import torch
     from torch import nn

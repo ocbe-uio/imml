@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 try:
     import lightning.pytorch as pl
     import torch

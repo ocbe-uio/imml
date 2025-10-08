@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 """
 Module to initialise a bioFAM model
 """

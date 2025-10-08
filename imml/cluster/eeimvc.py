@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import os
 from contextlib import contextmanager
 from os.path import dirname

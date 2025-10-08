@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import os.path
 from os.path import dirname
 from typing import Union

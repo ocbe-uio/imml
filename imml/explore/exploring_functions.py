@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from typing import Union
 import numpy as np
 import pandas as pd

@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import math
 from matplotlib.patches import Rectangle, Circle
 from matplotlib import pyplot as plt

@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from .Alpha_nodes import AlphaW_Node, AlphaZ_Node
 from .Tau_nodes import TauD_Node
 from .Theta_nodes import ThetaW_Node, ThetaZ_Node

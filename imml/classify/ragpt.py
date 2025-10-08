@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from ._ragpt import MMG, CAP
 from ._ragpt.vilt import ViltModel
 

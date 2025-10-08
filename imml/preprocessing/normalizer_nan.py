@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 import numpy as np
 from sklearn.preprocessing import Normalizer
 from sklearn.utils import check_array

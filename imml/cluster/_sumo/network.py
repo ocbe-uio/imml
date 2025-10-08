@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from .utils import check_matrix_symmetry
 import numpy as np
 

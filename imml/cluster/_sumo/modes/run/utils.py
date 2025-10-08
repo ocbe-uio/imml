@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from math import sqrt
 import numpy as np
 

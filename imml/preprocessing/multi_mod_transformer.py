@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from copy import deepcopy
 from sklearn.base import BaseEstimator, TransformerMixin
 

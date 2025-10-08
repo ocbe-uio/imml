@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 try:
     import rpy2.robjects as ro
     from rpy2.robjects.packages import importr

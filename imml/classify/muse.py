@@ -1,3 +1,5 @@
+# License: BSD-3-Clause
+
 from ._muse import FFNEncoder, RNNEncoder, TextEncoder, MML
 
 try:
