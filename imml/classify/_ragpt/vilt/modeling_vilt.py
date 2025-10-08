@@ -1,5 +1,3 @@
-# License: BSD-3-Clause
-
 # coding=utf-8
 # Copyright 2022 NAVER AI Labs and The HuggingFace Inc. team. All rights reserved.
 #
