@@ -32,7 +32,7 @@ def test_deepmodule_not_installed(sample_data):
     with patch.dict(sys.modules, {"torch": None}):
         import imml.cluster.integrao as module_mock
         importlib.reload(module_mock)
-        with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             estimator(Xs=sample_data[1])
     importlib.reload(module_mock)
 
