@@ -7,12 +7,12 @@ task and check whether additional modules or dependencies are required.
 
 .. list-table::
    :header-rows: 1
-   :widths: 5 5 5 5 5
+   :widths: 10 5 70 5 10
    :align: center
 
    * - Task
      - Algorithm
-     - Supported input modalities
+     - Input modalities
      - Module
      - Extra dependencies
    * - Classification
@@ -156,11 +156,14 @@ task and check whether additional modules or dependencies are required.
      -
      -
 
-How to install an additional module and extra dependencies
+How to install an additional module
 ----------------------------------------------------------
 
 See our `page <https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies>`__ on
 how to install a module.
+
+How to install extra dependencies
+----------------------------------------------------------
 
 Extra dependencies when using "matlab" module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
