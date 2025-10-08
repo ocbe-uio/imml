@@ -20,6 +20,7 @@ def sample_data():
     observed_mod_indicator = observed_mod_indicator.values
     return Xs_pandas, Xs_numpy, observed_mod_indicator
 
+
 def test_invalid_params():
     with pytest.raises(ValueError, match="Invalid Xs."):
         convert_dataset_format(Xs="invalid_input")

@@ -1,28 +1,18 @@
-import importlib
-import sys
-from unittest.mock import patch
 import pytest
+rpy2 = pytest.importorskip("rpy2")
 import numpy as np
 import pandas as pd
+from rpy2.robjects.packages import importr, PackageNotInstalledError
+rbase = importr("base")
 
 from imml.ampute import Amputer
 from imml.decomposition import JNMF
 
 try:
-    from rpy2.robjects.packages import importr, PackageNotInstalledError
-    rmodule_installed = True
-except ImportError:
-    rmodule_installed = False
-    rmodule_error = "Module 'r' needs to be installed to use r engine."
-
-nnTensor_installed = False
-if rmodule_installed:
-    rbase = importr("base")
-    try:
-        nnTensor = importr("nnTensor")
-        nnTensor_installed = True
-    except PackageNotInstalledError:
-        pass
+    nnTensor = importr("nnTensor")
+    nnTensor_installed = True
+except PackageNotInstalledError:
+    nnTensor_installed = False
 estimator = JNMF
 
 
@@ -35,24 +25,20 @@ def sample_data():
     return Xs_pandas, Xs_numpy
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_rmodule_installed():
-    if rmodule_installed:
-        if nnTensor_installed:
+    if nnTensor_installed:
+        estimator(engine="r")
+    else:
+        with pytest.raises(ImportError, match="nnTensor needs to be installed in R to use r engine."):
             estimator(engine="r")
-        else:
-            with pytest.raises(ImportError, match="nnTensor needs to be installed in R to use r engine."):
-                estimator(engine="r")
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_random_state(sample_data):
     estimator()
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_default_params(sample_data):
     transformer = estimator(random_state=42)
@@ -65,7 +51,6 @@ def test_default_params(sample_data):
         assert hasattr(transformer, 'relchange_')
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_fit(sample_data):
     n_components = 5
@@ -79,7 +64,6 @@ def test_fit(sample_data):
         assert hasattr(transformer, 'relchange_')
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_transform(sample_data):
     n_components = 5
@@ -93,7 +77,6 @@ def test_transform(sample_data):
         assert transformer.H_[0].shape == (Xs[0].shape[1], n_components)
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_missing_values_handling(sample_data):
     n_components = 5
@@ -108,7 +91,6 @@ def test_missing_values_handling(sample_data):
         assert transformer.H_[0].shape == (Xs[0].shape[1], n_components)
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_invalid_params(sample_data):
     with pytest.raises(ValueError, match="Invalid engine"):

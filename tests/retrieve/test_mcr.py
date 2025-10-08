@@ -1,3 +1,6 @@
+import pytest
+torch = pytest.importorskip("torch")
+transformers = pytest.importorskip("transformers")
 import importlib
 import os
 import shutil
@@ -8,15 +11,6 @@ import pytest
 import pandas as pd
 
 from imml.retrieve import MCR
-
-try:
-    import torch
-    import transformers
-    from transformers import AutoModel, AutoProcessor, BertTokenizer
-    from imml.classify._ragpt.vilt import ViltModel, ViltImageProcessor
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
 
 estimator = MCR
 
@@ -31,20 +25,15 @@ def sample_data():
 
 
 def test_deepmodule_not_installed(sample_data):
-    if deepmodule_installed:
-        estimator(modalities=["image", "text"])
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.retrieve.mcr as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                estimator(modalities=["image", "text"])
+    estimator(modalities=["image", "text"])
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.retrieve.mcr as module_mock
         importlib.reload(module_mock)
-    else:
-        with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             estimator(modalities=["image", "text"])
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_default_params(sample_data):
     Xs, y = sample_data
     model = estimator(modalities=["image", "text"], n_neighbors=1)
@@ -58,7 +47,6 @@ def test_default_params(sample_data):
     assert "text" in predictions
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params(sample_data):
     with pytest.raises(ValueError, match="Invalid modalities."):
         estimator(modalities=None)
@@ -112,7 +100,6 @@ def test_invalid_params(sample_data):
         estimator(modalities=["image", "text"], n_neighbors=1).fit_predict(Xs, y, n_neighbors=-1)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_fit_methods(sample_data, tmp_path):
     Xs, y = sample_data
     model = estimator(modalities=["image", "text"], n_neighbors=1)
@@ -142,7 +129,6 @@ def test_fit_methods(sample_data, tmp_path):
     assert not os.path.exists(tmp_path)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_missing_values_handling(sample_data, tmp_path):
     Xs, y = sample_data
     model = estimator(modalities=["image", "text"], n_neighbors=1, generate_cap=True, prompt_path=str(tmp_path))

@@ -1,24 +1,19 @@
+import pytest
+torch = pytest.importorskip("torch")
+L = pytest.importorskip("lightning")
 import importlib
 import sys
 from unittest.mock import patch
-import pytest
 import numpy as np
 import pandas as pd
+from lightning import Trainer
+from torch.utils.data import DataLoader
 
 from imml.ampute import Amputer
 from imml.cluster import IntegrAO
 from imml.load import IntegrAODataset
 
-try:
-    import torch
-    from torch import nn
-    from lightning import Trainer
-    import lightning as L
-    L.seed_everything(42)
-    from torch.utils.data import DataLoader
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
+L.seed_everything(42)
 estimator = IntegrAO
 
 
@@ -28,28 +23,21 @@ def sample_data():
     X1, X2, X3 = X[:, :3], X[:, 3:5], X[:, 5:]
     Xs_pandas = [pd.DataFrame(X1), pd.DataFrame(X2), pd.DataFrame(X3)]
     Xs_numpy = [X1, X2, X3]
-    if deepmodule_installed:
-        Xs_torch = [torch.from_numpy(X.astype(np.float32)) for X in Xs_numpy]
-        return Xs_torch, Xs_pandas, Xs_numpy
-    return Xs_pandas, Xs_numpy
+    Xs_torch = [torch.from_numpy(X.astype(np.float32)) for X in Xs_numpy]
+    return Xs_torch, Xs_pandas, Xs_numpy
 
 
 def test_deepmodule_not_installed(sample_data):
-    if deepmodule_installed:
-        estimator(Xs=sample_data[1])
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.cluster.integrao as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                estimator(Xs=sample_data[1])
+    estimator(Xs=sample_data[1])
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.cluster.integrao as module_mock
         importlib.reload(module_mock)
-    else:
         with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-            estimator(Xs=sample_data[0])
+            estimator(Xs=sample_data[1])
+    importlib.reload(module_mock)
 
 
 @pytest.mark.skipif(sys.platform.startswith("darwin"), reason="Error with torch_geometric and MPS")
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_default_params(sample_data):
     n_clusters = 3
     for Xs in sample_data:
@@ -71,7 +59,6 @@ def test_default_params(sample_data):
         assert len(model.embedding_) == n_samples
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params(sample_data):
     with pytest.raises(ValueError, match="Invalid n_clusters."):
         estimator(n_clusters='invalid', Xs=sample_data[0])
@@ -88,7 +75,6 @@ def test_invalid_params(sample_data):
 
 
 @pytest.mark.skipif(sys.platform.startswith("darwin"), reason="Error with torch_geometric and MPS")
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_missing_values_handling(sample_data):
     n_clusters = 2
     for Xs in sample_data[1:]:

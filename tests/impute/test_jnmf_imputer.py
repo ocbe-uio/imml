@@ -1,23 +1,18 @@
 import pytest
+rpy2 = pytest.importorskip("rpy2")
 import numpy as np
 import pandas as pd
+from rpy2.robjects.packages import importr, PackageNotInstalledError
+rbase = importr("base")
+
 from imml.impute import JNMFImputer
 
 try:
-    from rpy2.robjects.packages import importr, PackageNotInstalledError
-    rmodule_installed = True
-except ImportError:
-    rmodule_installed = False
-    rmodule_error = "Module 'r' needs to be installed to use r engine."
-
-nnTensor_installed = False
-if rmodule_installed:
-    rbase = importr("base")
-    try:
-        nnTensor = importr("nnTensor")
-        nnTensor_installed = True
-    except PackageNotInstalledError:
-        pass
+    nnTensor = importr("nnTensor")
+    nnTensor_installed = True
+except PackageNotInstalledError:
+    nnTensor_installed = False
+estimator = JNMFImputer
 
 
 @pytest.fixture
@@ -31,7 +26,6 @@ def sample_data():
     return Xs_pandas, Xs_numpy
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_default_params(sample_data):
     transformer = JNMFImputer(random_state=42)
@@ -41,7 +35,6 @@ def test_default_params(sample_data):
         assert transformed_Xs[0].shape == Xs[0].shape
 
 
-@pytest.mark.skipif(not rmodule_installed, reason="Module 'r' needs to be installed to use r engine.")
 @pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_transform(sample_data):
     transformer = JNMFImputer(random_state=42)

@@ -94,7 +94,7 @@ task and check whether additional modules or dependencies are required.
      - OSLFIMVC
      - Numeric
      - matlab
-     - octave, octave-control, octave-statistics
+     - octave, octave-statistics
    * - Clustering
      - PIMVC
      - Numeric

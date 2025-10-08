@@ -562,17 +562,17 @@ modify the internal functions. For instance, we can track loss and compute evalu
 
  .. code-block:: none
 
-    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:08<00:00,  0.12it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:30<00:00,  0.03it/s]    Epoch 0: 100%|██████████| 1/1 [00:30<00:00,  0.03it/s]
+    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:32<00:00,  0.03it/s]    Epoch 0: 100%|██████████| 1/1 [00:32<00:00,  0.03it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0: 100%|██████████| 1/1 [00:09<00:00,  0.11it/s]
-                                                                              Epoch 0: 100%|██████████| 1/1 [00:40<00:00,  0.02it/s]    Epoch 0: 100%|██████████| 1/1 [00:40<00:00,  0.02it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:30<00:00,  0.03it/s]    Epoch 1: 100%|██████████| 1/1 [00:30<00:00,  0.03it/s]
+                                                                              Epoch 0: 100%|██████████| 1/1 [00:42<00:00,  0.02it/s]    Epoch 0: 100%|██████████| 1/1 [00:42<00:00,  0.02it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:34<00:00,  0.03it/s]    Epoch 1: 100%|██████████| 1/1 [00:34<00:00,  0.03it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:09<00:00,  0.11it/s]
-                                                                              Epoch 1: 100%|██████████| 1/1 [00:39<00:00,  0.03it/s]    Epoch 1: 100%|██████████| 1/1 [00:39<00:00,  0.03it/s]    Epoch 1: 100%|██████████| 1/1 [00:39<00:00,  0.03it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:08<00:00,  0.12it/s]
+                                                                              Epoch 1: 100%|██████████| 1/1 [00:43<00:00,  0.02it/s]    Epoch 1: 100%|██████████| 1/1 [00:43<00:00,  0.02it/s]    Epoch 1: 100%|██████████| 1/1 [00:43<00:00,  0.02it/s]
 
 
 
@@ -632,7 +632,7 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:08<00:00,  0.12it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:08<00:00,  0.12it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]
 
 
 
@@ -689,7 +689,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (11 minutes 36.797 seconds)
+   **Total running time of the script:** (13 minutes 41.655 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:

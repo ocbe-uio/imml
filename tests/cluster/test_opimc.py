@@ -1,18 +1,14 @@
+import pytest
+oct2py = pytest.importorskip("oct2py")
 import importlib
 import sys
 from unittest.mock import patch
-import pytest
 import numpy as np
 import pandas as pd
 
 from imml.ampute import Amputer
 from imml.cluster import OPIMC
 
-try:
-    import oct2py
-    matlabmodule_installed = True
-except ImportError:
-    matlabmodule_installed = False
 estimator = OPIMC
 
 
@@ -25,20 +21,15 @@ def sample_data():
     return Xs_pandas, Xs_numpy
 
 def test_matlab_not_installed():
-    if matlabmodule_installed:
-        estimator(engine="matlab")
-        with patch.dict(sys.modules, {"oct2py": None}):
-            import imml.cluster.opimc as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'matlab' needs to be installed."):
-                estimator(engine="matlab")
+    estimator(engine="matlab")
+    with patch.dict(sys.modules, {"oct2py": None}):
+        import imml.cluster.opimc as module_mock
         importlib.reload(module_mock)
-    else:
         with pytest.raises(ImportError, match="Module 'matlab' needs to be installed."):
             estimator(engine="matlab")
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not matlabmodule_installed, reason="Module 'matlab' needs to be installed.")
 def test_default_params(sample_data):
     for Xs in sample_data:
         model = estimator(random_state=42)
@@ -61,7 +52,6 @@ def test_invalid_params(sample_data):
         estimator(n_clusters=0)
 
 
-@pytest.mark.skipif(not matlabmodule_installed, reason="Module 'matlab' needs to be installed.")
 def test_fit_predict(sample_data):
     n_clusters = 3
     for Xs in sample_data:
@@ -76,7 +66,6 @@ def test_fit_predict(sample_data):
         assert model.embedding_.shape == (n_samples, n_clusters)
 
 
-@pytest.mark.skipif(not matlabmodule_installed, reason="Module 'matlab' needs to be installed.")
 def test_missing_values_handling(sample_data):
     n_clusters = 2
     for Xs in sample_data:

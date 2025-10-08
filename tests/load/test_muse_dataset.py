@@ -1,53 +1,35 @@
+import pytest
+torch = pytest.importorskip("torch")
 import importlib
 import sys
 from unittest.mock import patch
-
 import numpy as np
-import pytest
-from imml.load import MUSEDataset
 
-try:
-    import torch
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
+from imml.load import MUSEDataset
 
 
 @pytest.fixture
 def sample_data():
     n_samples = 5
     n_mods = 3
-    
-    if deepmodule_installed:
-        Xs = [torch.rand((n_samples, 10)) for _ in range(n_mods)]
-        y = torch.randint(0, 2, (n_samples,), dtype=torch.float)
-        observed_mod_indicator = torch.ones((n_samples, n_mods), dtype=torch.bool)
-        y_indicator = torch.ones((n_samples,), dtype=torch.bool)
-    else:
-        Xs = [np.random.random((n_samples, 10)) for _ in range(n_mods)]
-        y = np.random.randint(0, 2, n_samples).astype(np.float32)
-        observed_mod_indicator = np.ones((n_samples, n_mods), dtype=bool)
-        y_indicator = np.ones((n_samples,), dtype=bool)
-
+    Xs = [torch.rand((n_samples, 10)) for _ in range(n_mods)]
+    y = torch.randint(0, 2, (n_samples,), dtype=torch.float)
+    observed_mod_indicator = torch.ones((n_samples, n_mods), dtype=torch.bool)
+    y_indicator = torch.ones((n_samples,), dtype=torch.bool)
     return Xs, y, observed_mod_indicator, y_indicator
 
 
 def test_deepmodule_not_installed(sample_data):
     Xs, y, observed_mod_indicator, y_indicator = sample_data
-    if deepmodule_installed:
-        MUSEDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator, y_indicator=y_indicator)
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.load.muse_dataset as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                MUSEDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator, y_indicator=y_indicator)
+    MUSEDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator, y_indicator=y_indicator)
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.load.muse_dataset as module_mock
         importlib.reload(module_mock)
-    else:
-        with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             MUSEDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator, y_indicator=y_indicator)
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_default_params(sample_data):
     Xs, y, observed_mod_indicator, y_indicator = sample_data
     dataset = MUSEDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator, y_indicator=y_indicator)
@@ -65,7 +47,6 @@ def test_default_params(sample_data):
     assert isinstance(sample[3], torch.Tensor)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params():
     n_samples = 5
     Xs = [torch.rand((n_samples, 10)) for _ in range(3)]
@@ -100,7 +81,6 @@ def test_invalid_params():
                    y_indicator=torch.ones((n_samples+1,)))
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_getitem(sample_data):
     Xs, y, observed_mod_indicator, y_indicator = sample_data
     dataset = MUSEDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator, y_indicator=y_indicator)
@@ -124,7 +104,6 @@ def test_getitem(sample_data):
         assert y_indicator_idx.item() == y_indicator[i].item()
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_missing_values(sample_data):
     Xs, y, observed_mod_indicator, y_indicator = sample_data
     observed_mod_indicator[0, 0] = False

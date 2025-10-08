@@ -1,22 +1,16 @@
+import pytest
+torch = pytest.importorskip("torch")
+transformers = pytest.importorskip("transformers")
+from transformers import BertTokenizer
 import importlib
 import os
 import sys
-
 import numpy as np
 import pandas as pd
-import pytest
 from unittest.mock import patch, MagicMock
 from PIL import Image
 
 from imml.load import RAGPTDataset, RAGPTCollator
-
-try:
-    import torch
-    from transformers import BertTokenizer
-    from imml.classify._ragpt.vilt import ViltImageProcessor
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
 
 
 @pytest.fixture
@@ -57,22 +51,17 @@ def sample_database(tmp_path):
 
 def test_deepmodule_not_installed(sample_database):
     database, _ = sample_database
-    if deepmodule_installed:
-        RAGPTDataset(database=database)
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.load.ragpt_dataset as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                RAGPTDataset(database=database)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                RAGPTCollator()
+    RAGPTDataset(database=database)
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.load.ragpt_dataset as module_mock
         importlib.reload(module_mock)
-    else:
-        with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             RAGPTDataset(database=database)
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
+            RAGPTCollator()
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 @patch('imml.load.ragpt_dataset.Image.open')
 def test_default_params(mock_image_open, sample_database):
     mock_img = MagicMock()
@@ -94,7 +83,6 @@ def test_default_params(mock_image_open, sample_database):
     assert 'observed_image' in sample
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params():
     with pytest.raises(ValueError, match="Invalid database."):
         RAGPTDataset(database="not_a_dataframe")
@@ -116,7 +104,6 @@ def test_invalid_params():
         RAGPTCollator(max_text_len=None)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 @patch('imml.load.ragpt_dataset.Image.open')
 @patch('imml.load.ragpt_dataset.np.load')
 def test_getitem_with_both_modalities(mock_np_load, mock_image_open, sample_database):
@@ -133,7 +120,6 @@ def test_getitem_with_both_modalities(mock_np_load, mock_image_open, sample_data
     assert len(sample['r_i_list']) > 0
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 @patch('imml.load.ragpt_dataset.Image.open')
 @patch('imml.load.ragpt_dataset.np.load')
 def test_getitem_with_missing_text(mock_np_load, mock_image_open, sample_database):
@@ -153,7 +139,6 @@ def test_getitem_with_missing_text(mock_np_load, mock_image_open, sample_databas
     assert len(sample['r_i_list']) > 0
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 @patch('imml.load.ragpt_dataset.Image.open')
 @patch('imml.load.ragpt_dataset.np.load')
 def test_getitem_with_missing_image(mock_np_load, mock_image_open, sample_database):
@@ -173,7 +158,6 @@ def test_getitem_with_missing_image(mock_np_load, mock_image_open, sample_databa
     assert len(sample['r_i_list']) > 0
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 @patch('imml.load.ragpt_dataset.Image.open')
 def test_getitem_with_both_modalities_missing(mock_image_open, sample_database):
     mock_img = MagicMock()
@@ -189,7 +173,6 @@ def test_getitem_with_both_modalities_missing(mock_image_open, sample_database):
         dataset[0]
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 @patch('transformers.BertTokenizer.from_pretrained')
 @patch('imml.classify._ragpt.vilt.ViltImageProcessor.from_pretrained')
 def test_collator_default_params(mock_vilt_processor, mock_bert_tokenizer):
@@ -201,7 +184,6 @@ def test_collator_default_params(mock_vilt_processor, mock_bert_tokenizer):
     assert hasattr(collator, 'image_processor')
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_collator_invalid_params():
     with pytest.raises(ValueError, match="Invalid tokenizer."):
         RAGPTCollator(tokenizer="not_a_tokenizer")
@@ -211,7 +193,6 @@ def test_collator_invalid_params():
         RAGPTCollator(max_text_len=-1)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 @patch('transformers.BertTokenizer.from_pretrained')
 @patch('imml.classify._ragpt.vilt.ViltImageProcessor.from_pretrained')
 @patch('imml.classify._ragpt.resize_image')

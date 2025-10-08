@@ -464,7 +464,7 @@ machine learning models in the presence of incomplete data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.530 seconds)
+   **Total running time of the script:** (0 minutes 4.525 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_generate_missing_modalities.py:

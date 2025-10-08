@@ -1,27 +1,21 @@
+import pytest
+torch = pytest.importorskip("torch")
+L = pytest.importorskip("lightning")
 import importlib
 import sys
 from unittest.mock import patch
-import pytest
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import FunctionTransformer
+from torch.utils.data import DataLoader
+from lightning import Trainer
 
 from imml.ampute import Amputer
 from imml.preprocessing import MultiModTransformer
 from imml.cluster import MRGCN
 from imml.load import MRGCNDataset
 
-try:
-    import torch
-    from torch import nn
-    import lightning.pytorch as pl
-    from torch.nn import functional as F
-    from torch.utils.data import DataLoader
-    from lightning import Trainer
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
 estimator = MRGCN
 
 
@@ -30,27 +24,20 @@ def sample_data():
     X = np.random.default_rng(42).random((25, 10))
     X1, X2, X3 = X[:, :3], X[:, 3:5], X[:, 5:]
     Xs_numpy = [X1, X2, X3]
-    if deepmodule_installed:
-        Xs_torch = [torch.from_numpy(X.astype(np.float32)) for X in Xs_numpy]
-        return Xs_torch, Xs_numpy
-    return Xs_numpy
+    Xs_torch = [torch.from_numpy(X.astype(np.float32)) for X in Xs_numpy]
+    return Xs_torch, Xs_numpy
 
 
 def test_deepmodule_not_installed(sample_data):
-    if deepmodule_installed:
-        estimator(Xs=sample_data[0])
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.cluster.mrgcn as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                estimator(Xs=sample_data[0])
+    estimator(Xs=sample_data[0])
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.cluster.mrgcn as module_mock
         importlib.reload(module_mock)
-    else:
-        with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-            estimator()
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
+            estimator(Xs=sample_data[0])
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_default_params(sample_data):
     n_clusters = 3
     Xs = sample_data[0]
@@ -72,7 +59,6 @@ def test_default_params(sample_data):
     assert len(embedding_) == n_samples
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params(sample_data):
     with pytest.raises(ValueError, match="Invalid n_clusters."):
         estimator(n_clusters='invalid', Xs=sample_data[0])
@@ -96,7 +82,6 @@ def test_invalid_params(sample_data):
         estimator(reg3="invalid", Xs=sample_data[0])
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_missing_values_handling(sample_data):
     n_clusters = 2
     Xs = sample_data[1]

@@ -1,50 +1,36 @@
+import pytest
+torch = pytest.importorskip("torch")
+transformers = pytest.importorskip("transformers")
+L = pytest.importorskip("lightning")
 import importlib
 import sys
 from unittest.mock import patch
 
-import pytest
 from imml.classify import M3Care
-
-try:
-    import torch
-    import transformers
-    from torch import nn
-    import lightning as L
-    from torch.utils.data import DataLoader
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
 
 estimator = M3Care
 
 
 @pytest.fixture
 def sample_data():
-    if deepmodule_installed:
-        batch_size = 2
-        n_modalities = 3
-        Xs = [torch.rand((batch_size, 10)) for _ in range(n_modalities)]
-        y = torch.tensor([0, 1], dtype=torch.float)
-        observed_mod_indicator = torch.ones((batch_size, n_modalities), dtype=torch.bool)
-        return Xs, y, observed_mod_indicator
-    return None
+    batch_size = 2
+    n_modalities = 3
+    Xs = [torch.rand((batch_size, 10)) for _ in range(n_modalities)]
+    y = torch.tensor([0, 1], dtype=torch.float)
+    observed_mod_indicator = torch.ones((batch_size, n_modalities), dtype=torch.bool)
+    return Xs, y, observed_mod_indicator
 
 
 def test_deepmodule_not_installed():
-    if deepmodule_installed:
-        estimator(modalities=["image", "text"])
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.classify.m3care as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                estimator(modalities=["image", "text"])
+    estimator(modalities=["image", "text"])
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.classify.m3care as module_mock
         importlib.reload(module_mock)
-    else:
-        with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             estimator(modalities=["image", "text"])
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_default_params(sample_data):
     model = estimator(modalities=["tabular", "tabular", "tabular"], input_dim=[10, 10, 10])
     assert hasattr(model, 'model')
@@ -57,7 +43,6 @@ def test_default_params(sample_data):
     assert isinstance(loss, torch.Tensor)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params():
     with pytest.raises(ValueError, match="Invalid input_dim."):
         estimator(modalities=["tabular", "tabular"], input_dim="not_a_list")
@@ -103,7 +88,6 @@ def test_invalid_params():
         estimator(modalities=["tabular", "tabular"], vocab="not_a_list")
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_lightning_methods(sample_data):
     model = estimator(modalities=["tabular", "tabular", "tabular"], input_dim=[10, 10, 10])
     loss = model.training_step(sample_data)
@@ -118,7 +102,6 @@ def test_lightning_methods(sample_data):
     assert isinstance(optimizer, torch.optim.Optimizer)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_missing_values_handling(sample_data):
     model = estimator(modalities=["tabular", "tabular", "tabular"], input_dim=[10, 10, 10])
     Xs, y, observed_mod_indicator = sample_data
@@ -129,7 +112,6 @@ def test_missing_values_handling(sample_data):
     assert isinstance(loss, torch.Tensor)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_custom_loss_fn(sample_data):
     model = estimator(modalities=["tabular", "tabular", "tabular"],
                      input_dim=[10, 10, 10],

@@ -1,3 +1,5 @@
+import pytest
+torch = pytest.importorskip("torch")
 import importlib
 import sys
 from unittest.mock import patch
@@ -8,12 +10,6 @@ import pytest
 from imml.cluster import IntegrAO
 from imml.load import IntegrAODataset
 
-try:
-    import torch
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-
 
 @pytest.fixture
 def sample_data():
@@ -21,32 +17,23 @@ def sample_data():
     X1, X2, X3 = X[:, :3], X[:, 3:5], X[:, 5:]
     Xs_pandas = [pd.DataFrame(X1), pd.DataFrame(X2), pd.DataFrame(X3)]
     Xs_numpy = [X1, X2, X3]
-    if deepmodule_installed:
-        Xs_torch = [torch.from_numpy(X.astype(np.float32)) for X in Xs_numpy]
-        return Xs_torch, Xs_pandas, Xs_numpy
-    return Xs_pandas, Xs_numpy
+    Xs_torch = [torch.from_numpy(X.astype(np.float32)) for X in Xs_numpy]
+    return Xs_torch, Xs_pandas, Xs_numpy
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_deepmodule_not_installed(sample_data):
     n_clusters = 3
     Xs = sample_data[0]
-    if deepmodule_installed:
-        model = IntegrAO(Xs=Xs, n_clusters=n_clusters, random_state=42)
-        IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.load.integrao_dataset as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
+    model = IntegrAO(Xs=Xs, n_clusters=n_clusters, random_state=42)
+    IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.load.integrao_dataset as module_mock
         importlib.reload(module_mock)
-    else:
         with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-            model = IntegrAO(Xs=Xs, n_clusters=n_clusters, random_state=42)
             IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_default_params(sample_data):
     n_clusters = 3
     for Xs in sample_data:
@@ -57,7 +44,6 @@ def test_default_params(sample_data):
         assert len(dataset.Xs) == len(Xs)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params(sample_data):
     n_clusters = 3
     model = IntegrAO(Xs=sample_data[0], n_clusters=n_clusters, random_state=42)
@@ -82,7 +68,6 @@ def test_invalid_params(sample_data):
                         neighbor_size=model.neighbor_size, networks="invalid_input")
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_getitem(sample_data):
     n_clusters = 3
     Xs = sample_data[0]

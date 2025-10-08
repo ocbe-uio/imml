@@ -1,51 +1,33 @@
+import pytest
+torch = pytest.importorskip("torch")
 import importlib
 import sys
 from unittest.mock import patch
 
-import numpy as np
-import pytest
-
-try:
-    from imml.load import M3CareDataset
-    import torch
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
+from imml.load import M3CareDataset
 
 
 @pytest.fixture
 def sample_data():
     n_samples = 5
     n_mods = 3
-
-    if deepmodule_installed:
-        Xs = [torch.rand((n_samples, 10)) for _ in range(n_mods)]
-        y = torch.randint(0, 2, (n_samples,), dtype=torch.float)
-        observed_mod_indicator = torch.ones((n_samples, n_mods), dtype=torch.bool)
-    else:
-        Xs = [np.random.random((n_samples, 10)) for _ in range(n_mods)]
-        y = np.random.randint(0, 2, n_samples).astype(np.float32)
-        observed_mod_indicator = np.ones((n_samples, n_mods), dtype=bool)
-
+    Xs = [torch.rand((n_samples, 10)) for _ in range(n_mods)]
+    y = torch.randint(0, 2, (n_samples,), dtype=torch.float)
+    observed_mod_indicator = torch.ones((n_samples, n_mods), dtype=torch.bool)
     return Xs, y, observed_mod_indicator
 
 
 def test_deepmodule_not_installed(sample_data):
     Xs, y, observed_mod_indicator = sample_data
-    if deepmodule_installed:
-        M3CareDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator)
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.load.m3care_dataset as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                M3CareDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator)
+    M3CareDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator)
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.load.m3care_dataset as module_mock
         importlib.reload(module_mock)
-    else:
-        with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             M3CareDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator)
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_default_params(sample_data):
     Xs, y, observed_mod_indicator = sample_data
     dataset = M3CareDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator)
@@ -61,7 +43,6 @@ def test_default_params(sample_data):
     assert isinstance(sample[2], torch.Tensor)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params():
     n_samples = 5
     Xs = [torch.rand((n_samples, 10)) for _ in range(3)]
@@ -90,7 +71,6 @@ def test_invalid_params():
         M3CareDataset(Xs=Xs, y=y, observed_mod_indicator=torch.ones((n_samples, 2)))
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_getitem(sample_data):
     Xs, y, observed_mod_indicator = sample_data
     dataset = M3CareDataset(Xs=Xs, y=y, observed_mod_indicator=observed_mod_indicator)
@@ -111,7 +91,6 @@ def test_getitem(sample_data):
         assert torch.all(observed_mod_indicator_idx == observed_mod_indicator[i])
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_missing_values(sample_data):
     Xs, y, observed_mod_indicator = sample_data
     observed_mod_indicator[0, 0] = False

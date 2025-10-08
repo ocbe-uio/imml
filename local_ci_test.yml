@@ -65,6 +65,7 @@ jobs:
     - name: Test base
       run: |
         uv run pytest --cov=imml \
+               --cov-report=term \
                --cov-report=html:reports/htmlcov-base \
                --cov-report=xml:reports/coverage-base.xml
     - name: Test linux
@@ -72,7 +73,9 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt install libtirpc-dev #needed for rpy2
-        sudo apt install r-base r-base-dev octave octave-control octave-statistics -y
+        sudo apt install r-base r-base-dev -y
+        sudo apt install octave -y
+        sudo apt install octave-control octave-statistics -y
         sudo Rscript -e "install.packages(c('nnTensor', 'SNFtool'))"
     - name: Test windows
       if: runner.os == 'Windows'
@@ -97,12 +100,15 @@ jobs:
                --cov-report=html:reports/htmlcov-r \
                --cov-report=xml:reports/coverage-r.xml
     - name: Test matlab
+      if: runner.os != 'Windows'
       run: |
         uv pip install ".[matlab]"
         uv run pytest --cov=imml \
+               --cov-report=term \
                --cov-report=html:reports/htmlcov-matlab \
                --cov-report=xml:reports/coverage-matlab.xml
     - name: Test deep
+      if: runner.os != 'Windows'
       run: |
         uv pip install ".[deep]"
         uv run pytest --cov=imml \

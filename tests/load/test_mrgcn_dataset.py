@@ -1,42 +1,31 @@
+import pytest
+torch = pytest.importorskip("torch")
 import importlib
 import sys
 from unittest.mock import patch
 import numpy as np
-import pytest
 
 from imml.load import MRGCNDataset
-
-try:
-    import torch
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
 
 
 @pytest.fixture
 def sample_data():
     X = np.random.default_rng(42).random((25, 10))
     Xs = [X[:, :3], X[:, 3:5], X[:, 5:]]
-    if deepmodule_installed:
-        Xs = [torch.from_numpy(X) for X in Xs]
+    Xs = [torch.from_numpy(X) for X in Xs]
     return Xs
 
 
 def test_deepmodule_not_installed(sample_data):
-    if deepmodule_installed:
-        MRGCNDataset(Xs=sample_data)
-        with patch.dict(sys.modules, {"torch": None}):
-            import imml.load.mrgcn_dataset as module_mock
-            importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
-                MRGCNDataset(Xs=sample_data)
+    MRGCNDataset(Xs=sample_data)
+    with patch.dict(sys.modules, {"torch": None}):
+        import imml.load.mrgcn_dataset as module_mock
         importlib.reload(module_mock)
-    else:
-        with pytest.raises(ImportError, match="Module 'Deep' needs to be installed."):
+        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             MRGCNDataset(Xs=sample_data)
+    importlib.reload(module_mock)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_default_params(sample_data):
     dataset = MRGCNDataset(sample_data)
     assert len(dataset) == len(sample_data[0])
@@ -45,21 +34,17 @@ def test_default_params(sample_data):
     assert len(dataset.Xs) == len(sample_data)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_invalid_params():
     with pytest.raises(ValueError, match="Invalid Xs."):
         MRGCNDataset(Xs="invalid_input")
     with pytest.raises(ValueError, match="Invalid Xs."):
         MRGCNDataset(Xs=[])
-    if deepmodule_installed:
-        with pytest.raises(ValueError, match="Invalid Xs."):
-            MRGCNDataset(Xs=[torch.rand((5, 10)), torch.rand((0, 10))])
-    if deepmodule_installed:
-        with pytest.raises(ValueError, match="Invalid Xs."):
-            MRGCNDataset(Xs=[torch.rand((5, 10)), torch.rand((6, 10))])
+    with pytest.raises(ValueError, match="Invalid Xs."):
+        MRGCNDataset(Xs=[torch.rand((5, 10)), torch.rand((0, 10))])
+    with pytest.raises(ValueError, match="Invalid Xs."):
+        MRGCNDataset(Xs=[torch.rand((5, 10)), torch.rand((6, 10))])
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_getitem(sample_data):
     dataset = MRGCNDataset(sample_data)
     sample = dataset[0]
@@ -74,10 +59,8 @@ def test_getitem(sample_data):
         assert len(sample) == len(sample_data)
 
 
-@pytest.mark.skipif(not deepmodule_installed, reason="Module 'Deep' needs to be installed.")
 def test_transform(sample_data):
-    dataset = MRGCNDataset(sample_data,
-                           transform=[lambda x: x for _ in range(len(sample_data))])
+    dataset = MRGCNDataset(sample_data, transform=[lambda x: x for _ in range(len(sample_data))])
     sample = dataset[0]
     assert isinstance(sample, tuple)
     assert len(sample) == len(sample_data)
