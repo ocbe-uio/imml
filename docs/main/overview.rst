@@ -78,7 +78,7 @@ This package provides a user-friendly interface to apply these algorithms to use
 `iMML` was designed to be compatible with widely-used machine learning and data analysis tools, such as
 `Pandas <https://pandas.pydata.org/>`__, `Numpy <https://numpy.org/>`__, `Scikit-learn
 <https://scikit-learn.org/stable/>`__, and
-`Lightning AI <https://lightning.ai/>`__ , hence allowing researchers to **apply machine learning models with
+`Lightning <https://lightning.ai/>`__ , hence allowing researchers to **apply machine learning models with
 minimal programming effort**. Moreover, it can be easily integrated into Scikit-learn pipelines for data
 preprocessing and modeling.
 

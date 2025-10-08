@@ -1,6 +1,7 @@
-import copy
-from typing import List
+# Authors: The imml developers
+# License: BSD-3-Clause
 
+import copy
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
@@ -11,7 +12,7 @@ from ..utils import check_Xs
 class RemoveMods(FunctionTransformer):
     r"""
     A transformer that generates block-wise missingness patterns in complete multi-modal datasets. Apply
-    `FunctionTransformer` (from `Scikit-learn`) with `remove_modalities` as a function.
+    `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_ (from `Scikit-learn`) with `remove_modalities` as a function.
 
     Parameters
     ----------
@@ -22,9 +23,10 @@ class RemoveMods(FunctionTransformer):
     --------
     >>> import numpy as np
     >>> import pandas as pd
-    >>> from imml.preprocessing import DropMod
+    >>> from imml.ampute import RemoveMods
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
-    >>> transformer = DropMod(X_idx = 1)
+    >>> observed_mod_indicator = np.random.default_rng(42).choice(2, size=(len(Xs[0]), len(Xs)))
+    >>> transformer = RemoveMods(observed_mod_indicator = observed_mod_indicator)
     >>> transformer.fit_transform(Xs)
     """
 
@@ -33,7 +35,7 @@ class RemoveMods(FunctionTransformer):
         super().__init__(remove_mods, kw_args={"observed_mod_indicator": self.observed_mod_indicator})
 
 
-def remove_mods(Xs: List, observed_mod_indicator):
+def remove_mods(Xs: list, observed_mod_indicator):
     r"""
     A function that generates block-wise missingness patterns in complete multi-modal datasets.
 
@@ -47,16 +49,17 @@ def remove_mods(Xs: List, observed_mod_indicator):
 
     Returns
     -------
-    transformed_Xs : array-like, shape (n_samples, n_features)
-        The transformed dataset.
+    transformed_X : list of array-likes objects (n_samples, n_features_i)
+        The transformed multi-modal dataset.
 
     Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
-    >>> from imml.preprocessing import concatenate_mods
+    >>> from imml.ampute import remove_mods
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
-    >>> concatenate_mods(Xs=Xs)
+    >>> observed_mod_indicator = np.random.default_rng(42).choice(2, size=(len(Xs[0]), len(Xs)))
+    >>> remove_mods(Xs=Xs, observed_mod_indicator = observed_mod_indicator)
     """
 
     Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")

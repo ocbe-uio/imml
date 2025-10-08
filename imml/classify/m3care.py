@@ -1,5 +1,4 @@
 import os
-from typing import List
 import numpy as np
 
 from ._m3care import NMT_tran, MM_transformer_encoder, init_weights, PositionalEncoding, clones, \
@@ -30,7 +29,7 @@ class M3Care(LightningModuleBase):
     It supports heterogeneous input types (e.g., tabular, text, vision).
 
     This class provides training, validation, testing, and prediction logic compatible with the
-    `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+    `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
 
     Parameters
     ----------
@@ -87,9 +86,9 @@ class M3Care(LightningModuleBase):
     >>> trainer.predict(estimator, train_dataloader)
     """
 
-    def __init__(self, input_dim: List = None, hidden_dim: int = 128, embed_size: int = 128, modalities: List = None,
+    def __init__(self, input_dim: list = None, hidden_dim: int = 128, embed_size: int = 128, modalities: list = None,
                  vocab: list = None, learning_rate: float = 1e-4, weight_decay: float = 1e-4, output_dim: int = 1,
-                 loss_fn: callable = None, keep_prob: float = 0.5, extractors: List = None):
+                 loss_fn: callable = None, keep_prob: float = 0.5, extractors: list = None):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
@@ -149,7 +148,7 @@ class M3Care(LightningModuleBase):
 
     def training_step(self, batch, batch_idx=None):
         r"""
-        Method required for training using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator = batch
         y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
@@ -159,7 +158,7 @@ class M3Care(LightningModuleBase):
 
     def validation_step(self, batch, batch_idx=None):
         r"""
-        Method required for validating using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for validating using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator = batch
         y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
@@ -169,7 +168,7 @@ class M3Care(LightningModuleBase):
 
     def test_step(self, batch, batch_idx=None):
         r"""
-        Method required for testing using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for testing using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator = batch
         y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
@@ -179,7 +178,7 @@ class M3Care(LightningModuleBase):
 
     def predict_step(self, batch, batch_idx=None):
         r"""
-        Method required for predicting using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for predicting using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator = batch
         y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
@@ -189,15 +188,15 @@ class M3Care(LightningModuleBase):
 
     def configure_optimizers(self):
         r"""
-        Method required for training using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         return optim.Adam(self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay)
 
 
 class M3CareModule(nnModuleBase):
 
-    def __init__(self, input_dim: List = None, hidden_dim: int = 128, embed_size: int = 128, modalities: List = None,
-                 vocab = None, output_dim: int =1, keep_prob: float = 1, extractors: List = None):
+    def __init__(self, input_dim: list = None, hidden_dim: int = 128, embed_size: int = 128, modalities: list = None,
+                 vocab = None, output_dim: int =1, keep_prob: float = 1, extractors: list = None):
 
         super().__init__()
 

@@ -8,7 +8,7 @@ from ..explore import get_samples
 
 class DropMod(FunctionTransformer):
     r"""
-    A transformer that drops a specified modality from a multi-modal dataset. Apply `FunctionTransformer`
+    A transformer that drops a specified modality from a multi-modal dataset. Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_
     (from `Scikit-learn`) with `drop_mod` as a function.
 
     Parameters
@@ -33,7 +33,7 @@ class DropMod(FunctionTransformer):
 
 class ConcatenateMods(FunctionTransformer):
     r"""
-    A transformer that concatenates all modalities from a multi-modal dataset. Apply `FunctionTransformer`
+    A transformer that concatenates all modalities from a multi-modal dataset. Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_
     (from `Scikit-learn`) with `concatenate_mods` as a function.
 
     Example
@@ -52,7 +52,7 @@ class ConcatenateMods(FunctionTransformer):
 
 class SingleMod(FunctionTransformer):
     r"""
-    Transformer that selects a single modality from multi-modal data. Apply `FunctionTransformer` (from `Scikit-learn`)
+    Transformer that selects a single modality from multi-modal data. Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_ (from `Scikit-learn`)
     with `single_mod` as a function.
 
     Parameters
@@ -78,7 +78,7 @@ class SingleMod(FunctionTransformer):
 class AddMissingMods(FunctionTransformer):
     r"""
     Transformer to add missing samples in each modality, in a way that all the modalities will have the same samples.
-     Apply `FunctionTransformer` (from `Scikit-learn`) with `add_missing_mods` as a function.
+     Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_ (from `Scikit-learn`) with `add_missing_mods` as a function.
 
     This transformer is applied on individual modalities, so for applying in a multi-modal dataset, we recommend
     to use it with `MultiModTransformer`.
@@ -109,7 +109,7 @@ class AddMissingMods(FunctionTransformer):
 class SortData(FunctionTransformer):
     r"""
     Transformer that establish and assess the order of the incomplete multi-modal dataset. Apply
-    `FunctionTransformer` (from `Scikit-learn`) with sort_data as a function.
+    `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_ (from `Scikit-learn`) with sort_data as a function.
 
     Example
     --------
@@ -175,7 +175,7 @@ def drop_mod(Xs, X_idx : int = 0):
 
     Returns
     -------
-    transformed_Xs : array-like, shape (n_samples, n_features)
+    transformed_X : list of array-likes objects (n_samples, n_features_i)
         The transformed multi-modal dataset.
 
     Example
@@ -241,7 +241,7 @@ def add_missing_mods(Xs, samples):
 
     Returns
     -------
-    transformed_Xs : array-like, shape (n_samples, n_features)
+    transformed_X : list of array-likes objects (n_samples, n_features_i)
         The transformed multi-modal dataset.
 
     Example

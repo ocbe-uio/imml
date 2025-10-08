@@ -25,7 +25,7 @@ class MRGCN(DLBaseeModule):
     Incomplete samples should be filled with 0.
 
     This class provides training, validation, testing, and prediction logic compatible with the
-    `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+    `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
 
     Parameters
     ----------
@@ -145,14 +145,14 @@ class MRGCN(DLBaseeModule):
 
     def configure_optimizers(self):
         r"""
-        Method required for training using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         return torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.learning_rate)
 
 
     def training_step(self, batch, batch_idx=None):
         r"""
-        Method required for training using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         z = self._embedding(batch=batch)
         loss_x = 0
@@ -184,21 +184,21 @@ class MRGCN(DLBaseeModule):
 
     def validation_step(self, batch, batch_idx=None):
         r"""
-        Method required for validating using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for validating using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         return self.training_step(batch, batch_idx=None)
 
 
     def test_step(self, batch, batch_idx=None):
         r"""
-        Method required for testing using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for testing using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         return self.training_step(batch, batch_idx=None)
 
 
     def predict_step(self, batch, batch_idx=None):
         r"""
-        Method required for predicting using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for predicting using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         z = self._embedding(batch=batch)
         z = z.detach().cpu().numpy()
@@ -208,7 +208,7 @@ class MRGCN(DLBaseeModule):
 
     def on_fit_end(self):
         r"""
-        Method required for training using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         z = self._embedding(batch=self.data)
         z = z.detach().cpu().numpy()

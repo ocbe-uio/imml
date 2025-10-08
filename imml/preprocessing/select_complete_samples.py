@@ -6,7 +6,7 @@ from ..utils import check_Xs
 
 class SelectCompleteSamples(FunctionTransformer):
     r"""
-    Remove incomplete samples from a multi-modal dataset. Apply `FunctionTransformer` (from `Scikit-learn`)
+    Remove incomplete samples from a multi-modal dataset. Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_ (from `Scikit-learn`)
     with `select_complete_samples` as a function.
 
     Example

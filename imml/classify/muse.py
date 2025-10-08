@@ -1,4 +1,3 @@
-from typing import List
 from ._muse import FFNEncoder, RNNEncoder, TextEncoder, MML
 
 try:
@@ -17,7 +16,7 @@ nnModuleBase = nn.Module if deepmodule_installed else object
 class MUSE(LightningModuleBase):
     r"""
 
-    Mutual-consistent graph contrastive learning (MUSE). [#musepaper]_ [#musecode]_
+    MUtual-conSistEnt graph contrastive learning (MUSE). [#musepaper]_ [#musecode]_
 
     MUSE is a multimodal representation learning framework designed to handle missing modalities and partially
     labeled data. It uses a bipartite graph between samples and modalities to support arbitrary missingness patterns
@@ -25,7 +24,7 @@ class MUSE(LightningModuleBase):
     features.
 
     This class provides training, validation, testing, and prediction logic compatible with the
-    `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+    `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
 
     Parameters
     ----------
@@ -85,9 +84,9 @@ class MUSE(LightningModuleBase):
     >>> trainer.predict(estimator, train_dataloader)
     """
 
-    def __init__(self, input_dim: List = None, hidden_dim: int = 128, modalities: List = None,
+    def __init__(self, input_dim: list = None, hidden_dim: int = 128, modalities: list = None,
                  tokenizer=None, learning_rate: float = 2e-4, weight_decay: float = 0., output_dim: int = 1,
-                 extractors: List = None, gnn_layers: int = 2, gnn_norm: str = None,
+                 extractors: list = None, gnn_layers: int = 2, gnn_norm: str = None,
                  code_pretrained_embedding: bool = True, bert_type: str = "prajjwal1/bert-tiny", dropout: float = 0.25):
 
         if not deepmodule_installed:
@@ -147,7 +146,7 @@ class MUSE(LightningModuleBase):
 
     def training_step(self, batch, batch_idx=None):
         r"""
-        Method required for training using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator, y_indicator = batch
         loss = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator, y=y, y_indicator=y_indicator)
@@ -156,7 +155,7 @@ class MUSE(LightningModuleBase):
 
     def validation_step(self, batch, batch_idx=None):
         r"""
-        Method required for validating using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for validating using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator, y_indicator = batch
         loss = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator, y=y, y_indicator=y_indicator)
@@ -165,7 +164,7 @@ class MUSE(LightningModuleBase):
 
     def test_step(self, batch, batch_idx=None):
         r"""
-        Method required for testing using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for testing using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator, y_indicator = batch
         loss = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator, y=y, y_indicator=y_indicator)
@@ -174,7 +173,7 @@ class MUSE(LightningModuleBase):
 
     def predict_step(self, batch, batch_idx=None):
         r"""
-        Method required for predicting using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for predicting using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator, y_indicator = batch
         pred = self.model.predict(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
@@ -183,14 +182,14 @@ class MUSE(LightningModuleBase):
 
     def configure_optimizers(self):
         r"""
-        Method required for training using `Lightning AI Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
+        Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         return optim.Adam(self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay)
 
 
 class MUSEModule(nnModuleBase):
 
-    def __init__(self, input_dim: List = None, modalities: List = None, extractors: List = None, tokenizer=None,
+    def __init__(self, input_dim: list = None, modalities: list = None, extractors: list = None, tokenizer=None,
                  hidden_dim: int = 128, output_dim: int = 1, gnn_layers: int = 2, gnn_norm: str = None,
                  code_pretrained_embedding: bool = True, bert_type: str = "prajjwal1/bert-tiny", dropout: float = 0.25
                  ):

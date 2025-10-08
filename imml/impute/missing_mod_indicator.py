@@ -1,5 +1,3 @@
-from typing import List
-
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
@@ -30,7 +28,7 @@ class MissingModIndicator(FunctionTransformer):
         super().__init__(get_missing_mod_indicator)
 
 
-def get_missing_mod_indicator(Xs : List, y = None):
+def get_missing_mod_indicator(Xs : list, y = None):
     r"""
     Return a binary indicator for missing modalities.
 

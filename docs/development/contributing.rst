@@ -251,9 +251,9 @@ Deep Learning
 ~~~~~~~~~~~~~
 
 Currently, repositories offering deep learning methods lack a unified convention. To address this, `iMML` adopts
-the `Lightning AI <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library, which provides a
+the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library, which provides a
 structured and flexible framework for implementing deep learning models. By standardizing deep learning methods in
-`iMML` using the Lightning library, we ensure that all implementations are robust, reproducible, and easy to extend.
+`iMML` using theLightning library, we ensure that all implementations are robust, reproducible, and easy to extend.
 
 Dataset defition
 ^^^^^^^^^^^^^^^^
@@ -319,7 +319,7 @@ Training
 ^^^^^^^^^^^^^^^^^^^
 
 The defined LightningModule is used as an argument to the
-`Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_ class provided by the Lightning AI library.
+`Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_ class provided by theLightning library.
 The Trainer handles the training process, including logging, checkpointing, and scaling across devices. Refer to the
 `Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_ documentation for further details. Here is
 an example of how to train the model:

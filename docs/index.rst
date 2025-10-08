@@ -15,6 +15,7 @@ Documentation
 
    main/overview
    main/installation
+   main/alg_guidelines
    auto_tutorials/index
    main/modules/imml
 

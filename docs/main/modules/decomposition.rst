@@ -9,7 +9,7 @@ Data Fusion by Matrix Factorization (DFMF)
 .. autoclass:: DFMF
    :show-inheritance:
 
-Joint Non-Negative Matrix Factorization (jNMF)
+Joint Non-Negative Matrix Factorization (JNMF)
 ----------------------------------------------
 
 .. autoclass:: JNMF

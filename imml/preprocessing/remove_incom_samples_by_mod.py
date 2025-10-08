@@ -6,7 +6,7 @@ from ..utils import check_Xs
 
 class RemoveIncomSamplesByMod(FunctionTransformer):
     r"""
-    Remove incomplete samples from each specific modality. Apply `FunctionTransformer` (from `Scikit-learn`)
+    Remove incomplete samples from each specific modality. Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_ (from `Scikit-learn`)
     with `remove_samples_missing_mods` as a function.
 
     Example

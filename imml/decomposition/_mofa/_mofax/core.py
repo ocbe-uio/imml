@@ -1,10 +1,9 @@
 import h5py
 import numpy as np
 import pandas as pd
-
 import sys
 from os import path
-from typing import Union, List, Optional
+from typing import Union, Optional
 from collections.abc import Iterable
 import warnings
 
@@ -300,8 +299,8 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def get_top_features(
         self,
-        factors: Union[int, List[int]] = None,
-        views: Union[str, int, List[str], List[int]] = None,
+        factors: Union[int, list[int]] = None,
+        views: Union[str, int, list[str], list[int]] = None,
         n_features: int = None,
         clip_threshold: float = None,
         scale: bool = False,
@@ -396,8 +395,8 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def get_factors(
         self,
-        groups: Union[str, int, List[str], List[int]] = None,
-        factors: Optional[Union[int, List[int], str, List[str]]] = None,
+        groups: Union[str, int, list[str], list[int]] = None,
+        factors: Optional[Union[int, list[int], str, list[str]]] = None,
         df: bool = False,
         concatenate_groups: bool = True,
         scale: bool = False,
@@ -453,8 +452,8 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def get_interpolated_factors(
         self,
-        groups: Union[str, int, List[str], List[int]] = None,
-        factors: Optional[Union[int, List[int], str, List[str]]] = None,
+        groups: Union[str, int, list[str], list[int]] = None,
+        factors: Optional[Union[int, list[int], str, list[str]]] = None,
         df: bool = False,
         df_long: bool = False,
         concatenate_groups: bool = True,
@@ -474,7 +473,7 @@ Expectations: {', '.join(self.expectations.keys())}"""
         Parameters
         ----------
         groups : optional
-            List of groups to consider
+            list of groups to consider
         factors : optional
             Indices of factors to consider
         df : optional
@@ -608,8 +607,8 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def get_weights(
         self,
-        views: Union[str, int, List[str], List[int]] = None,
-        factors: Union[int, List[int]] = None,
+        views: Union[str, int, list[str], list[int]] = None,
+        factors: Union[int, list[int]] = None,
         df: bool = False,
         scale: bool = False,
         concatenate_views: bool = True,
@@ -666,8 +665,8 @@ Expectations: {', '.join(self.expectations.keys())}"""
     def get_data(
         self,
         views: Optional[Union[str, int]] = None,
-        features: Optional[Union[str, List[str]]] = None,
-        groups: Optional[Union[str, int, List[str], List[int]]] = None,
+        features: Optional[Union[str, list[str]]] = None,
+        groups: Optional[Union[str, int, list[str], list[int]]] = None,
         df: bool = False,
     ):
         """
@@ -721,8 +720,8 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def run_umap(
         self,
-        groups: Union[str, int, List[str], List[int]] = None,
-        factors: Union[int, List[int]] = None,
+        groups: Union[str, int, list[str], list[int]] = None,
+        factors: Union[int, list[int]] = None,
         n_neighbors: int = 10,
         min_dist: float = 0.5,
         spread: float = 1.0,
@@ -777,7 +776,7 @@ Expectations: {', '.join(self.expectations.keys())}"""
         )
         print("UMAP coordinates added to the samples_metadata")
 
-    def fetch_values(self, variables: Union[str, List[str]], unique: bool = True):
+    def fetch_values(self, variables: Union[str, list[str]], unique: bool = True):
         """
         Fetch metadata column, factors, or feature values
         as well as covariates.
@@ -966,9 +965,9 @@ Expectations: {', '.join(self.expectations.keys())}"""
     def calculate_variance_explained(
         self,
         # factor_index: int,
-        factors: Optional[Union[int, List[int], str, List[str]]] = None,
-        groups: Optional[Union[str, int, List[str], List[int]]] = None,
-        views: Optional[Union[str, int, List[str], List[int]]] = None,
+        factors: Optional[Union[int, list[int], str, list[str]]] = None,
+        groups: Optional[Union[str, int, list[str], list[int]]] = None,
+        views: Optional[Union[str, int, list[str], list[int]]] = None,
         group_label: Optional[str] = None,
         per_factor: Optional[bool] = None,
     ) -> pd.DataFrame:
@@ -1095,9 +1094,9 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def get_variance_explained(
         self,
-        factors: Optional[Union[int, List[int], str, List[str]]] = None,
-        groups: Optional[Union[str, int, List[str], List[int]]] = None,
-        views: Optional[Union[str, int, List[str], List[int]]] = None,
+        factors: Optional[Union[int, list[int], str, list[str]]] = None,
+        groups: Optional[Union[str, int, list[str], list[int]]] = None,
+        views: Optional[Union[str, int, list[str], list[int]]] = None,
     ) -> pd.DataFrame:
         """
         Get variance explained estimates (R2) for each factor across  view(s) and/or group(s).
@@ -1158,8 +1157,8 @@ Expectations: {', '.join(self.expectations.keys())}"""
 
     def get_r2(
         self,
-        factors: Optional[Union[int, List[int], str, List[str]]] = None,
-        groups: Optional[Union[str, int, List[str], List[int]]] = None,
+        factors: Optional[Union[int, list[int], str, list[str]]] = None,
+        groups: Optional[Union[str, int, list[str], List[int]]] = None,
         views: Optional[Union[str, int, List[str], List[int]]] = None,
         groups_df: Optional[pd.DataFrame] = None,
         group_label: Optional[str] = None,

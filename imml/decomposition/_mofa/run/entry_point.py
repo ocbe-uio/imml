@@ -4,7 +4,7 @@ import scipy as s
 import sys
 import os
 from time import sleep, time, strftime
-from typing import List, Optional, Union
+from typing import Optional, Union
 from itertools import chain
 from functools import wraps
 
@@ -1770,7 +1770,7 @@ def mofa(
     use_raw: bool = False,
     use_layer: bool = None,
     features_subset: Optional[str] = None,
-    likelihood: Optional[Union[str, List[str]]] = None,
+    likelihood: Optional[Union[str, list[str]]] = None,
     n_factors: int = 10,
     scale_views: bool = False,
     scale_groups: bool = False,
@@ -1788,7 +1788,7 @@ def mofa(
     save_metadata: bool = True,
     seed: int = 1,
     outfile: Optional[str] = None,
-    expectations: Optional[List[str]] = None,
+    expectations: Optional[list[str]] = None,
     save_interrupted: bool = False,
     verbose: bool = False,
     quiet: bool = True,

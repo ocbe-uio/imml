@@ -2,7 +2,6 @@ import copy
 import math
 from collections import Counter
 from itertools import chain
-from typing import Tuple, List
 
 try:
     import torch
@@ -218,7 +217,7 @@ class NMT_tran(nnModuleBase):
 
         self.dropout = nn.Dropout(p=dropout_rate)
 
-    def forward(self, source: List[List[str]]):
+    def forward(self, source: list[list[str]]):
         # Compute sentence lengths
         #         print(source)
         source_lengths = [len(s) for s in source]
@@ -239,7 +238,7 @@ class NMT_tran(nnModuleBase):
         @param source_padded (Tensor): Tensor of padded source sentences with shape (src_len, b), where
                                         b = batch_size, src_len = maximum source sentence length. Note that
                                        these have already been sorted in order of longest to shortest sentence.
-        @param source_lengths (List[int]): List of actual lengths for each of the source sentences in the batch
+        @param source_lengths (list[int]): List of actual lengths for each of the source sentences in the batch
         @returns enc_hiddens (Tensor): Tensor of hidden units with shape (b, src_len, h*2), where
                                         b = batch size, src_len = maximum source sentence length, h = hidden size.
         @returns dec_init_state (tuple(Tensor, Tensor)): Tuple of tensors representing the decoder's initial
@@ -316,7 +315,7 @@ class VocabEntry(object):
     def indices2words(self, word_ids):
         return [self.id2word[w_id] for w_id in word_ids]
 
-    def to_input_tensor(self, sents: List[List[str]], device):
+    def to_input_tensor(self, sents: list[list[str]], device):
         word_ids = self.words2indices(sents)
         sents_t = self.input_transpose(word_ids, self['<pad>'])
 

@@ -48,7 +48,7 @@ dependencies = [
 [project.urls]
 Documentation = "https://imml.readthedocs.io"
 Source = "https://github.com/ocbe-uio/imml"
-Download = "https://github.com/ocbe-uio/imml/archive/refs/heads/main.zip"
+Download = "https://pypi.org/project/imml/#files"
 Tracker = "https://github.com/ocbe-uio/imml/issues"
 Changelog = "https://imml.readthedocs.io/stable/development/changelog.html"
 

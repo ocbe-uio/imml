@@ -188,7 +188,7 @@ test_dataloader = DataLoader(dataset=test_data, batch_size=batch_size,
 
 ########################################################
 # Train the ``RAGPT`` model using the generated prompts. For speed in this demo we train for only 2 epochs using
-# the `Lightning AI <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
+# the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
 estimator = RAGPT(cls_num=len(le.classes_))
 trainer.fit(estimator, train_dataloader)
@@ -196,7 +196,7 @@ trainer.fit(estimator, train_dataloader)
 ########################################################
 # Step 6: Advanced Usage: Track Metrics During Training
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# As any other model in `Lightning AI <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_, we can
+# As any other model in `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_, we can
 # modify the internal functions. For instance, we can track loss and compute evaluation metrics during training.
 
 trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)

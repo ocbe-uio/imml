@@ -109,7 +109,13 @@ To include these dependencies, execute in the terminal:
 
     pip install imml[keyword]
 
-where 'keyword' is from the list above.
+where 'keyword' is from the list above. For example:
+
+.. code:: bash
+
+    pip install imml[deep] # to install "deep" module
+    pip install imml[matlab] # to install "matlab" module
+    pip install imml[r] # to install "r" module
 
 To install all possible dependencies:
 
@@ -117,57 +123,6 @@ To install all possible dependencies:
 
     pip install imml[all]
 
-
-Using engine = "matlab"
-^^^^^^^^^^^^^^^^^^^^^^^
-
-To include these dependencies, execute in the terminal:
-
-.. code:: bash
-
-    pip install imml[matlab]
-
-In order to use matlab as an engine, you will need to have `Octave` (`MATLAB`) in your machine. In linux, you can
-install it using the following commands:
-
-.. code:: bash
-
-    sudo apt install octave
-
-For other platforms, please refer to the official guides: https://octave.org/download
-
-Additionally, some algorithms (such as ``DAIMC`` and ``OSLFIMVC``) could have some extra dependencies. To install these
-dependencies, execute the following commands in a terminal:
-
-.. code:: bash
-
-    sudo apt install octave-control
-    sudo apt install octave-statistics
-
-Using engine = "r"
-^^^^^^^^^^^^^^^^^^^^^^^
-
-To include these dependencies, execute in the terminal:
-
-.. code:: bash
-
-    pip install imml[r]
-
-In order to use R as an engine, you will need to have R in your machine. In linux, you can install it using the
-following commands:
-
-.. code:: bash
-
-    sudo apt install r-base r-base-dev -y
-
-For other platforms, please refer to the official guides: https://cran.r-project.org/doc/manuals/r-patched/R-admin.html
-
-When using R as engine, some algorithms (such as ``JNMF``) could have some extra dependencies. To install these
-dependencies, execute the following command in R:
-
-.. code:: R
-
-    install.packages("nnTensor")
 
 OS Requirements
 ---------------

@@ -31,6 +31,21 @@ Change tags (adopted from `Scikit-learn
 - |API| : you will need to change your code to have the same effect in the future; or a feature will be removed in the future.
 
 
+Version 0.1.1
+-------------
+
+Updates in this release:
+
+- |Enhancement| Improve documentation of several methods and installation.
+- |Enhancement| Adding guidelines on how to choose an algorithm.
+- |Enhancement| Adding license to all files.
+- |Enhancement| Adding license to all files.
+
+`.github/workflows/ci_test.yml <https://github.com/ocbe-uio/imml/blob/main/.github/workflows/ci_test.yml>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Enhancement| Fixing actions/missing-workflow-permissions security.
+
+
 Version 0.1.0
 -------------
 

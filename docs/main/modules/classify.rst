@@ -10,7 +10,7 @@ Missing Modalities in Multimodal healthcare data (M3Care)
    :members:
    :show-inheritance:
 
-Mutual-consistent graph contrastive learning (MUSE)
+MUtual-conSistEnt graph contrastive learning (MUSE)
 -------------------------------------------------------------------------------
 
 .. autoclass:: MUSE

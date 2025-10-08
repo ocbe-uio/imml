@@ -1,6 +1,7 @@
-import copy
-from typing import List
+# Authors: The imml developers
+# License: BSD-3-Clause
 
+import copy
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -35,7 +36,7 @@ class Amputer(BaseEstimator, TransformerMixin):
     >>> transformer.fit_transform(Xs)
     """
 
-    def __init__(self, p: float = 0.1, mechanism: str = "mem", weights: List = None, random_state: int = None):
+    def __init__(self, p: float = 0.1, mechanism: str = "mem", weights: list = None, random_state: int = None):
 
         mechanisms_options = ["mem", "mcar", "mnar", "pm"]
         if mechanism not in mechanisms_options:
@@ -50,7 +51,7 @@ class Amputer(BaseEstimator, TransformerMixin):
         self.rng = np.random.default_rng(self.random_state)
 
 
-    def fit(self, Xs: List, y=None):
+    def fit(self, Xs: list, y=None):
         r"""
         Fit the transformer to the input data.
 
@@ -72,7 +73,7 @@ class Amputer(BaseEstimator, TransformerMixin):
         return self
 
 
-    def transform(self, Xs: List):
+    def transform(self, Xs: list):
         r"""
         Ampute a fully observed multi-modal dataset.
 
