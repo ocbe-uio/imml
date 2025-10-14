@@ -95,9 +95,11 @@ mechanism_dict = {"mem": "Mutually exclusive missing",
 
 samples_dict = {}
 fig,axs = plt.subplots(1,4, figsize= (12.5,2.5))
-for idx, (ax, mechanism) in enumerate(zip(axs, list(mechanism_dict.keys()))):
+for idx, (mechanism, title) in enumerate(mechanism_dict.items()):
+    ax = axs[idx]
     transformed_Xs = Amputer(mechanism=mechanism, p=0.8, random_state=random_state).fit_transform(Xs)
-    fig, ax = plot_missing_modality(Xs=transformed_Xs, ax=ax)
+    _, ax = plot_missing_modality(Xs=transformed_Xs, ax=ax)
+    ax.set_title(title)
     if idx != 0:
         ax.get_yaxis().set_visible(False)
     samples_dict[mechanism_dict[mechanism]] = get_summary(Xs=transformed_Xs, one_row=True)
@@ -124,7 +126,7 @@ for p in np.arange(0.1, 1., 0.1):
     fig,axs = plt.subplots(1,4, figsize= (12,2.5))
     for idx, (ax, mechanism) in enumerate(zip(axs, list(mechanism_dict.keys()))):
         transformed_Xs = Amputer(mechanism=mechanism, p=p, random_state=random_state+1).fit_transform(Xs)
-        fig, ax = plot_missing_modality(Xs=transformed_Xs, ax=ax)
+        _, ax = plot_missing_modality(Xs=transformed_Xs, ax=ax)
         if p == 0.1:
             ax.set_title(mechanism_dict[mechanism])
         if idx != 0:

@@ -4,7 +4,9 @@
 [![CI Tests](https://github.com/ocbe-uio/imml/actions/workflows/ci_test.yml/badge.svg)](https://github.com/ocbe-uio/imml/actions/workflows/ci_test.yml)
 ![Codecov](https://codecov.io/github/ocbe-uio/imml/graph/bundle/badge.svg)
 [![CodeQL](https://github.com/ocbe-uio/imml/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/ocbe-uio/imml/actions/workflows/github-code-scanning/codeql)
+![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/pypi/imml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/ocbe-uio/imml/pulls)
+![PyPI - Status](https://img.shields.io/pypi/status/imml)
 ![GitHub repo size](https://img.shields.io/github/repo-size/ocbe-uio/imml)
 [![GitHub License](https://img.shields.io/github/license/ocbe-uio/imml)](https://github.com/ocbe-uio/imml/blob/main/LICENSE)
 
@@ -16,7 +18,7 @@
 </p>
 
 [**Overview**](#Overview) | [**Background**](#Background) | [**Key features**](#Key-features) | [**Installation**](#installation) | 
-[**Usage**](#Usage) | [**Free software**](#Free-software) | [**Contribute**](#Contribute)
+[**Usage**](#Usage) | [**Free software**](#Free-software) | [**Contribute**](#Contribute) | [**Help us**](#Help-us-grow)
 
 Overview
 ====================
@@ -113,3 +115,13 @@ For the full contributing guide, please see:
 
 - In-repo: https://github.com/ocbe-uio/imml/tree/main?tab=contributing-ov-file
 - Documentation: https://imml.readthedocs.io/stable/development/contributing.html
+
+Help us grow
+------------
+
+How you can help *iMML* grow:
+
+- 🔥 Try it out and share your feedback.
+- 🤝 Contribute if you are interested in building with us.
+- 🗣️ Share this project with colleagues who deal with multi-modal data.
+- 🌟 And of course… give the repo a star to support the project!
