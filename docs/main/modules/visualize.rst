@@ -11,7 +11,7 @@ Plot PID
    :members:
    :show-inheritance:
 
-Plot Missing Modality
+Plot missing modality
 --------------------------------
 
 .. autoclass:: plot_missing_modality

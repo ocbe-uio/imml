@@ -39,7 +39,7 @@ Using uv
 ^^^^^^^^^
 
 To install `iMML` using ``uv``, ensure Python 3 and ``uv`` (Python's package manager) are properly set up on
-your system. If ``pip`` is not already installed or needs an update, refer to the official documentation at
+your system. If ``uv`` is not already installed or needs an update, refer to the official documentation at
 https://docs.astral.sh/uv/.
 
 Run the following command to install the most recent release of `iMML`:
@@ -84,7 +84,7 @@ Dependencies
 -  networkx>=2.5
 -  h5py>=3.9.0
 -  snfpy>=0
--  control>=0.10.2
+-  control>=0.10.1
 -  cvxpy>=1.7.1
 -  numba>=0.58.0
 

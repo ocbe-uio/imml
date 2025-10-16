@@ -5,7 +5,7 @@ Modality-wise missing data simulation (Amputation)
 
 Evaluation and benchmarking of new algorithms or models under diverse conditions is essential to ensure their
 robustness, added value and generalizability. `iMML` simplifies this process by simulating incomplete multi-modal
-datasets with block-wise missing data. This so-called data amputation process allows for controlled testing of
+datasets with modality-wise missing data. This so-called data amputation process allows for controlled testing of
 methods by introducing missing data from various mechanisms that reflect real-world scenarios where different
 modalities may be partially observed or entirely missing.
 
@@ -13,7 +13,7 @@ What you will learn:
 
 - The four amputation (missingness) mechanisms supported by `iMML` (PM, MCAR, MNAR, MEM).
 - How to generate modality-wise incomplete multi-modal datasets with ``Amputer``.
-- How to visualize missingness patterns across modalities.
+- How to visualize missingness patterns across modalities with ``plot_missing_modality``.
 - How missingness mechanisms and rates affect per-modality data availability.
 
 Missingness mechanisms:
@@ -66,7 +66,7 @@ Xs = [pd.DataFrame(rng.random((n_samples, 10))) for i in range(n_mods)]
 # Step 3: Simulate missing data
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # Using ``Amputer``, we introduce missing data to simulate a scenario where some modalities are missing. Here,
-# 80% of the samples will be incomplete following a mutually exclusive missing pattern.
+# 80% of the samples will be incomplete following a mutually exclusive missing (MEM) pattern.
 
 mechanism = "mem"
 p=0.8

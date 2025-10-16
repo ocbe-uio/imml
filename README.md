@@ -38,10 +38,10 @@ The key features of this package are:
 
 -   **Coverage**: More than 25 methods for integrating, processing, and analyzing incomplete multi-modal 
     datasets implemented as a single, user-friendly interface.
--   **Comprehensive**: Designed to be compatible with widely-used machine learning and data analysis tools, 
-    allowing use with minimal programming effort.
--   **Extensible**: It is a unified framework where researchers can contribute and integrate new approaches, 
-    serving as a community platform for hosting new methods.
+-   **Comprehensive**: Designed to be compatible with widely-used machine learning and data analysis tools, allowing 
+    use with minimal programming effort. 
+-   **Extensible**: A unified framework where researchers can contribute and integrate new approaches, serving 
+    as a community platform for hosting new methods.
 
 Installation
 --------------

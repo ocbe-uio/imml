@@ -2,7 +2,7 @@ Tutorials
 ====================
 
 This folder collects hands‑on, runnable examples that demonstrate how to use `iMML` for common multi‑modal learning
-workflows, including exploring datasets, simulating missing modalities, and clustering with incomplete data,
+workflows, including exploring datasets, simulating missing modalities, classifying and clustering with incomplete data,
 among others. Each script is self‑contained and designed to be easy to adapt to your own data.
 You can find the tutorials in:
 
