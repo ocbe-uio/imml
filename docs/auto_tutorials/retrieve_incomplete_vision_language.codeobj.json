@@ -1867,36 +1867,6 @@
    "name": "DirNamesMixin.drop"
   }
  ],
- "test_df.index": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.indexes.base",
-   "module_short": "pandas.core.indexes.base",
-   "name": "Index"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.indexes",
-   "module_short": "pandas.core.indexes",
-   "name": "Index"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "Index"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "Index"
-  }
- ],
  "test_df.loc": [
   {
    "is_class": false,
@@ -2460,29 +2430,6 @@
    "module": "pandas",
    "module_short": "pandas",
    "name": "DirNamesMixin.shape"
-  }
- ],
- "y_test": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.series",
-   "module_short": "pandas.core.series",
-   "name": "Series"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "Series"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "Series"
   }
  ],
  "y_train": [

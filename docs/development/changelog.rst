@@ -36,14 +36,15 @@ Version 0.1.1
 
 Updates in this release:
 
-- |Enhancement| Improving documentation of several methods.
-- |Enhancement| Improving documentation of installation and extra dependencies.
+- |Enhancement| Improving documentation for several methods.
+- |Enhancement| Improved documentation for installation and extra dependencies.
 - |Enhancement| Adding guidelines on how to choose an algorithm.
-- |Enhancement| Adding license to all files.
+- |Enhancement| Added license headers to all files.
+- |Fix| Fixed iPython dependency issue. Oct2Py depends on iPython but returned an error when importing ipython>=9.0.0.
 
 `.github/workflows/ci_test.yml <https://github.com/ocbe-uio/imml/blob/main/.github/workflows/ci_test.yml>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |Enhancement| Fixing actions/missing-workflow-permissions security.
+- |Fix| Fixing actions/missing-workflow-permissions security.
 
 
 Version 0.1.0

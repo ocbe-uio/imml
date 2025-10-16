@@ -124,7 +124,7 @@ Step 3: Summarize the dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The ``get_summary`` function provides a compact overview of the multi‑modal dataset. Below we first
 make the dataset a bit more complex by introducing some incomplete samples, then show two views:
-1) a dictionary aggregated across modalities (one_row=True) and 2) per‑modality counts (one_row=False).
+1) a dataframe aggregated across modalities (one_row=True) and 2) per‑modality counts (one_row=False).
 
 .. GENERATED FROM PYTHON SOURCE LINES 65-76
 
@@ -411,7 +411,7 @@ feature engineering for downstream multi‑modal learning.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.448 seconds)
+   **Total running time of the script:** (0 minutes 11.718 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_multil_modal_data_statistics.py:

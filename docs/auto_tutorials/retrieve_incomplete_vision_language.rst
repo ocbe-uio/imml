@@ -272,7 +272,7 @@ Step 5: Retrieve
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We retrieved the most similar items for the test set.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-139
+.. GENERATED FROM PYTHON SOURCE LINES 129-137
 
 .. code-block:: Python
 
@@ -281,8 +281,6 @@ We retrieved the most similar items for the test set.
         test_df["img"].to_list(),
         test_df["text"].to_list()
     ]
-    # Use dummy labels for API compatibility
-    y_test = pd.Series(np.zeros(len(test_df)), index=test_df.index)
 
     preds = estimator.predict(Xs=Xs_test, n_neighbors=2)
 
@@ -293,11 +291,11 @@ We retrieved the most similar items for the test set.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-141
+.. GENERATED FROM PYTHON SOURCE LINES 138-139
 
 This is the content of the prediction.
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-142
+.. GENERATED FROM PYTHON SOURCE LINES 139-140
 
 .. code-block:: Python
 
@@ -315,7 +313,7 @@ This is the content of the prediction.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-144
+.. GENERATED FROM PYTHON SOURCE LINES 141-142
 
 .. code-block:: Python
 
@@ -333,7 +331,7 @@ This is the content of the prediction.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-148
+.. GENERATED FROM PYTHON SOURCE LINES 143-146
 
 .. code-block:: Python
 
@@ -353,7 +351,7 @@ This is the content of the prediction.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-158
+.. GENERATED FROM PYTHON SOURCE LINES 147-156
 
 Step 6: Visualize the retrieved instances
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -365,7 +363,7 @@ The target instance is displayed in the leftmost column, followed by the most si
 order of similarity. Note that some instances have missing modalities, which will not appear in the plot. In this
 example, the first two instances are missing the image modality, while the last one is missing the text modality.
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-194
+.. GENERATED FROM PYTHON SOURCE LINES 156-192
 
 .. code-block:: Python
 
@@ -417,7 +415,7 @@ example, the first two instances are missing the image modality, while the last 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-202
+.. GENERATED FROM PYTHON SOURCE LINES 193-200
 
 Summary of results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -427,7 +425,7 @@ memory bank, even when one of the modalities (image or text) was missing.
 This example is intentionally simplified, using only a few instances for demonstration.
 For stronger performance and more reliable results, the full dataset should be used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-207
+.. GENERATED FROM PYTHON SOURCE LINES 202-205
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -437,7 +435,7 @@ even in the presence of missing modalities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (18 minutes 41.658 seconds)
+   **Total running time of the script:** (15 minutes 9.558 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_retrieve_incomplete_vision_language.py:

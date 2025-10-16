@@ -115,6 +115,8 @@ Xs_train = [
     train_df["img"].to_list(),
     train_df["text"].to_list()
 ]
+# Use dummy labels for API compatibility (labels are not provided in Flickr30k)
+y_train = pd.Series(np.zeros(len(train_df)), index=train_df.index)
 
 estimator.fit(Xs=Xs_train, y=y_train)
 memory_bank = estimator.memory_bank_
@@ -129,8 +131,6 @@ Xs_test = [
     test_df["img"].to_list(),
     test_df["text"].to_list()
 ]
-# Use dummy labels for API compatibility
-y_test = pd.Series(np.zeros(len(test_df)), index=test_df.index)
 
 preds = estimator.predict(Xs=Xs_test, n_neighbors=2)
 

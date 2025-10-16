@@ -61,7 +61,7 @@ print("Samples:", len(Xs[0]), "\t", "Modalities:", len(Xs), "\t", "Features:", [
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # The ``get_summary`` function provides a compact overview of the multi‑modal dataset. Below we first
 # make the dataset a bit more complex by introducing some incomplete samples, then show two views:
-# 1) a dictionary aggregated across modalities (one_row=True) and 2) per‑modality counts (one_row=False).
+# 1) a dataframe aggregated across modalities (one_row=True) and 2) per‑modality counts (one_row=False).
 
 inc_Xs = copy.deepcopy(Xs)
 # Introduce block-wise missingness in a few regions for illustration

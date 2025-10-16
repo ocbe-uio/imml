@@ -24,7 +24,7 @@ Modality-wise missing data simulation (Amputation)
 
 Evaluation and benchmarking of new algorithms or models under diverse conditions is essential to ensure their
 robustness, added value and generalizability. `iMML` simplifies this process by simulating incomplete multi-modal
-datasets with block-wise missing data. This so-called data amputation process allows for controlled testing of
+datasets with modality-wise missing data. This so-called data amputation process allows for controlled testing of
 methods by introducing missing data from various mechanisms that reflect real-world scenarios where different
 modalities may be partially observed or entirely missing.
 
@@ -32,7 +32,7 @@ What you will learn:
 
 - The four amputation (missingness) mechanisms supported by `iMML` (PM, MCAR, MNAR, MEM).
 - How to generate modality-wise incomplete multi-modal datasets with ``Amputer``.
-- How to visualize missingness patterns across modalities.
+- How to visualize missingness patterns across modalities with ``plot_missing_modality``.
 - How missingness mechanisms and rates affect per-modality data availability.
 
 Missingness mechanisms:
@@ -123,7 +123,7 @@ Using your own data:
 Step 3: Simulate missing data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Using ``Amputer``, we introduce missing data to simulate a scenario where some modalities are missing. Here,
-80% of the samples will be incomplete following a mutually exclusive missing pattern.
+80% of the samples will be incomplete following a mutually exclusive missing (MEM) pattern.
 
 .. GENERATED FROM PYTHON SOURCE LINES 70-77
 
@@ -174,7 +174,7 @@ Step 4: Compare amputation mechanisms
 We now illustrate the four different amputation patterns: mutually exclusive missing (MEM),
 partial missing (PM), missing completely at random (MCAR), and missing not at random (MNAR).
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-107
+.. GENERATED FROM PYTHON SOURCE LINES 88-109
 
 .. code-block:: Python
 
@@ -188,9 +188,11 @@ partial missing (PM), missing completely at random (MCAR), and missing not at ra
 
     samples_dict = {}
     fig,axs = plt.subplots(1,4, figsize= (12.5,2.5))
-    for idx, (ax, mechanism) in enumerate(zip(axs, list(mechanism_dict.keys()))):
+    for idx, (mechanism, title) in enumerate(mechanism_dict.items()):
+        ax = axs[idx]
         transformed_Xs = Amputer(mechanism=mechanism, p=0.8, random_state=random_state).fit_transform(Xs)
-        fig, ax = plot_missing_modality(Xs=transformed_Xs, ax=ax)
+        _, ax = plot_missing_modality(Xs=transformed_Xs, ax=ax)
+        ax.set_title(title)
         if idx != 0:
             ax.get_yaxis().set_visible(False)
         samples_dict[mechanism_dict[mechanism]] = get_summary(Xs=transformed_Xs, one_row=True)
@@ -201,7 +203,7 @@ partial missing (PM), missing completely at random (MCAR), and missing not at ra
 
 
 .. image-sg:: /auto_tutorials/images/sphx_glr_generate_missing_modalities_002.png
-   :alt: generate missing modalities
+   :alt: Mutually exclusive missing, Partial missing, Missing completely at random, Missing not at random
    :srcset: /auto_tutorials/images/sphx_glr_generate_missing_modalities_002.png
    :class: sphx-glr-single-img
 
@@ -209,12 +211,12 @@ partial missing (PM), missing completely at random (MCAR), and missing not at ra
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-110
+.. GENERATED FROM PYTHON SOURCE LINES 110-112
 
 As shown in the table below, all cases have the same numbers of complete and incomplete samples overall.
 However, the number of observed samples in each modality varies with the missingness pattern.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-113
+.. GENERATED FROM PYTHON SOURCE LINES 112-115
 
 .. code-block:: Python
 
@@ -299,14 +301,14 @@ However, the number of observed samples in each modality varies with the missing
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-118
+.. GENERATED FROM PYTHON SOURCE LINES 116-120
 
 Step 5: Vary the missingness rate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Next, we explore how patterns behave as we increase the percentage of incomplete samples. We amputate a
 random multi-modal dataset under each mechanism at different missingness rates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-138
+.. GENERATED FROM PYTHON SOURCE LINES 120-140
 
 .. code-block:: Python
 
@@ -319,7 +321,7 @@ random multi-modal dataset under each mechanism at different missingness rates.
         fig,axs = plt.subplots(1,4, figsize= (12,2.5))
         for idx, (ax, mechanism) in enumerate(zip(axs, list(mechanism_dict.keys()))):
             transformed_Xs = Amputer(mechanism=mechanism, p=p, random_state=random_state+1).fit_transform(Xs)
-            fig, ax = plot_missing_modality(Xs=transformed_Xs, ax=ax)
+            _, ax = plot_missing_modality(Xs=transformed_Xs, ax=ax)
             if p == 0.1:
                 ax.set_title(mechanism_dict[mechanism])
             if idx != 0:
@@ -453,7 +455,7 @@ random multi-modal dataset under each mechanism at different missingness rates.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-144
+.. GENERATED FROM PYTHON SOURCE LINES 141-146
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -464,7 +466,7 @@ machine learning models in the presence of incomplete data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.525 seconds)
+   **Total running time of the script:** (0 minutes 3.725 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_generate_missing_modalities.py:

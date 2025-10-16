@@ -73,7 +73,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt install libtirpc-dev #needed for rpy2
-        sudo apt install r-base r-base-dev -y
+        sudo apt install r-base -y
         sudo apt install octave -y
         sudo apt install octave-control octave-statistics -y
         sudo Rscript -e "install.packages(c('nnTensor', 'SNFtool'))"

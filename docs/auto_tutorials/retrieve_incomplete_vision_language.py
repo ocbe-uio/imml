@@ -131,8 +131,6 @@ Xs_test = [
     test_df["img"].to_list(),
     test_df["text"].to_list()
 ]
-# Use dummy labels for API compatibility
-y_test = pd.Series(np.zeros(len(test_df)), index=test_df.index)
 
 preds = estimator.predict(Xs=Xs_test, n_neighbors=2)
 

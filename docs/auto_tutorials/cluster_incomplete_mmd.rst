@@ -468,7 +468,7 @@ missingness make it straightforward to prototype, evaluate, and benchmark real-w
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.072 seconds)
+   **Total running time of the script:** (0 minutes 7.088 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_cluster_incomplete_mmd.py:

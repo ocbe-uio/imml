@@ -54,6 +54,7 @@ Changelog = "https://imml.readthedocs.io/stable/development/changelog.html"
 
 [project.optional-dependencies]
 matlab = [
+    "ipython<9.0.0",
     "oct2py>=5.8.0",
 ]
 r = [

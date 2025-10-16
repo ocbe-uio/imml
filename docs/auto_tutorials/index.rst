@@ -4,7 +4,7 @@ Tutorials
 ====================
 
 This folder collects hands‑on, runnable examples that demonstrate how to use `iMML` for common multi‑modal learning
-workflows, including exploring datasets, simulating missing modalities, and clustering with incomplete data,
+workflows, including exploring datasets, simulating missing modalities, classifying and clustering with incomplete data,
 among others. Each script is self‑contained and designed to be easy to adapt to your own data.
 You can find the tutorials in:
 
@@ -43,7 +43,7 @@ Questions or feedback?
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Evaluation and benchmarking of new algorithms or models under diverse conditions is essential to ensure their robustness, added value and generalizability. iMML simplifies this process by simulating incomplete multi-modal datasets with block-wise missing data. This so-called data amputation process allows for controlled testing of methods by introducing missing data from various mechanisms that reflect real-world scenarios where different modalities may be partially observed or entirely missing.">
+    <div class="sphx-glr-thumbcontainer" tooltip="Evaluation and benchmarking of new algorithms or models under diverse conditions is essential to ensure their robustness, added value and generalizability. iMML simplifies this process by simulating incomplete multi-modal datasets with modality-wise missing data. This so-called data amputation process allows for controlled testing of methods by introducing missing data from various mechanisms that reflect real-world scenarios where different modalities may be partially observed or entirely missing.">
 
 .. only:: html
 

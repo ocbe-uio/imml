@@ -170,7 +170,7 @@
    "is_explicit": false,
    "module": "builtins",
    "module_short": "builtins",
-   "name": "tuple"
+   "name": "NoneType"
   }
  ],
  "amputer": [
@@ -513,9 +513,16 @@
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "NoneType"
+   "module": "matplotlib.figure",
+   "module_short": "matplotlib.figure",
+   "name": "Figure"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "matplotlib",
+   "module_short": "matplotlib",
+   "name": "Figure"
   }
  ],
  "get_summary": [
@@ -559,6 +566,15 @@
    "module": "builtins",
    "module_short": "builtins",
    "name": "dict"
+  }
+ ],
+ "mechanism_dict.items": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
   }
  ],
  "mechanism_dict.keys": [
@@ -1002,6 +1018,15 @@
    "module": "builtins",
    "module_short": "builtins",
    "name": "dict"
+  }
+ ],
+ "title": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "str"
   }
  ],
  "transformed_Xs": [
