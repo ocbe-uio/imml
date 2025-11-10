@@ -11,7 +11,7 @@ from ._monet._aux_monet import _best_samples_to_add, _which_sample_to_remove, _w
     _which_view_to_remove_from_module, _score_of_split_module, _weight_of_split_and_add_view, \
     _weight_of_split_and_remove_view, _weight_of_new_module, _top_samples_to_switch, \
     _weight_of_spreading_module, _weight_of_merged_modules, _Globals, _Sample, _Module, _View, _switch_2_samples
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 from ..preprocessing import remove_missing_samples_by_mod
 
 
@@ -147,7 +147,7 @@ class MONET(BaseEstimator, ClusterMixin):
         -------
         self :  returns an instance of self.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         if not isinstance(Xs[0], pd.DataFrame):
             Xs = [pd.DataFrame(X) for X in Xs]
         for X in Xs:

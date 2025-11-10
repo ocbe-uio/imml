@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 from ..explore import get_samples
 
 
@@ -190,7 +190,7 @@ def drop_mod(Xs, X_idx : int = 0):
     """
     if X_idx >= len(Xs):
         raise ValueError("X_idx out of range. Should be between 0 and n_mods - 1")
-    Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+    Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
     transformed_Xs = Xs[:X_idx] + Xs[X_idx+1 :]
     return transformed_Xs
 
@@ -224,7 +224,7 @@ def single_mod(Xs, X_idx : int = 0):
   """
     if X_idx >= len(Xs):
         raise ValueError("X_idx out of range. Should be between 0 and n_mods - 1")
-    Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+    Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
     transformed_X = Xs[X_idx]
     return transformed_X
 
@@ -295,7 +295,7 @@ def sort_data(Xs: list):
     >>> sort_data(Xs=Xs)
     """
 
-    Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+    Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
     if not isinstance(Xs[0], pd.DataFrame):
         Xs = [pd.DataFrame(X) for X in Xs]
     samples = get_samples(Xs=Xs)

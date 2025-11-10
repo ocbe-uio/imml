@@ -3,7 +3,7 @@
 import pandas as pd
 
 from ..decomposition import DFMF
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 
 class DFMFImputer(DFMF):

@@ -94,6 +94,23 @@ Questions or feedback?
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial illustrates how to classify samples from an incomplete tabular-language dataset using the iMML library. We will use the MUSE algorithm from the iMML classify module on the Synthetic Employee Dataset and evaluate its performance.">
+
+.. only:: html
+
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_classify_incomplete_tabular_language_dataset_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_tutorials_classify_incomplete_tabular_language_dataset.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Classify an incomplete tabular–language dataset (Synthetic Employee Dataset)</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="When the learning algorithms cannot directly handle missing data, imputation methods become essential to allow their application. Thus, iMML has a module designed for filling missing data, which can be particularly useful when using external methods that are unable to handle missing values directly.">
 
 .. only:: html
@@ -157,6 +174,7 @@ Questions or feedback?
    /auto_tutorials/generate_missing_modalities
    /auto_tutorials/cluster_incomplete_mmd
    /auto_tutorials/retrieve_incomplete_vision_language
+   /auto_tutorials/classify_incomplete_tabular_language_dataset
    /auto_tutorials/impute_multi_modal_data
    /auto_tutorials/classify_incomplete_vision_language
    /auto_tutorials/select_and_extract_features

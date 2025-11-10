@@ -10,7 +10,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import LabelEncoder
 import cvxpy as cp
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 
 def pid(Xs, y, n_clusters = 20, n_components = .95, random_state = None, normalize: bool = False,
@@ -75,7 +75,7 @@ def pid(Xs, y, n_clusters = 20, n_components = .95, random_state = None, normali
     >>> y = np.random.default_rng(42).choice(2, size=len(Xs[0]))
     >>> pid(Xs=Xs, y=y, n_clusters=20, n_components=0.95, random_state=42)
     """
-    Xs = check_Xs(Xs=Xs)
+    Xs = check_Xs_y(Xs=Xs)
     if not isinstance(n_clusters, list):
         n_clusters = [n_clusters]
     if not isinstance(n_components, list):

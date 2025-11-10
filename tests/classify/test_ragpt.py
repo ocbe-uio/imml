@@ -145,6 +145,36 @@ def test_lightning_methods(sample_data):
     assert not os.path.exists(tmp_path)
 
 
+def test_custom_loss_fn(sample_data):
+    model = estimator(modalities=["tabular", "tabular", "tabular"],
+                     input_dim=[10, 10, 10],
+                     loss_fn=torch.nn.functional.binary_cross_entropy_with_logits)
+    with torch.no_grad():
+        loss = model.training_step(sample_data, 0)
+    assert isinstance(loss, torch.Tensor)
+    assert not torch.isnan(loss).any()
+    preds = model.predict_step(sample_data)
+    assert isinstance(preds, torch.Tensor)
+    assert not torch.isnan(preds).any()
+    assert preds.ndim == 1
+    assert len(preds) == len(sample_data[1])
+
+    model = estimator(modalities=["tabular", "tabular", "tabular"],
+                     input_dim=[10, 10, 10], output_dim=2,
+                     loss_fn=torch.nn.functional.cross_entropy)
+    sample_data = (sample_data[0], sample_data[1].long(), sample_data[2])
+    with torch.no_grad():
+        loss = model.training_step(sample_data, 0)
+    assert isinstance(loss, torch.Tensor)
+    assert not torch.isnan(loss).any()
+    preds = model.predict_step(sample_data)
+    assert isinstance(preds, torch.Tensor)
+    assert not torch.isnan(preds).any()
+    assert preds.ndim == 2
+    assert len(preds) == len(sample_data[1])
+    assert preds.shape[1] == 2
+
+
 def test_missing_values_handling(sample_data):
     # Create model
     model = estimator()
@@ -160,6 +190,30 @@ def test_missing_values_handling(sample_data):
     assert isinstance(loss, torch.Tensor)
     shutil.rmtree(tmp_path, ignore_errors=True)
     assert not os.path.exists(tmp_path)
+
+
+@pytest.mark.skipif(sys.platform.startswith("darwin"), reason="Error with MPS")
+def test_example(sample_data):
+    from imml.retrieve import MCR
+    from imml.load import RAGPTDataset, RAGPTCollator
+    from imml.classify import RAGPT
+    from lightning import Trainer
+    from torch.utils.data import DataLoader
+    images = ["docs/figures/graph.png", "docs/figures/logo_imml.png",
+              "docs/figures/graph.png", "docs/figures/logo_imml.png"]
+    texts = ["This is the graphical abstract of iMML.", "This is the logo of iMML.",
+             "This is the graphical abstract of iMML.", "This is the logo of iMML."]
+    Xs = [images, texts]
+    y = [0, 1, 0, 1]
+    modalities = ["image", "text"]
+    estimator = MCR(modalities=modalities)
+    database = estimator.fit_transform(Xs=Xs, y=y)
+    train_data = RAGPTDataset(database=database)
+    train_dataloader = DataLoader(train_data, collate_fn=RAGPTCollator)
+    trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
+    estimator = RAGPT()
+    trainer.fit(estimator, train_dataloader)
+    trainer.predict(estimator, train_dataloader)
 
 
 if __name__ == "__main__":

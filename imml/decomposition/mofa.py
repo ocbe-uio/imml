@@ -10,7 +10,7 @@ from sklearn.base import TransformerMixin, BaseEstimator
 from ._mofa.run.entry_point import entry_point
 from ._mofa._mofax import core as mfx
 from ._mofa.core._BayesNet import BayesNet, StochasticBayesNet, _ModifiedBayesNet, _ModifiedStochasticBayesNet
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 
 class MOFA(TransformerMixin, BaseEstimator):
@@ -140,7 +140,7 @@ class MOFA(TransformerMixin, BaseEstimator):
         -------
         self :  returns an instance of self.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         if not isinstance(Xs[0], pd.DataFrame):
             self.transform_ = "numpy"
             Xs = [pd.DataFrame(X) for X in Xs]
@@ -178,7 +178,7 @@ class MOFA(TransformerMixin, BaseEstimator):
         transformed_Xs : list of n_mods array-likes objects of shape (n_samples, n_components)
             The projected data.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         if not isinstance(Xs[0], pd.DataFrame):
             Xs = [pd.DataFrame(X) for X in Xs]
 

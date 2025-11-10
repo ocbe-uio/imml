@@ -170,7 +170,7 @@ test_dataloader = DataLoader(dataset=test_data, batch_size=batch_size,
 # Train the ``RAGPT`` model using the generated prompts. For speed in this demo we train for only 2 epochs using
 # the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
-estimator = RAGPT(cls_num=len(le.classes_))
+estimator = RAGPT(output_dim=len(le.classes_))
 trainer.fit(estimator, train_dataloader)
 
 ########################################################
@@ -180,7 +180,7 @@ trainer.fit(estimator, train_dataloader)
 # modify the internal functions. For instance, we can track loss and compute evaluation metrics during training.
 
 trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
-estimator = RAGPT(cls_num=len(le.classes_))
+estimator = RAGPT(output_dim=len(le.classes_))
 estimator.loss_list = []
 estimator.agg_loss_list = []
 validation_step = estimator.validation_step
@@ -243,7 +243,7 @@ shutil.rmtree(data_folder, ignore_errors=True)
 #######################################################
 
 ConfusionMatrixDisplay.from_predictions(y_true=y_test, y_pred=preds)
-print("Testing metric:", matthews_corrcoef(y_true=y_test, y_pred=preds))
+print("Testing metric:", round(matthews_corrcoef(y_true=y_test, y_pred=preds), 2))
 
 #######################################################
 # Despite using only 50 instances and minimal training, the performance was excellent thanks to the pretrained models.

@@ -12,7 +12,7 @@ from scipy.stats import zscore
 
 from ..impute import simple_mod_imputer
 from ..preprocessing import select_complete_samples
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 from ..explore import get_missing_samples_by_mod
 
 matlabmodule_installed = False
@@ -139,7 +139,7 @@ class SIMCADC(BaseEstimator, ClusterMixin):
         -------
         self :  Fitted estimator.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
         if self.engine=="matlab":
             if not isinstance(Xs[0], pd.DataFrame):

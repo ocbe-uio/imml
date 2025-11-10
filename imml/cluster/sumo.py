@@ -7,7 +7,7 @@ from scipy.cluster.hierarchy import cophenet, linkage
 from scipy.spatial.distance import pdist
 import numpy as np
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 from ._sumo.utils import extract_ncut
 from ._sumo.network import MultiplexNet
 from ._sumo.modes.run.solvers.unsupervised_sumo import UnsupervisedSumoNMF
@@ -183,7 +183,7 @@ class SUMO(BaseEstimator, ClusterMixin):
         -------
         self :  returns an instance of self.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
         if not isinstance(Xs[0], pd.DataFrame):
             Xs = [pd.DataFrame(X) for X in Xs]

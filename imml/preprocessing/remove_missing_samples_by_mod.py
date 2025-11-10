@@ -3,7 +3,7 @@
 import numpy as np
 from sklearn.preprocessing import FunctionTransformer
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 
 class RemoveMissingSamplesByMod(FunctionTransformer):
@@ -57,6 +57,6 @@ def remove_missing_samples_by_mod(Xs: list) -> list:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> remove_missing_samples_by_mod(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     transformed_Xs = [X[np.isfinite(X).any(axis=1)] for X in Xs]
     return transformed_Xs

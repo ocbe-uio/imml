@@ -3,7 +3,7 @@
 import numpy as np
 from sklearn.preprocessing import FunctionTransformer
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 
 class SelectCompleteSamples(FunctionTransformer):
@@ -55,7 +55,7 @@ def select_complete_samples(Xs: list):
     >>> select_complete_samples(Xs)
     """
 
-    Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+    Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
     mask = np.stack([np.isfinite(X).any(axis=1) for X in Xs], axis=1)
     mask = mask.all(axis=1)
     transformed_Xs = [X[mask] for X in Xs]

@@ -4,7 +4,7 @@ from typing import Union
 import numpy as np
 import pandas as pd
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 from ..impute import get_observed_mod_indicator
 
 
@@ -33,7 +33,7 @@ def get_n_mods(Xs: list) -> int:
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
     >>> get_n_mods(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     n_mods = len(Xs)
     return n_mods
 
@@ -65,7 +65,7 @@ def get_n_samples_by_mod(Xs: list) -> int:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> get_n_samples_by_mod(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     n_samples_by_mod = get_observed_mod_indicator(Xs)
     n_samples_by_mod = n_samples_by_mod.sum(axis=0)
     return n_samples_by_mod
@@ -98,7 +98,7 @@ def get_com_samples(Xs: list) -> pd.Index:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> get_com_samples(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     samples = get_observed_mod_indicator(Xs)
     if not isinstance(samples, pd.DataFrame):
         samples = pd.DataFrame(samples)
@@ -133,7 +133,7 @@ def get_incom_samples(Xs: list) -> pd.Index:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> get_incom_samples(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     samples = get_observed_mod_indicator(Xs)
     if not isinstance(samples, pd.DataFrame):
         samples = pd.DataFrame(samples)
@@ -168,7 +168,7 @@ def get_samples(Xs: list) -> pd.Index:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> get_samples(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     if not isinstance(Xs[0], pd.DataFrame):
         Xs = [pd.DataFrame(X) for X in Xs]
     samples = [X.index.to_list() for X in Xs]
@@ -287,7 +287,7 @@ def get_n_com_samples(Xs: list) -> int:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> get_n_com_samples(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     n_samples = len(get_com_samples(Xs=Xs))
     return n_samples
 
@@ -319,7 +319,7 @@ def get_n_incom_samples(Xs: list) -> int:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> get_n_incom_samples(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     n_samples = len(get_incom_samples(Xs=Xs))
     return n_samples
 
@@ -351,7 +351,7 @@ def get_pct_com_samples(Xs: list) -> float:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> get_pct_com_samples(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     percentage_samples = get_n_com_samples(Xs=Xs) / len(Xs[0]) * 100
     return percentage_samples
 
@@ -383,7 +383,7 @@ def get_pct_incom_samples(Xs: list) -> float:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> get_pct_incom_samples(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     percentage_samples = get_n_incom_samples(Xs=Xs) / len(Xs[0]) * 100
     return percentage_samples
 
@@ -422,7 +422,7 @@ def get_summary(Xs: list, modalities: list = None, one_row: bool = False, comput
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
     >>> get_summary(Xs = Xs)
     """
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     n_samples = len(Xs[0])
     if one_row:
         summary = {

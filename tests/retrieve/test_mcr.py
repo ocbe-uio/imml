@@ -17,9 +17,10 @@ estimator = MCR
 
 @pytest.fixture
 def sample_data():
-    images = ["docs/figures/graph.png", "docs/figures/logo_imml.png"]
-    texts = ["This is the graphical abstract of iMML.", "This is the logo of iMML."]
-    Xs = [images, texts]
+    Xs = [
+        pd.DataFrame(["docs/figures/graph.png", "docs/figures/logo_imml.png"]),
+        pd.DataFrame(["This is the graphical abstract of iMML.", "This is the logo of iMML."]),
+    ]
     y = pd.Series([0, 1])
     return Xs, y
 
@@ -84,18 +85,6 @@ def test_invalid_params(sample_data):
         estimator(modalities=["image", "text"], save_memory_bank=-1)
 
     Xs, y = sample_data
-    with pytest.raises(ValueError, match="Invalid Xs."):
-        estimator(modalities=["image", "text"], n_neighbors=1).fit(1, y)
-    with pytest.raises(ValueError, match="Invalid Xs."):
-        estimator(modalities=["image", "text"], n_neighbors=1).fit([Xs[0][:1], Xs[1]], y)
-    with pytest.raises(ValueError, match="Invalid Xs."):
-        estimator(modalities=["image", "text"], n_neighbors=1).fit([[1]], y)
-    with pytest.raises(ValueError, match="Invalid Xs."):
-        estimator(modalities=["image", "text"], n_neighbors=1).fit([[1], []], y)
-    with pytest.raises(ValueError, match="Invalid y."):
-        estimator(modalities=["image", "text"], n_neighbors=1).fit(Xs, None)
-    with pytest.raises(ValueError, match="Invalid y."):
-        estimator(modalities=["image", "text"], n_neighbors=1).fit(Xs, [1])
     with pytest.raises(ValueError, match="Invalid n_neighbors."):
         estimator(modalities=["image", "text"], n_neighbors=1).fit_predict(Xs, y, n_neighbors=-1)
 
@@ -139,7 +128,7 @@ def test_missing_values_handling(sample_data, tmp_path):
 
     # Test with one missing value
     Xs_with_missing = [Xs[0].copy(), Xs[1].copy()]
-    Xs_with_missing[0][0] = np.nan
+    Xs_with_missing[0].iloc[0] = np.nan
     predictions = model.predict(Xs_with_missing)
     assert isinstance(predictions, dict)
     assert "image" in predictions
@@ -150,25 +139,42 @@ def test_missing_values_handling(sample_data, tmp_path):
     assert isinstance(transformed, pd.DataFrame)
     assert "observed_image" in transformed.columns
     assert "observed_text" in transformed.columns
-    assert (transformed["observed_image"] == pd.notna(Xs_with_missing[0]).astype(int)).all()
-    assert (transformed["observed_text"] == pd.notna(Xs_with_missing[1]).astype(int)).all()
+    assert transformed["observed_image"].equals(pd.notna(Xs_with_missing[0]).astype(int).squeeze())
+    assert transformed["observed_text"].equals(pd.notna(Xs_with_missing[1]).astype(int).squeeze())
 
     # Test with multiple missing values
     Xs_with_more_missing = [Xs[0].copy(), Xs[1].copy()]
-    Xs_with_more_missing[0][0] = np.nan
-    Xs_with_more_missing[1][1] = np.nan
+    Xs_with_more_missing[0].iloc[0] = np.nan
+    Xs_with_more_missing[1].iloc[1] = np.nan
     predictions = model.predict(Xs_with_more_missing)
     assert isinstance(predictions, dict)
 
     # Test transform with multiple missing values
     transformed = model.transform(Xs_with_more_missing, y)
     assert isinstance(transformed, pd.DataFrame)
-    assert (transformed["observed_image"] == pd.notna(Xs_with_more_missing[0]).astype(int)).all()
-    assert (transformed["observed_text"] == pd.notna(Xs_with_more_missing[1]).astype(int)).all()
+    assert transformed["observed_image"].equals(pd.notna(Xs_with_more_missing[0]).astype(int).squeeze())
+    assert transformed["observed_text"].equals(pd.notna(Xs_with_more_missing[1]).astype(int).squeeze())
 
     # Clean up
     shutil.rmtree(tmp_path, ignore_errors=True)
     assert not os.path.exists(tmp_path)
+
+
+def test_example(sample_data):
+    import pandas as pd
+    from imml.retrieve import MCR
+    Xs = [
+        pd.DataFrame(["docs/figures/graph.png", "docs/figures/logo_imml.png",
+                      "docs/figures/graph.png", "docs/figures/logo_imml.png"]),
+        pd.DataFrame(["This is the graphical abstract of iMML.", "This is the logo of iMML.",
+                      "This is the graphical abstract of iMML.", "This is the logo of iMML."]),
+    ]
+    y = [0, 1, 0, 1]
+    modalities = ["image", "text"]
+    estimator = MCR(modalities=modalities, n_neighbors=1)
+    estimator.fit(Xs=Xs, y=y)
+    memory_bank = estimator.memory_bank_
+    estimator.predict(Xs=Xs)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 try:
     from rpy2.robjects.packages import importr, PackageNotInstalledError
-    from ..utils import check_Xs, _convert_df_to_r_object
+    from ..utils import check_Xs_y, _convert_df_to_r_object
     rmodule_installed = True
 except ImportError:
     rmodule_installed = False
@@ -174,7 +174,7 @@ class JNMF(TransformerMixin, BaseEstimator):
         -------
         self :  returns an instance of self.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         if not isinstance(Xs[0], pd.DataFrame):
             self.transform_ = "numpy"
             Xs = [pd.DataFrame(X) for X in Xs]
@@ -226,7 +226,7 @@ class JNMF(TransformerMixin, BaseEstimator):
         transformed_Xs : list of array-likes objects, shape (n_samples, n_components)
             The projected data.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         if not isinstance(Xs[0], pd.DataFrame):
             Xs = [pd.DataFrame(X) for X in Xs]
 
@@ -278,7 +278,7 @@ class JNMF(TransformerMixin, BaseEstimator):
         transformed_X : array-likes objects of shape (n_samples, n_components)
             The projected data.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         if not isinstance(Xs[0], pd.DataFrame):
             self.transform_ = "numpy"
             Xs = [pd.DataFrame(X) for X in Xs]

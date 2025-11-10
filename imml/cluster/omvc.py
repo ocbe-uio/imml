@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 from ..explore import get_missing_samples_by_mod
 
 matlabmodule_installed = False
@@ -134,7 +134,7 @@ class OMVC(BaseEstimator, ClusterMixin):
         -------
         self :  Fitted estimator.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
         if self.engine=="matlab":
             n_mods = len(Xs)

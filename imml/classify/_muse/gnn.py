@@ -91,7 +91,8 @@ class GNNStack(Module):
 
 
 class MML(Module):
-    def __init__(self, num_modalities, hidden_channels, normalize_embs, num_layers, dropout, output_dim, loss_fn):
+    def __init__(self, num_modalities, hidden_channels, normalize_embs, num_layers, dropout, output_dim,
+                 loss_fn, get_probs):
         super(MML, self).__init__()
         self.output_dim = output_dim
         self.modality_nodes = nn.Parameter(torch.randn(num_modalities, hidden_channels))
@@ -113,11 +114,8 @@ class MML(Module):
             nn.Dropout(dropout),
             nn.Linear(hidden_channels, output_dim),
         )
-        if output_dim == 1:
-            self.act = nn.Sigmoid()
-        else:
-            self.act = nn.Softmax(dim=-1)
         self.loss_fn = loss_fn
+        self.get_probs = get_probs
 
 
     def edgedrop(self, flag):
@@ -159,13 +157,6 @@ class MML(Module):
         loss_zaz = F.binary_cross_entropy_with_logits(zaz_s, target)
         loss_zaz_t = F.binary_cross_entropy_with_logits(zaz_s.t(), target)
         return (2 * loss_z + loss_zaz + loss_zaz_t) / 4
-
-    def loss_fn(self, l, y):
-        if self.output_dim == 1:
-            loss = F.binary_cross_entropy_with_logits(l.squeeze(-1), y)
-        else:
-            loss = F.cross_entropy(l, y)
-        return loss
 
     def forward(self, Xs, missing_mod_indicator, y, y_indicator):
         batch_size = Xs[0].size(0)
@@ -212,7 +203,7 @@ class MML(Module):
 
         # cls
         z = z[y_indicator]
-        logits = self.classifier(z)
+        logits = self.classifier(z).squeeze(dim=1)
         cls_loss = self.loss_fn(logits, y)
 
         return 0.5 * unsup_loss + 0.5 * sup_loss + cls_loss
@@ -233,8 +224,6 @@ class MML(Module):
         z = self.gnn(g_nodes, g_edge_attr, g_edge_index)
         z = z[:batch_size]
 
-        logits = self.classifier(z)
-        if self.output_dim == 1:
-            logits = logits.squeeze(-1)
-        y_scores = self.act(logits)
+        logits = self.classifier(z).squeeze(dim=1)
+        y_scores = self.get_probs(logits)
         return y_scores, logits

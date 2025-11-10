@@ -50,10 +50,10 @@ class RAGPT(LightningModule):
         Dropout probability.
     hidden_dim : int, default=768
         Hidden dimension size.
-    cls_num : int, default=2
-        Number of target classes for classification tasks.
-    loss : callable, optional
-        Loss function. If None, defaults to `F.cross_entropy`.
+    output_dim : int, default=1
+        Number of classes in your response variable. Typically 1 for binary classification.
+    loss_fn : callable, default=None
+        Loss function. If None, defaults to `nn.BCEWithLogitsLoss()` if output_dim == <=2, else `nn.CrossEntropyLoss()`.
     learning_rate : float, default=1e-3
         Learning rate for the optimizer.
     weight_decay : float, default=2e-2
@@ -93,7 +93,7 @@ class RAGPT(LightningModule):
 
     def __init__(self, vilt: ViltModel = None, max_text_len: int = 128, max_image_len: int = 145,
                  prompt_position: int = 0, prompt_length: int = 1, dropout_rate: float = 0.2, hidden_dim: int = 768,
-                 cls_num: int = 2, loss: callable = None, learning_rate: float = 1e-3,
+                 output_dim: int = 2, loss_fn: callable = None, learning_rate: float = 1e-3,
                  weight_decay: float = 2e-2):
 
         if not deepmodule_installed:
@@ -123,12 +123,12 @@ class RAGPT(LightningModule):
             raise ValueError(f"Invalid hidden_dim. It must be an integer. A {type(hidden_dim)} was passed.")
         if hidden_dim <= 0:
             raise ValueError(f"Invalid hidden_dim. It must be positive. {hidden_dim} was passed.")
-        if not isinstance(cls_num, int):
-            raise ValueError(f"Invalid cls_num. It must be an integer. A {type(cls_num)} was passed.")
-        if cls_num <= 0:
-            raise ValueError(f"Invalid cls_num. It must be positive. {cls_num} was passed.")
-        if loss is not None and not callable(loss):
-            raise ValueError(f"Invalid loss. It must be callable. A {type(loss)} was passed.")
+        if not isinstance(output_dim, int):
+            raise ValueError(f"Invalid output_dim. It must be an integer. A {type(output_dim)} was passed.")
+        if output_dim <= 0:
+            raise ValueError(f"Invalid output_dim. It must be positive. {output_dim} was passed.")
+        if loss_fn is not None and not callable(loss_fn):
+            raise ValueError(f"Invalid loss_fn. It must be callable. A {type(loss_fn)} was passed.")
         if not isinstance(learning_rate, float):
             raise ValueError(f"Invalid learning_rate. It must be a float. A {type(learning_rate)} was passed.")
         if learning_rate <= 0:
@@ -142,10 +142,10 @@ class RAGPT(LightningModule):
 
         self.model = RAGPTModule(vilt=vilt, max_text_len=max_text_len, max_image_len=max_image_len,
                                 prompt_position=prompt_position, prompt_length=prompt_length,
-                                dropout_rate=dropout_rate, hidden_dim=hidden_dim, cls_num=cls_num)
-        if loss is None:
-            loss = F.cross_entropy
-        self.loss = loss
+                                dropout_rate=dropout_rate, hidden_dim=hidden_dim, output_dim=output_dim)
+        if loss_fn is None:
+            loss_fn = nn.BCEWithLogitsLoss() if output_dim == 1 else nn.CrossEntropyLoss()
+        self.loss_fn = loss_fn
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
 
@@ -154,9 +154,9 @@ class RAGPT(LightningModule):
         r"""
         Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
-        labels = batch.pop('label').long()
+        labels = batch.pop('label')
         preds = self.model(**batch)
-        loss = self.loss(preds, labels)
+        loss = self.loss_fn(preds, labels)
         return loss
 
 
@@ -164,9 +164,9 @@ class RAGPT(LightningModule):
         r"""
         Method required for validating using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
-        labels = batch.pop('label').long()
+        labels = batch.pop('label')
         preds = self.model(**batch)
-        loss = self.loss(preds, labels)
+        loss = self.loss_fn(preds, labels)
         return loss
 
 
@@ -174,9 +174,9 @@ class RAGPT(LightningModule):
         r"""
         Method required for testing using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
-        labels = batch.pop('label').long()
+        labels = batch.pop('label')
         preds = self.model(**batch)
-        loss = self.loss(preds, labels)
+        loss = self.loss_fn(preds, labels)
         return loss
 
 
@@ -184,7 +184,7 @@ class RAGPT(LightningModule):
         r"""
         Method required for predicting using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
-        _ = batch.pop('label').long()
+        _ = batch.pop('label')
         preds = self.model(**batch)
         return preds
 
@@ -200,7 +200,7 @@ class RAGPT(LightningModule):
 class RAGPTModule(Module):
     def __init__(self, vilt: ViltModel = None, max_text_len: int = 128, max_image_len: int = 145,
                  prompt_position: int = 0, prompt_length: int = 1, dropout_rate: float = 0.2,
-                 hidden_dim: int = 768, cls_num: int = 2):
+                 hidden_dim: int = 768, output_dim: int = 2):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
@@ -223,6 +223,7 @@ class RAGPTModule(Module):
         self.MMG_t = MMG(n = max_text_len, d=hidden_dim, dropout_rate=dropout_rate)
         self.MMG_i = MMG(n = max_image_len, d=hidden_dim, dropout_rate=dropout_rate)
         self.dynamic_prompt = CAP(prompt_length=prompt_length)
+        cls_num = 2 if output_dim <= 2 else output_dim
         self.label_enhanced = nn.Parameter(torch.randn(cls_num, hidden_dim))
         self.classifier = nn.Sequential(
                 nn.Linear(hidden_dim * 2, hidden_dim * 2),

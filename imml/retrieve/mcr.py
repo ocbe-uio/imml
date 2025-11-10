@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 
+from ..utils import check_Xs_y
+
 try:
     import torch
     import torch.nn.functional as F
@@ -91,18 +93,20 @@ class MCR(Module):
 
     Example
     --------
+    >>> import pandas as pd
     >>> from imml.retrieve import MCR
-    >>> images = ["docs/figures/graph.png", "docs/figures/logo_imml.png",
-                  "docs/figures/graph.png", "docs/figures/logo_imml.png"]
-    >>> texts = ["This is the graphical abstract of iMML.", "This is the logo of iMML.",
-                 "This is the graphical abstract of iMML.", "This is the logo of iMML."]
-    >>> Xs = [images, texts]
+    >>> Xs = [
+            pd.DataFrame(["docs/figures/graph.png", "docs/figures/logo_imml.png",
+                          "docs/figures/graph.png", "docs/figures/logo_imml.png"]),
+            pd.DataFrame(["This is the graphical abstract of iMML.", "This is the logo of iMML.",
+                          "This is the graphical abstract of iMML.", "This is the logo of iMML."]),
+    >>> ]
     >>> y = [0, 1, 0, 1]
     >>> modalities = ["image", "text"]
-    >>> estimator = MCR(modalities=modalities)
+    >>> estimator = MCR(modalities=modalities, n_neighbors=1)
     >>> estimator.fit(Xs=Xs, y=y)
     >>> memory_bank = estimator.memory_bank_
-    >>> preds = estimator.predict(Xs=Xs)
+    >>> estimator.predict(Xs=Xs)
     """
 
 
@@ -193,18 +197,9 @@ class MCR(Module):
         -------
         self :  Fitted estimator. Or memory_bank if save_memory_bank is False.
         """
-        if not isinstance(Xs, list):
-            raise ValueError(f"Invalid Xs. It must be a list. A {type(Xs)} was passed.")
         if len(Xs) != len(self.modalities):
             raise ValueError(f"Invalid Xs. It must have the same length as modalities. Got {len(Xs)} vs {len(self.modalities)}")
-        if any(len(X) == 0 for X in Xs):
-            raise ValueError("Invalid Xs. All elements must have at least one sample.")
-        if len(set(len(X) for X in Xs)) > 1:
-            raise ValueError("Invalid Xs. All elements must have the same number of samples.")
-        if y is None:
-            raise ValueError("Invalid y. It cannot be None.")
-        if len(y) != len(Xs[0]):
-            raise ValueError(f"Invalid y. It must have the same length as each element in Xs. Got {len(y)} vs {len(Xs[0])}")
+        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True)
 
         Xs = self._convert_to_1dlist(Xs=Xs)
         q_i_list, q_t_list = self._encode_img_text(Xs=Xs)
@@ -255,6 +250,9 @@ class MCR(Module):
         -------
         pred :  Dictionary with the ids, similarities and labels of the retrieved items for each modality.
         """
+        if len(Xs) != len(self.modalities):
+            raise ValueError(f"Invalid Xs. It must have the same length as modalities. Got {len(Xs)} vs {len(self.modalities)}")
+
         if n_neighbors is not None:
             if not isinstance(n_neighbors, int):
                 raise ValueError(f"Invalid n_neighbors. It must be a integer. A {type(n_neighbors)} was passed.")
@@ -396,19 +394,9 @@ class MCR(Module):
             - prompt_text_path: Path to the generated text prompt. Only if generate_cap is True.
 
         """
-        if not isinstance(Xs, list):
-            raise ValueError(f"Invalid Xs. It must be a list. A {type(Xs)} was passed.")
         if len(Xs) != len(self.modalities):
             raise ValueError(f"Invalid Xs. It must have the same length as modalities. Got {len(Xs)} vs {len(self.modalities)}")
-        if any(len(X) == 0 for X in Xs):
-            raise ValueError("Invalid Xs. All elements must have at least one sample.")
-        if len(set(len(X) for X in Xs)) > 1:
-            raise ValueError("Invalid Xs. All elements must have the same number of samples.")
-
-        if y is None:
-            raise ValueError("Invalid y. It cannot be None.")
-        if len(y) != len(Xs[0]):
-            raise ValueError(f"Invalid y. It must have the same length as each element in Xs. Got {len(y)} vs {len(Xs[0])}")
+        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True)
 
         if n_neighbors is not None:
             if not isinstance(n_neighbors, int):

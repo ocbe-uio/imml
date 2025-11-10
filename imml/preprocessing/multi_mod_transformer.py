@@ -3,7 +3,7 @@
 from copy import deepcopy
 from sklearn.base import BaseEstimator, TransformerMixin
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 
 class MultiModTransformer(BaseEstimator, TransformerMixin):
@@ -73,7 +73,7 @@ class MultiModTransformer(BaseEstimator, TransformerMixin):
         self :  returns an instance of self.
         """
 
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         for X_idx,X in enumerate(Xs):
             if self.same_transformer_:
                 self.transformer_list_.append(deepcopy(self.transformer))
@@ -99,6 +99,6 @@ class MultiModTransformer(BaseEstimator, TransformerMixin):
             A list of transformed mods of data, one for each input modality.
         """
 
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         tranformed_Xs = [self.transformer_list_[X_idx].transform(X) for X_idx, X in enumerate(Xs)]
         return tranformed_Xs

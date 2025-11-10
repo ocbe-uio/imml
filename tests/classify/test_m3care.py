@@ -101,8 +101,10 @@ def test_lightning_methods(sample_data):
         assert isinstance(loss, torch.Tensor)
         loss = model.test_step(sample_data)
         assert isinstance(loss, torch.Tensor)
+        assert not torch.isnan(loss).any()
         preds = model.predict_step(sample_data)
         assert isinstance(preds, torch.Tensor)
+        assert not torch.isnan(preds).any()
         optimizer = model.configure_optimizers()
         assert isinstance(optimizer, torch.optim.Optimizer)
 
@@ -123,6 +125,27 @@ def test_custom_loss_fn(sample_data):
     with torch.no_grad():
         loss = model.training_step(sample_data, 0)
     assert isinstance(loss, torch.Tensor)
+    assert not torch.isnan(loss).any()
+    preds = model.predict_step(sample_data)
+    assert isinstance(preds, torch.Tensor)
+    assert not torch.isnan(preds).any()
+    assert preds.ndim == 1
+    assert len(preds) == len(sample_data[1])
+
+    model = estimator(modalities=["tabular", "tabular", "tabular"],
+                     input_dim=[10, 10, 10], output_dim=2,
+                     loss_fn=torch.nn.functional.cross_entropy)
+    sample_data = (sample_data[0], sample_data[1].long(), sample_data[2])
+    with torch.no_grad():
+        loss = model.training_step(sample_data, 0)
+    assert isinstance(loss, torch.Tensor)
+    assert not torch.isnan(loss).any()
+    preds = model.predict_step(sample_data)
+    assert isinstance(preds, torch.Tensor)
+    assert not torch.isnan(preds).any()
+    assert preds.ndim == 2
+    assert len(preds) == len(sample_data[1])
+    assert preds.shape[1] == 2
 
 
 def test_image_text(sample_data):
@@ -141,20 +164,24 @@ def test_image_text(sample_data):
 
 
 def test_incomplete_image_text(sample_data):
-    model = estimator(modalities=["tabular", "image", "text"],
-                     input_dim=[10])
-    Xs = [
-        pd.DataFrame(sample_data[0][0].numpy()),
-        pd.DataFrame(["docs/figures/graph.png", "docs/figures/logo_imml.png"]),
-        pd.DataFrame(["This is the graphical abstract of iMML.", "This is the logo of iMML."]),
-    ]
-    Xs[0].iloc[0,:] = np.nan
-    Xs[1].iloc[1, 0] = np.nan
-    dataset = M3CareDataset(Xs=Xs, y=sample_data[1])
-    sample_data = next(iter(DataLoader(dataset=dataset, batch_size=2)))
-    with torch.no_grad():
-        loss = model.training_step(sample_data, 0)
-    assert isinstance(loss, torch.Tensor)
+    for i in range(3):
+        model = estimator(modalities=["tabular", "image", "text"],
+                         input_dim=[10])
+        Xs = [
+            pd.DataFrame(sample_data[0][0].numpy()),
+            pd.DataFrame(["docs/figures/graph.png", "docs/figures/logo_imml.png"]),
+            pd.DataFrame(["This is the graphical abstract of iMML.", "This is the logo of iMML."]),
+        ]
+        Xs[i].iloc[0,:] = np.nan
+        dataset = M3CareDataset(Xs=Xs, y=sample_data[1])
+        sample_data = next(iter(DataLoader(dataset=dataset, batch_size=2)))
+        with torch.no_grad():
+            loss = model.training_step(sample_data, 0)
+        assert isinstance(loss, torch.Tensor)
+        assert not torch.isnan(loss).any()
+        preds = model.predict_step(sample_data)
+        assert isinstance(preds, torch.Tensor)
+        assert not torch.isnan(preds).any()
 
 
 @pytest.mark.skipif(sys.platform.startswith("darwin"), reason="Error with MPS")
