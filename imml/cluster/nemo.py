@@ -11,7 +11,7 @@ from sklearn.cluster import SpectralClustering
 from sklearn.manifold import spectral_embedding
 
 from ..impute import get_observed_mod_indicator
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 from ..preprocessing import remove_missing_samples_by_mod
 
 try:
@@ -137,7 +137,7 @@ class NEMO(BaseEstimator, ClusterMixin):
         -------
         self :  Fitted estimator.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
         if not isinstance(Xs[0], pd.DataFrame):
             Xs = [pd.DataFrame(X) for X in Xs]

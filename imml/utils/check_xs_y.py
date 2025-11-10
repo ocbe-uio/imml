@@ -10,9 +10,10 @@ except ImportError:
     torch = object
 
 
-def check_Xs(Xs, enforce_modalities=None, copy=False, ensure_all_finite="allow-nan",return_dimensions=False):
+def check_Xs_y(Xs: list, y = None, enforce_modalities=None, copy=False, ensure_all_finite="allow-nan",
+               return_dimensions=False, supervised: bool = False):
     r"""
-    Checks Xs and ensures it to be a list of 2D matrices. Adapted from `̀mvlearn` [#checkxspaper]_ [#checkxscode]_ .
+    Checks Xs and y and ensures they have the correct format.
 
     Parameters
     ----------
@@ -21,6 +22,8 @@ def check_Xs(Xs, enforce_modalities=None, copy=False, ensure_all_finite="allow-n
         - Xs[i] shape: (n_samples, n_features_i)
 
         A list of different modalities.
+    y : array-like of shape (n_samples,), (default=None)
+        Target vector relative to X.
     enforce_modalities : int, (default=not checked)
         If provided, ensures this number of modalities in Xs. Otherwise not checked.
     copy : boolean, (default=False)
@@ -37,12 +40,8 @@ def check_Xs(Xs, enforce_modalities=None, copy=False, ensure_all_finite="allow-n
         If True, the function also returns the dimensions of the multi-modal dataset. The dimensions are n_mods,
         n_samples, n_features where n_samples and n_mods are respectively the number of modalities and the number of
         samples, and n_features is a list of length n_mods containing the number of features of each modality.
-
-    References
-    ----------
-    .. [#checkxspaper] Perry, Ronan, et al. "mvlearn: Multiview Machine Learning in Python." Journal of Machine
-                      Learning Research 22.109 (2021): 1-7.
-    .. [#checkxscode] https://mvlearn.github.io/references/utils.html
+    supervised : bool, (default=False)
+        If True, it checks y.
 
     Returns
     -------
@@ -71,8 +70,16 @@ def check_Xs(Xs, enforce_modalities=None, copy=False, ensure_all_finite="allow-n
         raise ValueError(f"Invalid Xs. All modalities should have the same number of samples. Got {[len(X) for X in Xs]}.")
     dtype = type(Xs[0])
     if not all(isinstance(X, dtype) for X in Xs):
-        msg = "All modalities should be the same data type"
         raise ValueError(f"Invalid Xs. All modalities should be the same data type. Got {[type(X) for X in Xs]}.")
+    if pd.concat(Xs,axis=1).isna().all(1).any():
+        raise ValueError(f"Invalid Xs. There are samples with no available data.")
+
+
+    if supervised:
+        if y is None:
+            raise ValueError("Invalid y. It cannot be None.")
+        if len(y) != len(Xs[0]):
+            raise ValueError(f"Invalid y. It must have the same length as each element in Xs. Got {len(y)} vs {len(Xs[0])}")
 
     if isinstance(Xs[0],pd.DataFrame):
         Xs = [pd.DataFrame(check_array(X, allow_nd=False, copy=copy, ensure_all_finite=ensure_all_finite, dtype=None),

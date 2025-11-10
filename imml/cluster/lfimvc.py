@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 from scipy.sparse.linalg import eigs
 
 from ..impute import simple_mod_imputer
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 matlabmodule_installed = False
 oct2py_module_error = "Module 'matlab' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
@@ -130,7 +130,7 @@ class LFIMVC(BaseEstimator, ClusterMixin):
         -------
         self :  Fitted estimator.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
         if self.engine=="matlab":
             transformed_Xs = simple_mod_imputer(Xs)

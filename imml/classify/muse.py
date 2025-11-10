@@ -44,7 +44,7 @@ class MUSE(LightningModule):
     weight_decay : float, default=0
         Weight decay used by the optimizer.
     output_dim : int, default=1
-        Number of output dimensions. Typically 1 for binary classification.
+        Number of classes in your response variable. Typically 1 for binary classification.
     extractors : list of nn.Module, default=None
         List of custom feature extractors for each modality. If None, defaults will be used.
     gnn_layers : int, default=2
@@ -52,7 +52,7 @@ class MUSE(LightningModule):
     gnn_norm : str or None, default=None
         Optional normalization strategy in GNN layers (e.g., 'batchnorm', 'layernorm').
     loss_fn : callable, default=None
-        Loss function. If None, defaults to `nn.BCEWithLogitsLoss()`.
+        Loss function. If None, defaults to `nn.BCEWithLogitsLoss()` if output_dim == <=2, else `nn.CrossEntropyLoss()`.
     code_pretrained_embedding : bool, default=True
         If True, initializes pretrained embeddings for text/code features.
     bert_type : str, default="prajjwal1/bert-tiny"
@@ -141,10 +141,17 @@ class MUSE(LightningModule):
 
         super().__init__()
 
+        if output_dim == 1:
+            get_probs = nn.Sigmoid()
+        else:
+            get_probs = nn.Softmax(dim=-1)
+        if loss_fn is None:
+            loss_fn = nn.BCEWithLogitsLoss() if output_dim == 1 else nn.CrossEntropyLoss()
         self.model = MUSEModule(input_dim=input_dim, tokenizer=tokenizer, hidden_dim=hidden_dim,
                                modalities=modalities, output_dim=output_dim, extractors=extractors,
                                gnn_layers=gnn_layers, gnn_norm=gnn_norm, bert_type=bert_type, dropout=dropout,
-                               code_pretrained_embedding=code_pretrained_embedding, loss_fn=loss_fn)
+                               code_pretrained_embedding=code_pretrained_embedding, loss_fn=loss_fn,
+                                get_probs=get_probs)
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
 
@@ -196,8 +203,8 @@ class MUSEModule(Module):
 
     def __init__(self, input_dim: list = None, modalities: list = None, extractors: list = None, tokenizer=None,
                  hidden_dim: int = 128, output_dim: int = 1, gnn_layers: int = 2, gnn_norm: str = None, loss_fn=None,
-                 code_pretrained_embedding: bool = True, bert_type: str = "prajjwal1/bert-tiny", dropout: float = 0.25
-                 ):
+                 get_probs=None, code_pretrained_embedding: bool = True, bert_type: str = "prajjwal1/bert-tiny",
+                 dropout: float = 0.25):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
@@ -212,10 +219,6 @@ class MUSEModule(Module):
         self.dropout = dropout
         self.gnn_layers = gnn_layers
         self.gnn_norm = gnn_norm
-        if loss_fn is None:
-            loss_fn = nn.BCEWithLogitsLoss()
-        self.loss_fn = loss_fn
-
         self.dropout_layer = nn.Dropout(dropout)
 
         if modalities is None:
@@ -247,7 +250,8 @@ class MUSEModule(Module):
             setattr(self, f"extractor{i}", extractor)
 
         self.mml = MML(num_modalities=len(modalities), hidden_channels=hidden_dim, num_layers=gnn_layers,
-                       dropout=dropout, normalize_embs=gnn_norm, output_dim=output_dim, loss_fn=loss_fn)
+                       dropout=dropout, normalize_embs=gnn_norm, output_dim=output_dim,
+                       loss_fn=loss_fn, get_probs=get_probs)
 
 
     def forward(self, Xs, y, missing_mod_indicator, y_indicator):

@@ -47,17 +47,18 @@ class M3Care(LightningModule):
     modalities : list of str, default=None
         Names of the modalities. Options are "tabular", "text" and "image".
     vocab : list, default=None
-        List with path to corpus file, freq_cutoff (if word occurs n < freq_cutoff times, drop the word), and
-        maximum number of words in vocabulary. If you want to pass your own Vocab object, use just a list with one
-        element [Vocab]. If None, ["train.de-en.en", 50000, 2] will be used (if applicable). [#m3carecode]_
+        List with path to corpus file, maximum number of words in vocabulary, and freq_cutoff
+        (if word occurs n < freq_cutoff times, drop the word). If you want to pass your own Vocab object, use just
+        a list with one element [Vocab]. If None, ["test.de-en.en", 50000, 2] will be
+        used (if applicable). [#m3carecode]_
     learning_rate : float, default=1e-4
         Learning rate for the optimizer.
     weight_decay : float, default=1e-4
         Weight decay used by the optimizer.
     output_dim : int, default=1
-        Number of output dimensions. Typically 1 for binary classification.
+        Number of classes in your response variable. Typically 1 for binary classification.
     loss_fn : callable, default=None
-        Loss function. If None, defaults to `nn.BCEWithLogitsLoss()`.
+        Loss function. If None, defaults to `nn.BCEWithLogitsLoss()` if output_dim == <=2, else `nn.CrossEntropyLoss()`.
     keep_prob : float, default=0.5
         Dropout keep probability used in MLP layers.
     extractors : list of nn.Module, default=None
@@ -139,7 +140,7 @@ class M3Care(LightningModule):
         if extractors is not None and not isinstance(extractors, list):
             raise ValueError(f"Invalid extractors. It must be a list. A {type(extractors)} was passed.")
         if vocab is None:
-            vocab = [os.path.join("imml", "classify", "_m3care", "train.de-en.en"), 50000, 2]
+            vocab = [os.path.join("imml", "classify", "_m3care", "test.de-en.en"), 50000, 2]
         elif not isinstance(vocab, list):
             raise ValueError(f"Invalid vocab. It must be a list. A {type(vocab)} was passed.")
 
@@ -150,8 +151,12 @@ class M3Care(LightningModule):
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
         if loss_fn is None:
-            loss_fn = nn.BCEWithLogitsLoss()
+            loss_fn = nn.BCEWithLogitsLoss() if output_dim == 1 else nn.CrossEntropyLoss()
         self.loss_fn = loss_fn
+        if output_dim == 1:
+            self.get_probs = nn.Sigmoid()
+        else:
+            self.get_probs = nn.Softmax(dim=-1)
 
 
     def training_step(self, batch, batch_idx=None):
@@ -160,7 +165,7 @@ class M3Care(LightningModule):
         """
         Xs, y, observed_mod_indicator = batch
         y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
-        loss = self.loss_fn(y_pred.squeeze(), y)
+        loss = self.loss_fn(y_pred, y)
         return loss
 
 
@@ -170,7 +175,7 @@ class M3Care(LightningModule):
         """
         Xs, y, observed_mod_indicator = batch
         y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
-        loss = self.loss_fn(y_pred.squeeze(), y)
+        loss = self.loss_fn(y_pred, y)
         return loss
 
 
@@ -180,7 +185,7 @@ class M3Care(LightningModule):
         """
         Xs, y, observed_mod_indicator = batch
         y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
-        loss = self.loss_fn(y_pred.squeeze(), y)
+        loss = self.loss_fn(y_pred, y)
         return loss
 
 
@@ -190,8 +195,8 @@ class M3Care(LightningModule):
         """
         Xs, y, observed_mod_indicator = batch
         y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
-        loss = F.sigmoid(y_pred)
-        return loss
+        y_pred = self.get_probs(y_pred)
+        return y_pred
 
 
     def configure_optimizers(self):
@@ -282,6 +287,8 @@ class M3CareModule(Module):
         for X_idx, (X,mod) in enumerate(zip(Xs, self.modalities)):
             extractor = getattr(self, f"extractor{X_idx}")
             if mod == 'tabular':
+                X = X.clone()
+                X[X.isnan().all(1)] = 0
                 feat = extractor(X)
                 feat = F.relu(feat)
                 if len(X) == 1:
@@ -291,7 +298,7 @@ class M3CareModule(Module):
                 feat_00 = feat.clone()
             elif mod == 'image':
                 X = [self.preprocess_img(Image.open(img_path).convert('RGB')
-                     if pd.notna(img_path) else Image.new("RGB", (256, 256), (0, 0, 0)))
+                     if bool(img_path) else Image.new("RGB", (256, 256), (0, 0, 0)))
                      for img_path in X]
                 X = torch.stack(X)
                 feat = extractor(X)
@@ -302,7 +309,7 @@ class M3CareModule(Module):
                     mask = torch.ones((feat.shape[0], 1)).int().squeeze()
                 feat_00 = feat.clone()
             elif mod == 'text':
-                X = [s.split() for s in X]
+                X = [f"[CLS] {s}".split() if bool(s) else "[CLS] None".split() for s in X]
                 feat, lens = extractor(X)
                 feat = F.relu(feat)
                 mask = torch.from_numpy(np.array(lens))
@@ -379,5 +386,6 @@ class M3CareModule(Module):
         combined_hidden = torch.cat(combined_hidden, dim=-1)
         last_hs_proj = self.dropout(F.relu(self.proj1(combined_hidden)))
         output = self.out_layer(last_hs_proj)
+        output = output.squeeze(dim=1)
 
         return output, sum_of_diff

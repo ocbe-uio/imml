@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from ..impute import get_observed_mod_indicator
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 try:
     import lightning as L
@@ -62,7 +62,7 @@ class M3CareDataset(Dataset):
         if len(y) != len(Xs[0]):
             raise ValueError(f"Invalid y. It must have the same length as each element in Xs. Got {len(y)} vs {len(Xs[0])}")
 
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         observed_mod_indicator = get_observed_mod_indicator(Xs)
         if isinstance(observed_mod_indicator, pd.DataFrame):
             observed_mod_indicator = observed_mod_indicator.values
@@ -77,6 +77,7 @@ class M3CareDataset(Dataset):
             if isinstance(X, np.ndarray):
                 if X[:,0].dtype == object:
                     X = X.tolist()
+                    X = [sent if isinstance(sent[0], str) else [""] for sent in X]
                 else:
                     X = torch.from_numpy(X).float()
             Xs_.append(X)

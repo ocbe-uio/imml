@@ -325,7 +325,6 @@ class VocabEntry(object):
 
         word_freq = Counter(chain(*corpus))
         valid_words = [w for w, v in word_freq.items() if v >= freq_cutoff]
-        print(f'number of word types: {len(word_freq)}, number of word types w/ frequency >= {freq_cutoff}: {len(valid_words)}')
 
         top_k_words = sorted(valid_words, key=lambda w: word_freq[w], reverse=True)[:size]
         for word in top_k_words:

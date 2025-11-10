@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from ..decomposition.mofa import MOFA
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 
 class MOFAImputer(MOFA):
@@ -59,7 +59,7 @@ class MOFAImputer(MOFA):
             The transformed data with filled missing samples.
         """
 
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         if not isinstance(Xs[0], pd.DataFrame):
             Xs = [pd.DataFrame(X) for X in Xs]
 

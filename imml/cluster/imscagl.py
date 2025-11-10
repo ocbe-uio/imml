@@ -8,7 +8,7 @@ from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 
 from ..impute import get_observed_mod_indicator
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 from ..preprocessing import remove_missing_samples_by_mod
 
 matlabmodule_installed = False
@@ -146,7 +146,7 @@ class IMSCAGL(BaseEstimator, ClusterMixin):
         -------
         self :  Fitted estimator.
         """
-        Xs = check_Xs(Xs, ensure_all_finite='allow-nan')
+        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
         if self.engine=="matlab":
             if not isinstance(Xs[0], pd.DataFrame):

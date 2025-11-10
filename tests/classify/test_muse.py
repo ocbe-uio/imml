@@ -101,6 +101,7 @@ def test_lightning_methods(sample_data):
         loss = model.test_step(sample_data)
         assert isinstance(loss, torch.Tensor)
         preds = model.predict_step(sample_data)
+        assert not torch.isnan(preds).any()
         assert isinstance(preds, torch.Tensor)
         optimizer = model.configure_optimizers()
         assert isinstance(optimizer, torch.optim.Optimizer)
@@ -117,6 +118,36 @@ def test_missing_values_handling(sample_data):
     with torch.no_grad():
         loss = model.training_step(sample_data)
     assert isinstance(loss, torch.Tensor)
+
+
+def test_custom_loss_fn(sample_data):
+    model = estimator(modalities=["tabular", "tabular", "tabular"],
+                     input_dim=[10, 10, 10],
+                     loss_fn=torch.nn.functional.binary_cross_entropy_with_logits)
+    with torch.no_grad():
+        loss = model.training_step(sample_data, 0)
+    assert isinstance(loss, torch.Tensor)
+    assert not torch.isnan(loss).any()
+    preds = model.predict_step(sample_data)
+    assert isinstance(preds, torch.Tensor)
+    assert not torch.isnan(preds).any()
+    assert preds.ndim == 1
+    assert len(preds) == len(sample_data[1])
+
+    model = estimator(modalities=["tabular", "tabular", "tabular"],
+                     input_dim=[10, 10, 10], output_dim=2,
+                     loss_fn=torch.nn.functional.cross_entropy)
+    sample_data = (sample_data[0], sample_data[1].long(), sample_data[2], sample_data[3])
+    with torch.no_grad():
+        loss = model.training_step(sample_data, 0)
+    assert isinstance(loss, torch.Tensor)
+    assert not torch.isnan(loss).any()
+    preds = model.predict_step(sample_data)
+    assert isinstance(preds, torch.Tensor)
+    assert not torch.isnan(preds).any()
+    assert preds.ndim == 2
+    assert len(preds) == len(sample_data[1])
+    assert preds.shape[1] == 2
 
 
 def test_tab_text(sample_data):

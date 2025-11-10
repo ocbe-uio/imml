@@ -31,6 +31,24 @@ Change tags (adopted from `Scikit-learn
 - |API| : you will need to change your code to have the same effect in the future; or a feature will be removed in the future.
 
 
+Version 0.3.0
+-------------
+November 3, 2025
+
+Updates in this release:
+
+- |MajorFeature| We have created a new module :mod:`imml.model_selection`.
+
+:mod:`imml.model_selection`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| :class:`~imml.model_selection.multi_train_test_split` Was added.
+
+:mod:`imml.utils`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Enhancement| :class:`~imml.utils.check_Xs` was converted to :class:`~imml.utils.check_Xs_y`
+
+
+
 Version 0.2.0
 -------------
 November 3, 2025
@@ -46,12 +64,13 @@ Updates in this release:
   `algorithm selection guide <https://imml.readthedocs.io/stable/main/alg_guidelines.html>`_ by adding direct
   hyperlinks from each algorithm to its corresponding detailed documentation page, making it easier for users
   to explore specific implementations.
+- |Efficiency| numba package was removed from the requirements.
 
 :mod:`imml.ampute`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |Feature| :class:`~imml.ampute.Amputer` Now support lists and
+- |Enhancement| :class:`~imml.ampute.Amputer` Now support lists and
   `pytorch tensors <https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor>`_.
-- |Feature| :class:`~imml.ampute.RemoveMods` Now support lists and
+- |Enhancement| :class:`~imml.ampute.RemoveMods` Now support lists and
   `pytorch tensors <https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor>`_.
 
 :mod:`imml.classify`
@@ -63,13 +82,13 @@ Updates in this release:
 
 :mod:`imml.impute`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |Feature| :class:`~imml.ampute.MissingModIndicator` Now support lists and
+- |Enhancement| :class:`~imml.ampute.MissingModIndicator` Now support lists and
   `pytorch tensors <https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor>`_.
-- |Feature| :class:`~imml.ampute.get_missing_mod_indicator` Now support lists and
+- |Enhancement| :class:`~imml.ampute.get_missing_mod_indicator` Now support lists and
   `pytorch tensors <https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor>`_.
-- |Feature| :class:`~imml.ampute.ObservedModIndicator` Now support lists and
+- |Enhancement| :class:`~imml.ampute.ObservedModIndicator` Now support lists and
   `pytorch tensors <https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor>`_.
-- |Feature| :class:`~imml.ampute.get_observed_mod_indicator` Now support lists and
+- |Enhancement| :class:`~imml.ampute.get_observed_mod_indicator` Now support lists and
   `pytorch tensors <https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor>`_.
 
 :mod:`imml.load`
@@ -79,7 +98,7 @@ Updates in this release:
 
 :mod:`imml.utils`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |Feature| :class:`~imml.utils.check_Xs` Now support
+- |Enhancement| :class:`~imml.utils.check_Xs` Now support
   `pytorch tensors <https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor>`_.
 
 

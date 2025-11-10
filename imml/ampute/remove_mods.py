@@ -11,7 +11,7 @@ try:
 except ImportError:
     Tensor = str
 
-from ..utils import check_Xs
+from ..utils import check_Xs_y
 
 
 class RemoveMods(FunctionTransformer):
@@ -67,7 +67,7 @@ def remove_mods(Xs: list, observed_mod_indicator):
     >>> remove_mods(Xs=Xs, observed_mod_indicator = observed_mod_indicator)
     """
 
-    Xs = check_Xs(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
     transformed_Xs = []
     if isinstance(observed_mod_indicator, pd.DataFrame):
         observed_mod_indicator = observed_mod_indicator.values

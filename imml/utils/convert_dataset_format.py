@@ -2,7 +2,7 @@
 
 from typing import Union
 
-from . import check_Xs
+from . import check_Xs_y
 
 
 def convert_dataset_format(Xs: list, keys: list = None) -> Union[list, dict]:
@@ -34,7 +34,7 @@ def convert_dataset_format(Xs: list, keys: list = None) -> Union[list, dict]:
     >>> convert_dataset_format(Xs = Xs)
     """
     if isinstance(Xs, dict):
-        check_Xs(Xs=list(Xs.values()), ensure_all_finite="allow-nan")
+        check_Xs_y(Xs=list(Xs.values()), ensure_all_finite="allow-nan")
         transformed_Xs = list(Xs.values())
     elif isinstance(Xs, list):
         if keys is None:

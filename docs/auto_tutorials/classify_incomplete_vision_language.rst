@@ -98,13 +98,6 @@ Step 1: Import required libraries
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: '/home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/image.so: undefined symbol: _ZN3c1017RegisterOperatorsD1Ev'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-      warn(
-
 
 
 
@@ -162,7 +155,6 @@ the ``MCR`` class from the retrieve module.
 
  .. code-block:: none
 
-    Seed set to 42
 
     class
     1    37
@@ -330,7 +322,6 @@ We use ``MCR`` (Multi-Channel Retriever) to construct a memory bank and generate
 
  .. code-block:: none
 
-    Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
     memory_bank (20, 8)
 
 
@@ -496,7 +487,7 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
 .. code-block:: Python
 
     trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
-    estimator = RAGPT(cls_num=len(le.classes_))
+    estimator = RAGPT(output_dim=len(le.classes_))
     trainer.fit(estimator, train_dataloader)
 
 
@@ -507,22 +498,7 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
 
  .. code-block:: none
 
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-
-      | Name  | Type        | Params | Mode 
-    ----------------------------------------------
-    0 | model | RAGPTModule | 118 M  | train
-    ----------------------------------------------
-    7.3 M     Trainable params
-    111 M     Non-trainable params
-    118 M     Total params
-    473.226   Total estimated model params size (MB)
-    19        Modules in train mode
-    232       Modules in eval mode
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:24<00:00,  0.04it/s]    Epoch 0: 100%|██████████| 1/1 [00:24<00:00,  0.04it/s]    Epoch 0: 100%|██████████| 1/1 [00:24<00:00,  0.04it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
-    Epoch 1: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]
 
 
 
@@ -540,7 +516,7 @@ modify the internal functions. For instance, we can track loss and compute evalu
 
 
     trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
-    estimator = RAGPT(cls_num=len(le.classes_))
+    estimator = RAGPT(output_dim=len(le.classes_))
     estimator.loss_list = []
     estimator.agg_loss_list = []
     validation_step = estimator.validation_step
@@ -566,32 +542,17 @@ modify the internal functions. For instance, we can track loss and compute evalu
 
  .. code-block:: none
 
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-
-      | Name  | Type        | Params | Mode 
-    ----------------------------------------------
-    0 | model | RAGPTModule | 118 M  | train
-    ----------------------------------------------
-    7.3 M     Trainable params
-    111 M     Non-trainable params
-    118 M     Total params
-    473.226   Total estimated model params size (MB)
-    19        Modules in train mode
-    232       Modules in eval mode
-    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:05<00:00,  0.19it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:22<00:00,  0.04it/s]    Epoch 0: 100%|██████████| 1/1 [00:22<00:00,  0.04it/s]
+    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:04<00:00,  0.23it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:17<00:00,  0.06it/s]    Epoch 0: 100%|██████████| 1/1 [00:17<00:00,  0.06it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:05<00:00,  0.18it/s]
-                                                                              Epoch 0: 100%|██████████| 1/1 [00:29<00:00,  0.03it/s]    Epoch 0: 100%|██████████| 1/1 [00:29<00:00,  0.03it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:22<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:22<00:00,  0.05it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:03<00:00,  0.33it/s]
+                                                                              Epoch 0: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:05<00:00,  0.17it/s]
-                                                                              Epoch 1: 100%|██████████| 1/1 [00:28<00:00,  0.03it/s]    Epoch 1: 100%|██████████| 1/1 [00:28<00:00,  0.03it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
-    Epoch 1: 100%|██████████| 1/1 [00:28<00:00,  0.03it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:03<00:00,  0.33it/s]
+                                                                              Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]
 
 
 
@@ -657,7 +618,7 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:05<00:00,  0.17it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:05<00:00,  0.17it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:03<00:00,  0.32it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:03<00:00,  0.32it/s]
 
 
 
@@ -668,7 +629,7 @@ After training, we can evaluate predictions and visualize the results.
 
 
     ConfusionMatrixDisplay.from_predictions(y_true=y_test, y_pred=preds)
-    print("Testing metric:", matthews_corrcoef(y_true=y_test, y_pred=preds))
+    print("Testing metric:", round(matthews_corrcoef(y_true=y_test, y_pred=preds), 2))
 
 
 
@@ -683,7 +644,7 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Testing metric: 0.8017837257372732
+    Testing metric: 0.8
 
 
 
@@ -714,7 +675,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (4 minutes 50.245 seconds)
+   **Total running time of the script:** (3 minutes 50.108 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:
