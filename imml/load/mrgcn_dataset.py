@@ -1,5 +1,7 @@
 # License: BSD-3-Clause
 
+from ..utils import check_Xs_y
+
 try:
     import torch
     deepmodule_installed = True
@@ -35,14 +37,7 @@ class MRGCNDataset(Dataset):
     def __init__(self, Xs: list, transform = None):
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
-        if not isinstance(Xs, list):
-            raise ValueError(f"Invalid Xs. It must be a list of array-likes objects. A {type(Xs)} was passed.")
-        if len(Xs) < 2:
-            raise ValueError(f"Invalid Xs. It must have at least two modalities. Got {len(Xs)} modalities.")
-        if any(len(X) == 0 for X in Xs):
-            raise ValueError("Invalid Xs. All elements must have at least one sample.")
-        if len(set(len(X) for X in Xs)) > 1:
-            raise ValueError("Invalid Xs. All elements must have the same number of samples.")
+        Xs = check_Xs_y(Xs=Xs)
 
         self.Xs = Xs
         self.transform = transform

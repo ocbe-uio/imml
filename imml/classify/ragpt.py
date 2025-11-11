@@ -66,6 +66,12 @@ class RAGPT(LightningModule):
                      vol. 39, no. 17, Apr. 2025, pp. 18035-43, doi:10.1609/aaai.v39i17.33984.
     .. [#ragptcode] https://github.com/Jian-Lang/RAGPT/
 
+    See Also
+    --------
+    `Classify an incomplete vision–language dataset (Oxford‑IIIT Pets) with deep learning
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html#sphx-glr-auto-tutorials-classify-incomplete-vision-language-py>`__:
+    Tutorial demonstrating its usage on an incomplete vision-language dataset.
+
     Example
     --------
     >>> from imml.retrieve import MCR

@@ -133,10 +133,10 @@ make the dataset a bit more complex by introducing some incomplete samples, then
 
     inc_Xs = copy.deepcopy(Xs)
     # Introduce block-wise missingness in a few regions for illustration
-    inc_Xs[0][:20, :] = np.nan
+    inc_Xs[0][:10, :] = np.nan
     inc_Xs[0][25, 1] = np.nan
-    inc_Xs[1][18:22, :] = np.nan
-    inc_Xs[1][-15:, 3] = np.nan
+    inc_Xs[1][18:20, :] = np.nan
+    inc_Xs[1][30:, 3] = np.nan
 
     summary = get_summary(Xs=inc_Xs, one_row=True, compute_pct=True, return_df=True)
     summary
@@ -178,12 +178,12 @@ make the dataset a bit more complex by introducing some incomplete samples, then
       <tbody>
         <tr>
           <th>0</th>
-          <td>28</td>
-          <td>22</td>
-          <td>[30, 46]</td>
+          <td>38</td>
+          <td>12</td>
+          <td>[40, 48]</td>
+          <td>[10, 2]</td>
+          <td>[80, 96]</td>
           <td>[20, 4]</td>
-          <td>[60, 92]</td>
-          <td>[40, 8]</td>
         </tr>
       </tbody>
     </table>
@@ -240,30 +240,30 @@ Per‑modality view:
       <tbody>
         <tr>
           <th>Modality A</th>
-          <td>29</td>
-          <td>20</td>
-          <td>21</td>
-          <td>58.0</td>
-          <td>40.0</td>
-          <td>42.0</td>
+          <td>39</td>
+          <td>10</td>
+          <td>11</td>
+          <td>78.0</td>
+          <td>20.0</td>
+          <td>22.0</td>
         </tr>
         <tr>
           <th>Modality B</th>
-          <td>31</td>
-          <td>4</td>
-          <td>19</td>
-          <td>62.0</td>
-          <td>8.0</td>
-          <td>38.0</td>
+          <td>28</td>
+          <td>2</td>
+          <td>22</td>
+          <td>56.0</td>
+          <td>4.0</td>
+          <td>44.0</td>
         </tr>
         <tr>
           <th>Total</th>
+          <td>17</td>
           <td>12</td>
-          <td>22</td>
-          <td>38</td>
+          <td>33</td>
+          <td>34.0</td>
           <td>24.0</td>
-          <td>44.0</td>
-          <td>76.0</td>
+          <td>66.0</td>
         </tr>
       </tbody>
     </table>
@@ -276,7 +276,7 @@ Per‑modality view:
 
 For quick inspection, we can also plot the per‑modality counts. Here we create a bar chart.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-90
+.. GENERATED FROM PYTHON SOURCE LINES 83-89
 
 .. code-block:: Python
 
@@ -285,7 +285,6 @@ For quick inspection, we can also plot the per‑modality counts. Here we create
     _ = summary[[c for c in summary.columns if not c.startswith('%')]].plot(
         kind="bar", xlabel="Samples", ylabel="Count", rot=0,
         title="Summary of the multi-modal dataset")
-
 
 
 
@@ -299,7 +298,7 @@ For quick inspection, we can also plot the per‑modality counts. Here we create
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-96
+.. GENERATED FROM PYTHON SOURCE LINES 90-95
 
 Step 4: Compute PID statistics (Redundancy, Uniqueness, Synergy)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -307,7 +306,7 @@ Using ``pid``, we quantify the degree of redundancy, uniqueness, and synergy rel
 With two input modalities, ``pid`` returns a dictionary with keys: "Redundancy", "Uniqueness1", "Uniqueness2",
 and "Synergy".
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-101
+.. GENERATED FROM PYTHON SOURCE LINES 95-100
 
 .. code-block:: Python
 
@@ -329,14 +328,14 @@ and "Synergy".
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-106
+.. GENERATED FROM PYTHON SOURCE LINES 101-105
 
 Step 5: Visualize the PID as a Venn-like diagram
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 You can directly pass the rus dict returned by ``pid`` to ``plot_pid``. Alternatively, ``plot_pid`` can also compute
 PID internally if you pass Xs and y, which is convenient when you want a one‑liner.
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-110
+.. GENERATED FROM PYTHON SOURCE LINES 105-109
 
 .. code-block:: Python
 
@@ -356,7 +355,7 @@ PID internally if you pass Xs and y, which is convenient when you want a one‑l
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-119
+.. GENERATED FROM PYTHON SOURCE LINES 110-118
 
 Step 6: Interpreting PID results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -367,14 +366,14 @@ Step 6: Interpreting PID results
 If redundancy is high while uniqueness and synergy are low, this may suggest that the dataset could be more
 appropriately analyzed using classical unimodal modeling.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-125
+.. GENERATED FROM PYTHON SOURCE LINES 120-124
 
 Step 7: Working with more than two modalities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 If you have more than two modalities, PID statistics are computed pairwise; ``pid`` returns a list of
 dictionaries (one per pair). For example, adding a third modality yields three pairwise results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-129
+.. GENERATED FROM PYTHON SOURCE LINES 124-128
 
 .. code-block:: Python
 
@@ -395,7 +394,7 @@ dictionaries (one per pair). For example, adding a third modality yields three p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-140
+.. GENERATED FROM PYTHON SOURCE LINES 129-139
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -411,7 +410,7 @@ feature engineering for downstream multi‑modal learning.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 27.475 seconds)
+   **Total running time of the script:** (0 minutes 25.443 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_multil_modal_data_statistics.py:
