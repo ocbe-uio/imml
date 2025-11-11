@@ -199,7 +199,7 @@ class MCR(Module):
         """
         if len(Xs) != len(self.modalities):
             raise ValueError(f"Invalid Xs. It must have the same length as modalities. Got {len(Xs)} vs {len(self.modalities)}")
-        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True)
+        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True, enforce_modalities=len(self.modalities))
 
         Xs = self._convert_to_1dlist(Xs=Xs)
         q_i_list, q_t_list = self._encode_img_text(Xs=Xs)
@@ -394,9 +394,7 @@ class MCR(Module):
             - prompt_text_path: Path to the generated text prompt. Only if generate_cap is True.
 
         """
-        if len(Xs) != len(self.modalities):
-            raise ValueError(f"Invalid Xs. It must have the same length as modalities. Got {len(Xs)} vs {len(self.modalities)}")
-        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True)
+        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True, enforce_modalities=len(self.modalities))
 
         if n_neighbors is not None:
             if not isinstance(n_neighbors, int):

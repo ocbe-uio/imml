@@ -24,7 +24,7 @@ def check_Xs_y(Xs: list, y = None, enforce_modalities=None, copy=False, ensure_a
         A list of different modalities.
     y : array-like of shape (n_samples,), (default=None)
         Target vector relative to X.
-    enforce_modalities : int, (default=not checked)
+    enforce_modalities : int, (default=None)
         If provided, ensures this number of modalities in Xs. Otherwise not checked.
     copy : boolean, (default=False)
         If True, the returned Xs is a copy of the input Xs, and operations on the output will not affect the input.
@@ -64,16 +64,15 @@ def check_Xs_y(Xs: list, y = None, enforce_modalities=None, copy=False, ensure_a
         raise ValueError(f"Invalid Xs. It must have at least two modalities. Got {n_mods} modalities.")
     if any(len(X) == 0 for X in Xs):
         raise ValueError(f"Invalid Xs. All elements must have at least one sample. Got {[len(X) for X in Xs]}.")
-    if enforce_modalities is not None and n_mods != enforce_modalities:
+    if (enforce_modalities is not None) and (n_mods != enforce_modalities):
         raise ValueError(f"Invalid Xs. Wrong number of modalities. Expected {enforce_modalities} but found {n_mods}")
     if len(set([len(X) for X in Xs])) != 1:
         raise ValueError(f"Invalid Xs. All modalities should have the same number of samples. Got {[len(X) for X in Xs]}.")
     dtype = type(Xs[0])
     if not all(isinstance(X, dtype) for X in Xs):
         raise ValueError(f"Invalid Xs. All modalities should be the same data type. Got {[type(X) for X in Xs]}.")
-    if pd.concat(Xs,axis=1).isna().all(1).any():
+    if pd.concat([pd.DataFrame(X) for X in Xs], axis=1).isna().all(1).any():
         raise ValueError(f"Invalid Xs. There are samples with no available data.")
-
 
     if supervised:
         if y is None:

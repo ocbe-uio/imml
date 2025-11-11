@@ -56,13 +56,8 @@ class M3CareDataset(Dataset):
     def __init__(self, Xs, y):
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
+        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True)
 
-        if y is None:
-            raise ValueError("Invalid y. It cannot be None.")
-        if len(y) != len(Xs[0]):
-            raise ValueError(f"Invalid y. It must have the same length as each element in Xs. Got {len(y)} vs {len(Xs[0])}")
-
-        Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
         observed_mod_indicator = get_observed_mod_indicator(Xs)
         if isinstance(observed_mod_indicator, pd.DataFrame):
             observed_mod_indicator = observed_mod_indicator.values

@@ -65,10 +65,10 @@ print("Samples:", len(Xs[0]), "\t", "Modalities:", len(Xs), "\t", "Features:", [
 
 inc_Xs = copy.deepcopy(Xs)
 # Introduce block-wise missingness in a few regions for illustration
-inc_Xs[0][:20, :] = np.nan
+inc_Xs[0][:10, :] = np.nan
 inc_Xs[0][25, 1] = np.nan
-inc_Xs[1][18:22, :] = np.nan
-inc_Xs[1][-15:, 3] = np.nan
+inc_Xs[1][18:20, :] = np.nan
+inc_Xs[1][30:, 3] = np.nan
 
 summary = get_summary(Xs=inc_Xs, one_row=True, compute_pct=True, return_df=True)
 summary
@@ -85,7 +85,6 @@ summary.index = summary.index.str.replace(" samples", "")
 _ = summary[[c for c in summary.columns if not c.startswith('%')]].plot(
     kind="bar", xlabel="Samples", ylabel="Count", rot=0,
     title="Summary of the multi-modal dataset")
-
 
 ###################################################
 # Step 4: Compute PID statistics (Redundancy, Uniqueness, Synergy)
