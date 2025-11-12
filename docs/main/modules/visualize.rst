@@ -3,6 +3,12 @@ Visualize
 
 .. currentmodule:: imml.visualize
 
+Plot missing modality
+--------------------------------
+
+.. autoclass:: plot_missing_modality
+   :members:
+   :show-inheritance:
 
 Plot PID
 --------------------------------
@@ -11,9 +17,9 @@ Plot PID
    :members:
    :show-inheritance:
 
-Plot missing modality
+Plot summary
 --------------------------------
 
-.. autoclass:: plot_missing_modality
+.. autoclass:: plot_summary
    :members:
    :show-inheritance:

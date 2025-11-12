@@ -16,7 +16,7 @@ def plot_pid(rus = None, Xs = None, y = None,
     Parameters
     ----------
     rus : list or dict, default=None
-        The output of the `̀`̀pid̀̀̀̀`̀`̀ function.
+        The output of the ``pid`` function.
     Xs : list of array-likes objects, default=None
         - Xs length: n_mods
         - Xs[i] shape: (n_samples, n_features_i)
@@ -43,7 +43,13 @@ def plot_pid(rus = None, Xs = None, y = None,
     ax : `matplotlib.axes.Axes`
         Axes object.
 
-    Examples
+    See Also
+    --------
+    `Statistics and interaction structure of a multi-modal dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/multil_modal_data_statistics.html#sphx-glr-auto-tutorials-multil-modal-data-statistics-py>`__:
+    Tutorial demonstrating its usage on a multi-modal dataset.
+
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd

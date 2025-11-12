@@ -32,6 +32,23 @@ def plot_missing_modality(Xs, ax: matplotlib.axes.Axes = None, figsize: tuple = 
         Figure object.
     ax : `matplotlib.axes.Axes`
         Axes object.
+
+    See Also
+    --------
+    `Modality-wise missing data simulation (Amputation)
+    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html#sphx-glr-auto-tutorials-generate-missing-modalities-py>`__:
+    Tutorial demonstrating its usage on a multi-modal dataset.
+
+    Example
+    --------
+    >>> import numpy as np
+    >>> import pandas as pd
+    >>> from imml.ampute import Amputer
+    >>> from imml.visualize import plot_missing_modality
+    >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
+    >>> transformer = Amputer(p= 0.2, random_state=42)
+    >>> Xs = transformer.fit_transform(Xs)
+    >>> plot_missing_modality(Xs=Xs)
     """
     if not isinstance(Xs, list):
         raise ValueError(f"Invalid Xs. It must be a list. A {type(Xs)} was passed.")

@@ -43,12 +43,15 @@ Updates in this release:
 
 :mod:`imml.model_selection`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |Feature| :class:`~imml.model_selection.multi_train_test_split` Was added.
+- |Feature| :class:`~imml.model_selection.multi_train_test_split` was added.
 
 :mod:`imml.utils`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Enhancement| :class:`~imml.utils.check_Xs` was converted to :class:`~imml.utils.check_Xs_y`
 
+:mod:`imml.visualize`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| :class:`~imml.visualize.plot_summary` was added.
 
 
 Version 0.2.0

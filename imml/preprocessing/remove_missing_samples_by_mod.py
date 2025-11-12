@@ -47,7 +47,7 @@ def remove_missing_samples_by_mod(Xs: list) -> list:
 
         A list of different modalities.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd

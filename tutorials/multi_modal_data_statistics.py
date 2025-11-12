@@ -30,12 +30,11 @@ replace the data‑loading section with your own data following the same structu
 
 import copy
 import numpy as np
-import pandas as pd
 from sklearn.datasets import make_classification
 
 from imml.statistics import pid
 from imml.explore import get_summary
-from imml.visualize import plot_pid
+from imml.visualize import plot_pid, plot_summary
 
 ###################################
 # Step 2: Create or load a multi-modal dataset
@@ -79,12 +78,8 @@ summary = get_summary(Xs=inc_Xs, modalities=["Modality A", "Modality B"], one_ro
 summary
 
 ###################################################
-# For quick inspection, we can also plot the per‑modality counts. Here we create a bar chart.
-
-summary.index = summary.index.str.replace(" samples", "")
-_ = summary[[c for c in summary.columns if not c.startswith('%')]].plot(
-    kind="bar", xlabel="Samples", ylabel="Count", rot=0,
-    title="Summary of the multi-modal dataset")
+# For quick inspection, we can also plot the per‑modality counts. Here we create a bar chart using ``plot_summary``.
+_ = plot_summary(summary=summary)
 
 ###################################################
 # Step 4: Compute PID statistics (Redundancy, Uniqueness, Synergy)

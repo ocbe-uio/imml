@@ -25,6 +25,12 @@ class Amputer(BaseEstimator, TransformerMixin):
     random_state: int, default=None
         If int, random_state is the seed used by the random number generator.
 
+    See Also
+    --------
+    `Modality-wise missing data simulation (Amputation)
+    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html#sphx-glr-auto-tutorials-generate-missing-modalities-py>`__:
+    Tutorial demonstrating its usage on a multi-modal dataset.
+
     Example
     --------
     >>> import numpy as np
