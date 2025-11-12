@@ -30,10 +30,10 @@ Questions or feedback?
 
 .. only:: html
 
-  .. image:: /auto_tutorials/images/thumb/sphx_glr_multil_modal_data_statistics_thumb.png
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_multi_modal_data_statistics_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_tutorials_multil_modal_data_statistics.py`
+  :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py`
 
 .. raw:: html
 
@@ -170,7 +170,7 @@ Questions or feedback?
 .. toctree::
    :hidden:
 
-   /auto_tutorials/multil_modal_data_statistics
+   /auto_tutorials/multi_modal_data_statistics
    /auto_tutorials/generate_missing_modalities
    /auto_tutorials/cluster_incomplete_mmd
    /auto_tutorials/retrieve_incomplete_vision_language

@@ -66,7 +66,13 @@ def pid(Xs, y, n_clusters = 20, n_components = .95, random_state = None, normali
                    27351-27393.
     .. [#pidcode] https://github.com/pliang279/PID/tree/main
 
-    Examples
+    See Also
+    --------
+    `Statistics and interaction structure of a multi-modal dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/multil_modal_data_statistics.html#sphx-glr-auto-tutorials-multil-modal-data-statistics-py>`__:
+    Tutorial demonstrating its usage on a multi-modal dataset.
+
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd

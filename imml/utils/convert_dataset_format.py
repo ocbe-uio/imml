@@ -26,7 +26,7 @@ def convert_dataset_format(Xs: list, keys: list = None) -> Union[list, dict]:
         - Xs length: n_mods
         - Xs[key] shape: (n_samples, n_features_i)
 
-    Examples
+    Example
     --------
     >>> from imml.utils.convert_dataset_format import convert_dataset_format    >>> import numpy as np
     >>> import pandas as pd

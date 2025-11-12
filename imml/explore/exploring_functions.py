@@ -25,7 +25,7 @@ def get_n_mods(Xs: list) -> int:
     n_mods: int
         Number of modalities.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -55,7 +55,7 @@ def get_n_samples_by_mod(Xs: list) -> int:
     n_samples_by_mod: pd.Series
         Number of samples in each modality.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -88,7 +88,7 @@ def get_com_samples(Xs: list) -> pd.Index:
     samples: pd.Index
         Sample names with full data.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -123,7 +123,7 @@ def get_incom_samples(Xs: list) -> pd.Index:
     samples: pd.Index
         Sample names with incomplete data.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -158,7 +158,7 @@ def get_samples(Xs: list) -> pd.Index:
     samples: pd.Index (n_samples,)
         Sample names.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -197,7 +197,7 @@ def get_samples_by_mod(Xs: list, return_as_list: bool = True) -> Union[list, dic
         If list, each element in the list is the sample names for each modality. If dict, keys are the modalities and the
         values are the sample names.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -237,7 +237,7 @@ def get_missing_samples_by_mod(Xs: list, return_as_list: bool = True) -> Union[l
     samples: dict of pd.Index or list of pd.Index.
         Dictionary or list of missing samples for each modality.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -277,7 +277,7 @@ def get_n_com_samples(Xs: list) -> int:
     n_samples: int
         number of complete samples.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -309,7 +309,7 @@ def get_n_incom_samples(Xs: list) -> int:
     n_samples: int
         number of incomplete samples.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -341,7 +341,7 @@ def get_pct_com_samples(Xs: list) -> float:
     percentage_samples: float
         percentage of complete samples.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -373,7 +373,7 @@ def get_pct_incom_samples(Xs: list) -> float:
     percentage_samples: float
         percentage of incomplete samples.
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd
@@ -412,9 +412,15 @@ def get_summary(Xs: list, modalities: list = None, one_row: bool = False, comput
     Returns
     -------
     summary: dict or pd.DataFrame
-        Summary of an incomplete multi-modal dataset.
+        Summary of a multi-modal dataset.
 
-    Examples
+    See Also
+    --------
+    `Statistics and interaction structure of a multi-modal dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/multil_modal_data_statistics.html#sphx-glr-auto-tutorials-multil-modal-data-statistics-py>`__:
+    Tutorial demonstrating its usage on a multi-modal dataset.
+
+    Example
     --------
     >>> import numpy as np
     >>> import pandas as pd

@@ -26,7 +26,7 @@ def multi_train_test_split_Xs(*args, **kwargs):
         - For each list input (Xs): (list_train, list_test)
         - For each array input (y): (array_train, array_test)
 
-    Examples
+    Example
     --------
     >>> import numpy as np
     >>> from imml.model_selection import multi_train_test_split_Xs

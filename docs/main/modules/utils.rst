@@ -11,9 +11,9 @@ Convert dataset format
    :members:
    :show-inheritance:
 
-Check Xs
+Check Xs and y
 -----------------------
 
-.. autoclass:: check_Xs
+.. autoclass:: check_Xs_y
    :members:
    :show-inheritance:
