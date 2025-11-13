@@ -52,6 +52,7 @@ Updates in this release:
 :mod:`imml.visualize`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Feature| :class:`~imml.visualize.plot_summary` was added.
+- |Feature| :class:`~imml.visualize.plot_combinations` was added.
 
 
 Version 0.2.0
