@@ -3,6 +3,13 @@ Visualize
 
 .. currentmodule:: imml.visualize
 
+Plot combinations
+--------------------------------
+
+.. autoclass:: plot_combinations
+   :members:
+   :show-inheritance:
+
 Plot missing modality
 --------------------------------
 

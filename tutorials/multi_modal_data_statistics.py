@@ -11,7 +11,8 @@ A multi-modal dataset can be characterized beyond basic shape information. With 
 
 What you will learn:
 
-- How to describe per‑modality completeness and cross‑modality overlap with ``get_summary``.
+- How to describe per‑modality completeness and cross‑modality overlap with ``get_summary``, ``plot_summary`` and
+  ``plot_combinations``.
 - How to compute redundancy, uniqueness, and synergy (PID) with respect to a target using ``pid``.
 - How to visualize and interpret PID results.
 - How PID generalizes when you have more than two modalities.
@@ -34,7 +35,7 @@ from sklearn.datasets import make_classification
 
 from imml.statistics import pid
 from imml.explore import get_summary
-from imml.visualize import plot_pid, plot_summary
+from imml.visualize import plot_pid, plot_summary, plot_combinations
 
 ###################################
 # Step 2: Create or load a multi-modal dataset
@@ -80,6 +81,10 @@ summary
 ###################################################
 # For quick inspection, we can also plot the per‑modality counts. Here we create a bar chart using ``plot_summary``.
 _ = plot_summary(summary=summary)
+
+###################################################
+# We can also show how is the distribution of the combinations using ``plot_combinations``.
+_ = plot_combinations(Xs=inc_Xs)
 
 ###################################################
 # Step 4: Compute PID statistics (Redundancy, Uniqueness, Synergy)

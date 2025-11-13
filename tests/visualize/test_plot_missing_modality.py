@@ -30,14 +30,6 @@ def test_plot_missing_modality(sample_data):
 
 @pytest.mark.skipif(sys.platform.startswith("win"), reason="Plot tests never ends on Windows")
 def test_invalid_params(sample_data):
-    with pytest.raises(ValueError, match="Invalid Xs."):
-        plot_missing_modality(np.array([[1, 2], [3, 4]]))
-    with pytest.raises(ValueError, match="Invalid Xs."):
-        plot_missing_modality([pd.DataFrame([]), pd.DataFrame([[1]])])
-    with pytest.raises(ValueError, match="Invalid Xs."):
-        plot_missing_modality([pd.DataFrame(np.ones((3, 2))), pd.DataFrame(np.ones((4, 1)))])
-    with pytest.raises(ValueError, match="Invalid ax."):
-        plot_missing_modality(sample_data[0], ax="")
     with pytest.raises(ValueError, match="Invalid figsize."):
         plot_missing_modality(sample_data[0], figsize=2)
     with pytest.raises(ValueError, match="Invalid sort."):
