@@ -49,7 +49,7 @@ from datasets import load_dataset
 from imml.classify import MUSE
 from imml.ampute import Amputer
 from imml.load import MUSEDataset
-
+from imml.model_selection import multi_train_test_split_Xs
 
 ################################
 # Step 2: Prepare the dataset
@@ -64,56 +64,36 @@ L.seed_everything(random_state) # Set the seed
 ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
                   split="train[:1000]") # Retrieve the first 1000 records
 df = ds.to_pandas()
-
-df.head()
+df.info()
 
 ###################################
-# As it can be seen, the dataset contains multiple attributes per record (more than 30). For the illustrative purpose
-# of this tutorial, we will use only the numeric attributes, and the `recent_feedback` column, which includes
-# employee comments about the working conditions, and which will be our text modality.
-# Our response variable is the `left_company` column, which includes the label about whether the employee left the
-# company or not. Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
-
-df = pd.concat([
-    df.select_dtypes(include='number'),
-    df['recent_feedback'],
-    df['left_company'].astype(int),
-], axis=1
-)
-train_df, test_df = train_test_split(df, test_size=0.2, shuffle=True,
-                                     stratify=df["left_company"], random_state=random_state)
-print("train_df", train_df.shape)
-print("test_df", test_df.shape)
-
-###################################################
-# Train data
-# Independent variables
-Xs_train = [
-    train_df.iloc[:,0:-2], # Numeric modality
-    train_df[['recent_feedback']] # Text modality
-]
-# Dependent variable
-y_train = train_df['left_company'].astype(np.float32) # Response variable
-
-# Test data
-# Independent variables
-Xs_test = [
-    test_df.iloc[:,0:-2], # Numeric modality
-    test_df[['recent_feedback']] # Text modality
-]
-# Dependent variable
-y_test = test_df['left_company'].astype(np.float32) # Response variable
-
+# As it can be seen, the dataset contains multiple attributes per record (more than 30).
 
 ###################################################
 # Step 3: Simulate missing modalities
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
+# column, which includes employee comments about the working conditions, and which will be our text modality.
+# Our response variable is the `left_company` column, which includes the label about whether the employee left the
+# company or not.
+Xs = [
+    df.select_dtypes(include='number').iloc[:,:-2], # Numeric modality
+    df[['recent_feedback']], # Text modality
+]
+y = df['left_company'].astype(np.float32) # Response variable
+
 # To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
 # randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
-# datasets so 10% of samples will have either numeric or text modalities missing.
+# datasets so 10% of samples will have either tabular or text modalities missing.
 transformer = Amputer(p=0.1, random_state=random_state)
-Xs_train = transformer.fit_transform(Xs_train)
-Xs_test = transformer.fit_transform(Xs_test)
+Xs = transformer.fit_transform(Xs)
+
+# Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
+Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
+                                                               random_state=42, shuffle=True,
+                                                               stratify=y)
+print("Xs_train", Xs_train[0].shape)
+print("Xs_test", Xs_test[0].shape)
 
 ########################################################
 # Step 4: Training the model
@@ -194,8 +174,8 @@ axes[1].set_title("Testing Set ROC Curve")
 plt.tight_layout()
 plt.show()
 
-print("MCC:", matthews_corrcoef(y_true=y_test_true, y_pred=y_pred_test_labels))
-print("Accuracy:", accuracy_score(y_true=y_test_true, y_pred=y_pred_test_labels))
+print("MCC:", round(matthews_corrcoef(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
+print("Accuracy:", round(accuracy_score(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
 
 ###################################
 # Summary of results

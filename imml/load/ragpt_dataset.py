@@ -222,7 +222,7 @@ class RAGPTCollator():
         input_ids = torch.tensor(input_ids,dtype=torch.int64)
         token_type_ids = torch.tensor(token_type_ids,dtype=torch.int64)
         attention_mask = torch.tensor(attention_mask,dtype=torch.int64)
-        label = torch.tensor(label,dtype=torch.float)
+        label = torch.tensor(label)
         r_l_list = torch.tensor(r_l_list,dtype=torch.long)
         r_t_list = torch.tensor(r_t_list,dtype=torch.float)
         r_i_list = torch.tensor(r_i_list,dtype=torch.float)

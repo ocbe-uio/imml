@@ -44,7 +44,6 @@ from PIL import Image
 from lightning import Trainer
 import lightning as L
 from matplotlib import pyplot as plt
-from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 import torch
 import os
@@ -56,6 +55,7 @@ from datasets import load_dataset
 from imml.ampute import Amputer
 from imml.classify import RAGPT
 from imml.load import RAGPTDataset, RAGPTCollator
+from imml.model_selection import multi_train_test_split_Xs
 from imml.retrieve import MCR
 
 ################################
@@ -100,13 +100,17 @@ df["class"].value_counts()
 
 ###################################
 # Split into 40% bank memory, 40% train and 20% test sets
-train_df, test_df = train_test_split(df, test_size=0.2, shuffle=True, stratify=df["class"])
-train_df, bank_df = train_test_split(train_df, test_size=0.5, shuffle=True, stratify=train_df["class"])
-print("train_df", train_df.shape)
-print("test_df", test_df.shape)
-print("bank_df", bank_df.shape)
-train_df.head()
-
+Xs = [df[["img"]],df[["text"]]]
+y = df["class"]
+Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, test_size=0.2,
+                                                               shuffle=True, stratify=y,
+                                                               random_state=random_state)
+Xs_train, Xs_bank, y_train, y_bank = multi_train_test_split_Xs(Xs_train, y_train, test_size=0.5,
+                                                               shuffle=True, stratify=y_train,
+                                                               random_state=random_state)
+print("Xs_train", Xs_train[0].shape)
+print("Xs_test", Xs_test[0].shape)
+print("Xs_bank", Xs_bank[0].shape)
 
 ###################################################
 # Step 3: Simulate missing modalities
@@ -114,12 +118,9 @@ train_df.head()
 # To reflect realistic scenarios, we randomly introduce missing data using ``Amputer``. In this case, 60% of training
 # and test samples will have either text or image missing. You can change this parameter for more or less
 # amount of incompleteness.
-
-Xs_train = [train_df[["img"]], train_df[["text"]]]
-Xs_test = [test_df[["img"]], test_df[["text"]]]
 amputer = Amputer(p=0.6, random_state=random_state)
 Xs_train = amputer.fit_transform(Xs_train)
-Xs_test = amputer.fit_transform(Xs_test)
+Xs_test = amputer.transform(Xs_test)
 
 
 ########################################################
@@ -132,24 +133,17 @@ modalities = ["image", "text"]
 batch_size = 64
 estimator = MCR(batch_size=batch_size, modalities=modalities, save_memory_bank=True,
                 prompt_path=data_folder, n_neighbors=2, generate_cap=True)
-
-Xs_bank = [bank_df[["img"]], bank_df[["text"]]]
-y_bank = bank_df["class"]
-
 estimator.fit(Xs=Xs_bank, y=y_bank)
 memory_bank = estimator.memory_bank_
 print("memory_bank", memory_bank.shape)
-memory_bank.head()
+memory_bank.info()
 
 ########################################################
 # Load generated training and testing prompts.
-
-y_train = train_df["class"]
 train_db = estimator.transform(Xs=Xs_train, y=y_train)
 print("train_db", train_db.shape)
 train_db.head()
 
-y_test = test_df["class"]
 test_db = estimator.transform(Xs=Xs_test, y=y_test)
 print("test_db", test_db.shape)
 
@@ -170,7 +164,7 @@ test_dataloader = DataLoader(dataset=test_data, batch_size=batch_size,
 # Train the ``RAGPT`` model using the generated prompts. For speed in this demo we train for only 2 epochs using
 # the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
-estimator = RAGPT(output_dim=len(le.classes_))
+estimator = RAGPT()
 trainer.fit(estimator, train_dataloader)
 
 ########################################################
@@ -180,7 +174,7 @@ trainer.fit(estimator, train_dataloader)
 # modify the internal functions. For instance, we can track loss and compute evaluation metrics during training.
 
 trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
-estimator = RAGPT(output_dim=len(le.classes_))
+estimator = RAGPT()
 estimator.loss_list = []
 estimator.agg_loss_list = []
 validation_step = estimator.validation_step

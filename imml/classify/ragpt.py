@@ -50,8 +50,8 @@ class RAGPT(LightningModule):
         Dropout probability.
     hidden_dim : int, default=768
         Hidden dimension size.
-    output_dim : int, default=1
-        Number of classes in your response variable. Typically 1 for binary classification.
+    output_dim : int, default=2
+        Number of classes in your response variable. Typically 2 for binary classification.
     loss_fn : callable, default=None
         Loss function. If None, defaults to `nn.BCEWithLogitsLoss()` if output_dim == <=2, else `nn.CrossEntropyLoss()`.
     learning_rate : float, default=1e-3
@@ -206,7 +206,7 @@ class RAGPT(LightningModule):
 class RAGPTModule(Module):
     def __init__(self, vilt: ViltModel = None, max_text_len: int = 128, max_image_len: int = 145,
                  prompt_position: int = 0, prompt_length: int = 1, dropout_rate: float = 0.2,
-                 hidden_dim: int = 768, output_dim: int = 2):
+                 hidden_dim: int = 768, output_dim: int = 1):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)

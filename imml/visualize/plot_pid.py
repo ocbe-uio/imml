@@ -65,7 +65,7 @@ def plot_pid(rus = None, Xs = None, y = None,
     a_only = round(float(rus.get("Uniqueness1", 0)), 2)
     b_only = round(float(rus.get("Uniqueness2", 0)), 2)
     inter  = round(float(rus.get("Redundancy", 0)), 2)
-    outside = round(float(rus.get("Synergy", 0)), 2)
+    outside = max(0.1, round(float(rus.get("Synergy", 0)), 2))
     A = a_only + inter
     B = b_only + inter
     r1 = math.sqrt(A / math.pi) if A>0 else 0.0
@@ -91,8 +91,8 @@ def plot_pid(rus = None, Xs = None, y = None,
     ax.text(max_r -d/2, 0, f"{r}\n{inter}", ha='center', va='center')
     ax.text(max_r -d/2, max_r*1.2, f"{s} {outside}", ha='center', va='bottom')
 
-    ax.text(0, -(max_r*1.1), modalities[0], ha='center', va='top')
-    ax.text(d, -(max_r*1.1), modalities[1], ha='center', va='top')
+    ax.text(-r1, -(max_r*1.1), modalities[0], ha='left', va='top')
+    ax.text(d+r2, -(max_r*1.1), modalities[1], ha='right', va='top')
 
     padding = max_r * 1.3 + d*0.1
     ax.set_xlim(-padding, d + padding)
