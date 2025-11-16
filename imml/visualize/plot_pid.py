@@ -83,7 +83,7 @@ def plot_pid(rus = None, Xs = None, y = None,
     ax.add_patch(Circle((d, 0), r2, facecolor=colors[1], alpha=0.5, edgecolor="black", linewidth=2))
 
     if abb:
-        u1, u2, r, s = "U", "U", "R", "S"
+        u1, u2, r, s = "U1", "U2", "R", "S"
     else:
         u1, u2, r, s = "Uniqueness", "Uniqueness", "Redundancy", "Synergy"
     ax.text(-r1/2, 0, f"{u1}\n{a_only}", ha='center', va='center')

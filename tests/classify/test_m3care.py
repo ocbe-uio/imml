@@ -105,6 +105,7 @@ def test_lightning_methods(sample_data):
         preds = model.predict_step(sample_data)
         assert isinstance(preds, torch.Tensor)
         assert not torch.isnan(preds).any()
+        assert torch.ge(preds, 0).all() and torch.le(preds, 2).all()
         optimizer = model.configure_optimizers()
         assert isinstance(optimizer, torch.optim.Optimizer)
 
@@ -131,6 +132,7 @@ def test_custom_loss_fn(sample_data):
     assert not torch.isnan(preds).any()
     assert preds.ndim == 1
     assert len(preds) == len(sample_data[1])
+    assert torch.ge(preds, 0).all() and torch.le(preds, 2).all()
 
     model = estimator(modalities=["tabular", "tabular", "tabular"],
                      input_dim=[10, 10, 10], output_dim=2,
@@ -146,6 +148,7 @@ def test_custom_loss_fn(sample_data):
     assert preds.ndim == 2
     assert len(preds) == len(sample_data[1])
     assert preds.shape[1] == 2
+    assert torch.ge(preds, 0).all() and torch.le(preds, 2).all()
 
 
 def test_image_text(sample_data):
@@ -182,6 +185,7 @@ def test_incomplete_image_text(sample_data):
         preds = model.predict_step(sample_data)
         assert isinstance(preds, torch.Tensor)
         assert not torch.isnan(preds).any()
+        assert torch.ge(preds, 0).all() and torch.le(preds, 2).all()
 
 
 @pytest.mark.skipif(sys.platform.startswith("darwin"), reason="Error with MPS")

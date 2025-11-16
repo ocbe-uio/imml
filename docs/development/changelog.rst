@@ -49,7 +49,7 @@ Updates in this release:
 
 :mod:`imml.utils`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |Enhancement| :class:`~imml.utils.check_Xs` was converted to :class:`~imml.utils.check_Xs_y`
+- |API| :class:`~imml.utils.check_Xs` was converted to :class:`~imml.utils.check_Xs_y`
 
 :mod:`imml.visualize`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

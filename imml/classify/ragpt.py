@@ -154,6 +154,10 @@ class RAGPT(LightningModule):
         self.loss_fn = loss_fn
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
+        if output_dim == 1:
+            self.get_probs = nn.Sigmoid()
+        else:
+            self.get_probs = nn.Softmax(dim=-1)
 
 
     def training_step(self, batch, batch_idx=None):
@@ -192,6 +196,7 @@ class RAGPT(LightningModule):
         """
         _ = batch.pop('label')
         preds = self.model(**batch)
+        preds = self.get_probs(preds)
         return preds
 
 

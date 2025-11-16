@@ -172,14 +172,13 @@ class RAGPTDataset(Dataset):
 class RAGPTCollator():
 
 
-    def __init__(self, tokenizer = None, image_processor = None,
-                 max_text_len: int = 128):
+    def __init__(self, tokenizer = None, image_processor = None, max_text_len: int = 128):
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
 
-        if tokenizer is not None and not isinstance(tokenizer, BertTokenizer):
+        if (tokenizer is not None) and (not isinstance(tokenizer, BertTokenizer)):
             raise ValueError(f"Invalid tokenizer. It must be a BertTokenizer. A {type(tokenizer)} was passed.")
-        if image_processor is not None and not isinstance(image_processor, ViltImageProcessor):
+        if (image_processor is not None) and (not isinstance(image_processor, ViltImageProcessor)):
             raise ValueError(f"Invalid image_processor. It must be a ViltImageProcessor. A {type(image_processor)} was passed.")
         if not isinstance(max_text_len, int):
             raise ValueError(f"Invalid max_text_len. It must be an integer. A {type(max_text_len)} was passed.")
