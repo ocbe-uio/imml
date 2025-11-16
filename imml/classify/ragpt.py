@@ -68,8 +68,8 @@ class RAGPT(LightningModule):
 
     See Also
     --------
-    `Classify an incomplete vision–language dataset (Oxford‑IIIT Pets) with deep learning
-    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html#sphx-glr-auto-tutorials-classify-incomplete-vision-language-py>`__:
+    `Classify an incomplete vision–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html>`__:
     Tutorial demonstrating its usage on an incomplete vision-language dataset.
 
     Example

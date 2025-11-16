@@ -8,7 +8,7 @@ from ..statistics import pid
 
 
 def plot_pid(rus = None, Xs = None, y = None,
-             modalities: list = ["Modality A", "Modality B"], colors: list = ["#780000", "#669BBC", "#FDF0D5"],
+             mod_names: list = ["Modality A", "Modality B"], colors: list = ["#780000", "#669BBC", "#FDF0D5"],
              abb: bool = True, figsize : tuple = None, **kwargs):
     r"""
     Plot PID statistics (redundancy, uniqueness and synergy) of a multi-modal dataset as a Venn diagram.
@@ -21,10 +21,10 @@ def plot_pid(rus = None, Xs = None, y = None,
         - Xs length: n_mods
         - Xs[i] shape: (n_samples, n_features_i)
 
-        A list of different modalities. If rus is provided, it will not be used.
+        A list of different mod_names. If rus is provided, it will not be used.
     y : array-like of shape (n_samples,), default=None
         Target vector relative to Xs. If rus is provided, it will not be used.
-    modalities : list, default=["Modality A", "Modality B"]
+    mod_names : list, default=["Modality A", "Modality B"]
         Name of each modality.
     colors : list, default=["#780000", "#669BBC", "#FDF0D5"]
         Colors used for the regions.
@@ -91,8 +91,8 @@ def plot_pid(rus = None, Xs = None, y = None,
     ax.text(max_r -d/2, 0, f"{r}\n{inter}", ha='center', va='center')
     ax.text(max_r -d/2, max_r*1.2, f"{s} {outside}", ha='center', va='bottom')
 
-    ax.text(-r1, -(max_r*1.1), modalities[0], ha='left', va='top')
-    ax.text(d+r2, -(max_r*1.1), modalities[1], ha='right', va='top')
+    ax.text(-r1, -(max_r*1.1), mod_names[0], ha='left', va='top')
+    ax.text(d+r2, -(max_r*1.1), mod_names[1], ha='right', va='top')
 
     padding = max_r * 1.3 + d*0.1
     ax.set_xlim(-padding, d + padding)

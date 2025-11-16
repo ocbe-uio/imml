@@ -19,7 +19,7 @@
 
 
 =============================================================
-Impute incomplete modality- and feature-wise multi-modal data
+Impute modality- and feature-wise incomplete multi-modal data
 =============================================================
 
 When the learning algorithms cannot directly handle missing data, imputation methods become essential to allow
@@ -392,7 +392,7 @@ real-world applications.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.280 seconds)
+   **Total running time of the script:** (0 minutes 2.536 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_impute_multi_modal_data.py:

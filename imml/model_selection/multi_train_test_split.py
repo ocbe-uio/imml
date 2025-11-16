@@ -26,6 +26,16 @@ def multi_train_test_split_Xs(*args, **kwargs):
         - For each list input (Xs): (list_train, list_test)
         - For each array input (y): (array_train, array_test)
 
+    See Also
+    --------
+    `Classify an incomplete tabular–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_tabular_language.html>`__:
+    Tutorial demonstrating its usage on an incomplete tabular-language dataset.
+
+    `Classify an incomplete vision–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html>`__:
+    Tutorial demonstrating its usage on an incomplete vision-language dataset.
+
     Example
     --------
     >>> import numpy as np

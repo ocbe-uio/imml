@@ -89,13 +89,6 @@ Step 1: Import required libraries
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: '/home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/image.so: undefined symbol: _ZN3c1017RegisterOperatorsD1Ev'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-      warn(
-
 
 
 
@@ -153,7 +146,6 @@ retrieve module.
 
  .. code-block:: none
 
-    Seed set to 42
     train_df (80, 2)
 
 
@@ -263,12 +255,6 @@ We build the retriever with ``MCR``.
 
 
 
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
 
 
 
@@ -418,15 +404,6 @@ example, the first two instances are missing the image modality, while the last 
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/alberto/Work/imml/tutorials/retrieve_incomplete_vision_language.py:152: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-      image_to_show = Xs_test[0].iloc[row][0]
-    /home/alberto/Work/imml/tutorials/retrieve_incomplete_vision_language.py:153: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-      caption = Xs_test[1].iloc[row][0]
-
 
 
 
@@ -450,7 +427,7 @@ even in the presence of missing modalities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (4 minutes 37.392 seconds)
+   **Total running time of the script:** (3 minutes 46.558 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_retrieve_incomplete_vision_language.py:

@@ -23,7 +23,8 @@ def test_plot_pid_with_rus_abbreviations():
     fig, ax = plot_pid(rus=rus, abb=True)
     assert fig is not None and ax is not None
     texts = [t.get_text() for t in ax.texts]
-    assert any("U\n" in t for t in texts)
+    assert any("U1\n" in t for t in texts)
+    assert any("U2\n" in t for t in texts)
     assert any("R\n" in t for t in texts)
     assert any("S " in t for t in texts)
     assert any("1.2" in t for t in texts)
@@ -42,7 +43,7 @@ def test_invalid_params():
 @pytest.mark.skipif(sys.platform.startswith("win"), reason="Plot tests never ends on Windows")
 def test_plot_pid_with_Xs(sample_data):
     for Xs,y in sample_data:
-        fig, ax = plot_pid(Xs=Xs, y=y, modalities=["Mod1", "Mod2"], abb=False)
+        fig, ax = plot_pid(Xs=Xs, y=y, mod_names=["Mod1", "Mod2"], abb=False)
         assert fig is not None and ax is not None
         texts = [t.get_text() for t in ax.texts]
         assert any(t.startswith("Uniqueness\n") for t in texts)

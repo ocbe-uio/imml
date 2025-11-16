@@ -66,6 +66,12 @@ class MUSE(LightningModule):
                     labels." The Twelfth International Conference on Learning Representations. 2024.
     .. [#musecode] https://github.com/zzachw/MUSE/
 
+    See Also
+    --------
+    `Classify an incomplete tabular–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_tabular_language.html>`__:
+    Tutorial demonstrating its usage on an incomplete tabular-language dataset.
+
     Example
     --------
     >>> from lightning import Trainer

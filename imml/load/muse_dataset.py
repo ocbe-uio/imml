@@ -41,6 +41,12 @@ class MUSEDataset(Dataset):
     y_indicator: array-like of shape (1,)
         Boolean array-like indicating observed label for the sample.
 
+    See Also
+    --------
+    `Classify an incomplete tabular–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_tabular_language.html>`__:
+    Tutorial demonstrating its usage on an incomplete tabular-language dataset.
+
     Example
     --------
     >>> import numpy as np

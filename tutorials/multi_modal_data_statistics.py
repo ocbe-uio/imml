@@ -21,7 +21,7 @@ This tutorial is fully reproducible and uses a small dataset. You can easily
 replace the data‑loading section with your own data following the same structure.
 """
 
-# sphinx_gallery_thumbnail_number = 2
+# sphinx_gallery_thumbnail_number = 3
 
 # License: BSD 3-Clause License
 
@@ -101,7 +101,7 @@ rus
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # Below we first make the dataset a bit more complex by introducing some incomplete samples with ``Amputer``, then
 # show two views: 1) a dataframe aggregated across modalities (one_row=True) and 2) per‑modality counts (one_row=False).
-amputer = Amputer(p=0.6, random_state=random_state)
+amputer = Amputer(p=0.6, mechanism="mcar", random_state=random_state)
 Xs = amputer.fit_transform(Xs)
 
 ###################################################
@@ -111,7 +111,7 @@ summary
 
 ###################################################
 # Per‑modality view:
-summary = get_summary(Xs=Xs, modalities=["Genes", "Lipids"], one_row=False, compute_pct=True, return_df=True)
+summary = get_summary(Xs=Xs, mod_names=["Genes", "Lipids"], one_row=False, compute_pct=True, return_df=True)
 summary
 
 ###################################################

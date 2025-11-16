@@ -1,6 +1,6 @@
 """
 =============================================================
-Impute incomplete modality- and feature-wise multi-modal data
+Impute modality- and feature-wise incomplete multi-modal data
 =============================================================
 
 When the learning algorithms cannot directly handle missing data, imputation methods become essential to allow

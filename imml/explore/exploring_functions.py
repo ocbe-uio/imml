@@ -388,7 +388,7 @@ def get_pct_incom_samples(Xs: list) -> float:
     return percentage_samples
 
 
-def get_summary(Xs: list, modalities: list = None, one_row: bool = False, compute_pct: bool = True,
+def get_summary(Xs: list, mod_names: list = None, one_row: bool = False, compute_pct: bool = True,
                 return_df: bool = False) -> Union[dict, pd.DataFrame]:
     r"""
     Get a summary of an incomplete multi-modal dataset.
@@ -400,7 +400,7 @@ def get_summary(Xs: list, modalities: list = None, one_row: bool = False, comput
         - Xs[i] shape: (n_samples, n_features_i)
 
         A list of different modalities.
-    modalities : list, default=None
+    mod_names : list, default=None
         Name of each modality. By default, it will be set to the modality index. Only applicable when one_row is False.
     one_row : bool, default=False
         If True, return a one-row summary of the dataset. If False, each row will correspond to a modality.
@@ -418,6 +418,10 @@ def get_summary(Xs: list, modalities: list = None, one_row: bool = False, comput
     --------
     `Statistics and interaction structure of a multi-modal dataset
     <https://imml.readthedocs.io/stable/auto_tutorials/multil_modal_data_statistics.html#sphx-glr-auto-tutorials-multil-modal-data-statistics-py>`__:
+    Tutorial demonstrating its usage on a multi-modal dataset.
+
+    `Modality-wise missing data simulation (Amputation)
+    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html>`__:
     Tutorial demonstrating its usage on a multi-modal dataset.
 
     Example
@@ -455,11 +459,11 @@ def get_summary(Xs: list, modalities: list = None, one_row: bool = False, comput
             summary = pd.DataFrame.from_dict(summary, orient="index").T
 
     else:
-        if modalities is None:
-            modalities = list(range(len(Xs)))
+        if mod_names is None:
+            mod_names = list(range(len(Xs)))
         c_samples, m_samples, i_samples = [], [], []
         summary = {}
-        for X, mod in zip(Xs, modalities):
+        for X, mod in zip(Xs, mod_names):
             mod_c_samples = pd.DataFrame(X)[np.isfinite(X).all(axis=1)]
             mod_m_samples = pd.DataFrame(X)[np.isnan(X).all(axis=1)]
             mod_i_samples = pd.DataFrame(X)[np.isnan(X).any(axis=1)]

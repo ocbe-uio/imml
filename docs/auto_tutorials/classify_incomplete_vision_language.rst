@@ -155,7 +155,6 @@ the ``MCR`` class from the retrieve module.
 
  .. code-block:: none
 
-    Seed set to 42
 
     class
     1    37
@@ -252,7 +251,6 @@ We use ``MCR`` (Multi-Channel Retriever) to construct a memory bank and generate
 
  .. code-block:: none
 
-    Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
     memory_bank (20, 8)
     <class 'pandas.core.frame.DataFrame'>
     Index: 20 entries, 43 to 18
@@ -349,23 +347,7 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
 
  .. code-block:: none
 
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-
-      | Name    | Type             | Params | Mode 
-    -----------------------------------------------------
-    0 | model   | RAGPTModule      | 118 M  | train
-    1 | loss_fn | CrossEntropyLoss | 0      | train
-    -----------------------------------------------------
-    7.3 M     Trainable params
-    111 M     Non-trainable params
-    118 M     Total params
-    473.226   Total estimated model params size (MB)
-    20        Modules in train mode
-    232       Modules in eval mode
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
-    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
 
 
 
@@ -409,33 +391,17 @@ modify the internal functions. For instance, we can track loss and compute evalu
 
  .. code-block:: none
 
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-
-      | Name    | Type             | Params | Mode 
-    -----------------------------------------------------
-    0 | model   | RAGPTModule      | 118 M  | train
-    1 | loss_fn | CrossEntropyLoss | 0      | train
-    -----------------------------------------------------
-    7.3 M     Trainable params
-    111 M     Non-trainable params
-    118 M     Total params
-    473.226   Total estimated model params size (MB)
-    20        Modules in train mode
-    232       Modules in eval mode
-    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.37it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
+    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.40it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.35it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]
                                                                               Epoch 0: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 0: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]
-                                                                              Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
-    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]
+                                                                              Epoch 1: 100%|██████████| 1/1 [00:15<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:15<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:15<00:00,  0.06it/s]
 
 
 
@@ -558,7 +524,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 5.919 seconds)
+   **Total running time of the script:** (3 minutes 3.437 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:

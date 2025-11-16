@@ -61,6 +61,12 @@ class JNMFFeatureSelector(JNMF):
     .. [#jnmfcode1] https://rdrr.io/cran/nnTensor/man/JNMF.html
     .. [#jnmfcode2] https://github.com/rikenbit/nnTensor
 
+    See Also
+    --------
+    `Dimensionality reduction: Feature extraction and feature selection
+    <https://imml.readthedocs.io/stable/auto_tutorials/select_and_extract_features.html>`__:
+    Tutorial demonstrating its usage on an (incomplete) multi-modal dataset.
+
     Example
     --------
     >>> import numpy as np

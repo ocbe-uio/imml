@@ -28,8 +28,20 @@ class Amputer(BaseEstimator, TransformerMixin):
     See Also
     --------
     `Modality-wise missing data simulation (Amputation)
-    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html#sphx-glr-auto-tutorials-generate-missing-modalities-py>`__:
+    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html>`__:
     Tutorial demonstrating its usage on a multi-modal dataset.
+
+    `Retrieval an incomplete vision–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/retrieve_incomplete_vision_language.html>`__:
+    Tutorial demonstrating its usage on a vision-language dataset.
+
+    `Classify an incomplete tabular–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_tabular_language.html>`__:
+    Tutorial demonstrating its usage on an incomplete tabular-language dataset.
+
+    `Classify an incomplete vision–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html>`__:
+    Tutorial demonstrating its usage on an incomplete vision-language dataset.
 
     Example
     --------

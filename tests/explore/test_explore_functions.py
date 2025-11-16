@@ -73,7 +73,7 @@ def test_get_summary(sample_data):
         assert summary_by_mod["Total"]["Incomplete samples"] == 3
 
         # one_row=False with provided modality names and compute_pct=True
-        summary_pct = get_summary(Xs=Xs, modalities=["mod1", "mod2"], one_row=False, compute_pct=True)
+        summary_pct = get_summary(Xs=Xs, mod_names=["mod1", "mod2"], one_row=False, compute_pct=True)
         assert set(summary_pct.keys()) == set(["mod1", "mod2", "Total"])  # named mods + total
         # Check percentages added correctly (counts/5*100)
         assert summary_pct["mod1"]["% Complete samples"] == (3 / 5) * 100

@@ -63,6 +63,12 @@ class RAGPTDataset(Dataset):
             - observed_text: True if the text is observed, False otherwise.
             - observed_image: True if the image is observed, False otherwise.
 
+    See Also
+    --------
+    `Classify an incomplete vision–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html>`__:
+    Tutorial demonstrating its usage on an incomplete vision-language dataset.
+
     Example
     --------
     >>> from torch.utils.data import DataLoader

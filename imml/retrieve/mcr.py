@@ -91,6 +91,16 @@ class MCR(Module):
                      vol. 39, no. 17, Apr. 2025, pp. 18035-43, doi:10.1609/aaai.v39i17.33984.
     .. [#ragptcode] https://github.com/Jian-Lang/RAGPT/
 
+    See Also
+    --------
+    `Retrieval an incomplete vision–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/retrieve_incomplete_vision_language.html>`__:
+    Tutorial demonstrating its usage on a vision-language dataset.
+
+    `Classify an incomplete vision–language dataset
+    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html>`__:
+    Tutorial demonstrating its usage on an incomplete vision-language dataset.
+
     Example
     --------
     >>> import pandas as pd

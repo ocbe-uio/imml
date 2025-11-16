@@ -26,6 +26,12 @@ class MOFAImputer(MOFA):
                      Biology, 21. doi:10.1186/s13059-020-02015-1.
     .. [#mofacode] https://biofam.github.io/MOFA2/index.html
 
+    See Also
+    --------
+    `Impute modality- and feature-wise incomplete multi-modal data
+    <https://imml.readthedocs.io/stable/auto_tutorials/impute_multi_modal_data.html>`__:
+    Tutorial demonstrating its usage on an incomplete multi-modal dataset.
+
     Example
     --------
     >>> import numpy as np

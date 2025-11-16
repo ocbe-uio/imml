@@ -36,11 +36,11 @@ def test_plot_combinations(sample_data):
 def test_invalid_params(sample_data):
     with pytest.raises(ValueError, match="Invalid figsize."):
         plot_combinations(sample_data[0], figsize=2)
-    with pytest.raises(ValueError, match="Invalid modalities."):
-        plot_combinations(sample_data[0], modalities="1")
-    with pytest.raises(ValueError, match="Invalid modalities."):
-        plot_combinations(sample_data[0], modalities=[1, 2, 3])
-    with pytest.raises(ValueError, match="Invalid modalities."):
-        plot_combinations(sample_data[0], modalities=["1"])
+    with pytest.raises(ValueError, match="Invalid mod_names."):
+        plot_combinations(sample_data[0], mod_names="1")
+    with pytest.raises(ValueError, match="Invalid mod_names."):
+        plot_combinations(sample_data[0], mod_names=[1, 2, 3])
+    with pytest.raises(ValueError, match="Invalid mod_names."):
+        plot_combinations(sample_data[0], mod_names=["1"])
     with pytest.raises(ValueError, match="Invalid max_combs."):
         plot_combinations(sample_data[0], max_combs="1")

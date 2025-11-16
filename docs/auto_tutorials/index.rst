@@ -105,7 +105,7 @@ Questions or feedback?
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Impute incomplete modality- and feature-wise multi-modal data</div>
+      <div class="sphx-glr-thumbnail-title">Impute modality- and feature-wise incomplete multi-modal data</div>
     </div>
 
 

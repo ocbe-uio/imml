@@ -5,7 +5,7 @@ import pandas as pd
 from ..explore import get_summary
 
 
-def plot_summary(Xs: list = None, summary: pd.DataFrame = None, modalities: list = None,
+def plot_summary(Xs: list = None, summary: pd.DataFrame = None, mod_names: list = None,
                  title: str = "Summary of the multi-modal dataset",
                  xlabel: str = "Samples", ylabel: str = "Count"):
     r"""
@@ -21,7 +21,7 @@ def plot_summary(Xs: list = None, summary: pd.DataFrame = None, modalities: list
     summary : pd.DataFrame, default=None
         A summary dataframe as returned by ``imml.explore.get_summary``. If provided, it will be plotted directly.
         If None, the summary will be computed from ``Xs``.
-    modalities : list, default=None
+    mod_names : list, default=None
         Names of each modality to use when computing the summary from ``Xs``. If ``None``, it will default to the
         modality index.
     title : str, default="Summary of the multi-modal dataset"
@@ -39,7 +39,7 @@ def plot_summary(Xs: list = None, summary: pd.DataFrame = None, modalities: list
     See Also
     --------
     `Statistics and interaction structure of a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/multi_modal_data_statistics.html#sphx-glr-auto-tutorials-multi-modal-data-statistics-py>`__:
+    <https://imml.readthedocs.io/stable/auto_tutorials/multi_modal_data_statistics.html>`__:
     Tutorial demonstrating its usage on a multi-modal dataset.
 
     Example
@@ -53,7 +53,7 @@ def plot_summary(Xs: list = None, summary: pd.DataFrame = None, modalities: list
     >>> plot_summary(Xs = Xs)
     """
     if summary is None:
-        summary = get_summary(Xs=Xs, modalities=modalities, compute_pct=False, return_df=True)
+        summary = get_summary(Xs=Xs, mod_names=mod_names, compute_pct=False, return_df=True)
     if not isinstance(summary, pd.DataFrame):
         raise ValueError(f"Invalid summary. It should be a pd.DataFrame. A {type(summary)} was passed. ")
     summary.index = summary.index.str.replace(" samples", "")
