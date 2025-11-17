@@ -46,7 +46,8 @@ def test_plot_pid_with_Xs(sample_data):
         fig, ax = plot_pid(Xs=Xs, y=y, mod_names=["Mod1", "Mod2"], abb=False)
         assert fig is not None and ax is not None
         texts = [t.get_text() for t in ax.texts]
-        assert any(t.startswith("Uniqueness\n") for t in texts)
+        assert any(t.startswith("Uniqueness1\n") for t in texts)
+        assert any(t.startswith("Uniqueness2\n") for t in texts)
         assert any(t.startswith("Redundancy\n") for t in texts)
         assert any("Synergy " in t for t in texts)
         assert any("Mod1" in t for t in texts)
