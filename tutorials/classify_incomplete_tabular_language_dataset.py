@@ -111,71 +111,71 @@ test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
 # We will train the ``MUSE`` model with only 1 epochs for speed, using the
 # `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
-trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
-estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
-                 input_dim=[Xs_train[0].shape[1]],
-                 bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
-                 )
-trainer.fit(estimator, train_dataloader)
-
-########################################################
-# Step 5: Evaluation
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# After the training, we can evaluate the predictions. Given the small dataset and short training, the model does
-# not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
-# Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
-
-train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=False)
-preds_train = trainer.predict(estimator, train_dataloader)
-y_pred_train = torch.cat(preds_train)
-
-plt.hist(y_pred_train, bins=15)
-plt.show()
-
-########################################################
-# As it can be seen, the probabilities are distributed in just three repeated values. We will stablish a threshold
-# based on this to assign the classes.
-
-tuned_threshold = 0.31
-y_pred_train_labels = (y_pred_train > tuned_threshold).int()
-y_train_true = torch.from_numpy(y_train.values).int()
-
-ConfusionMatrixDisplay.from_predictions(y_true=y_train_true, y_pred=y_pred_train_labels)
-plt.title("Training Set Evaluation")
-
-print("MCC:", round(matthews_corrcoef(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
-print("Accuracy:", round(accuracy_score(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
-
-########################################################
-# It is not the best performance, but given the small data, the missing values, and short training, it is expected
-# that the model does not offer the best solution.
-# 
-# Let us evaluate now the performance with the test set:
-
-preds_test = trainer.predict(estimator, test_dataloader)
-y_pred_test = torch.cat(preds_test)
-y_pred_test_labels = y_pred_test > tuned_threshold
-y_test_true = torch.from_numpy(y_test.values).bool()
-
-# Finally, let us plot and print some of the performance metrics:
-fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-
-# Confusion matrix
-ConfusionMatrixDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
-                                        ax=axes[0])
-axes[0].set_title("Testing Set Evaluation")
-
-# ROC Curve
-RocCurveDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
-                                 ax=axes[1])
-axes[1].set_title("Testing Set ROC Curve")
-
-# Adjust layout
-plt.tight_layout()
-plt.show()
-
-print("MCC:", round(matthews_corrcoef(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
-print("Accuracy:", round(accuracy_score(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
+# trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
+# estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
+#                  input_dim=[Xs_train[0].shape[1]],
+#                  bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
+#                  )
+# trainer.fit(estimator, train_dataloader)
+#
+# ########################################################
+# # Step 5: Evaluation
+# # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# # After the training, we can evaluate the predictions. Given the small dataset and short training, the model does
+# # not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
+# # Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
+#
+# train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=False)
+# preds_train = trainer.predict(estimator, train_dataloader)
+# y_pred_train = torch.cat(preds_train)
+#
+# plt.hist(y_pred_train, bins=15)
+# plt.show()
+#
+# ########################################################
+# # As it can be seen, the probabilities are distributed in just three repeated values. We will stablish a threshold
+# # based on this to assign the classes.
+#
+# tuned_threshold = 0.31
+# y_pred_train_labels = (y_pred_train > tuned_threshold).int()
+# y_train_true = torch.from_numpy(y_train.values).int()
+#
+# ConfusionMatrixDisplay.from_predictions(y_true=y_train_true, y_pred=y_pred_train_labels)
+# plt.title("Training Set Evaluation")
+#
+# print("MCC:", round(matthews_corrcoef(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
+# print("Accuracy:", round(accuracy_score(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
+#
+# ########################################################
+# # It is not the best performance, but given the small data, the missing values, and short training, it is expected
+# # that the model does not offer the best solution.
+# #
+# # Let us evaluate now the performance with the test set:
+#
+# preds_test = trainer.predict(estimator, test_dataloader)
+# y_pred_test = torch.cat(preds_test)
+# y_pred_test_labels = y_pred_test > tuned_threshold
+# y_test_true = torch.from_numpy(y_test.values).bool()
+#
+# # Finally, let us plot and print some of the performance metrics:
+# fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+#
+# # Confusion matrix
+# ConfusionMatrixDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
+#                                         ax=axes[0])
+# axes[0].set_title("Testing Set Evaluation")
+#
+# # ROC Curve
+# RocCurveDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
+#                                  ax=axes[1])
+# axes[1].set_title("Testing Set ROC Curve")
+#
+# # Adjust layout
+# plt.tight_layout()
+# plt.show()
+#
+# print("MCC:", round(matthews_corrcoef(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
+# print("Accuracy:", round(accuracy_score(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
 
 ###################################
 # Summary of results
