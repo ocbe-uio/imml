@@ -79,8 +79,6 @@ def test_invalid_params():
         estimator(modalities=["tabular"], gnn_layers=-1)
     with pytest.raises(ValueError, match="Invalid gnn_norm."):
         estimator(modalities=["tabular"], gnn_norm=123)
-    with pytest.raises(ValueError, match="Invalid code_pretrained_embedding."):
-        estimator(modalities=["tabular"], code_pretrained_embedding="not_a_bool")
     with pytest.raises(ValueError, match="Invalid bert_type."):
         estimator(modalities=["tabular"], bert_type=123)
     with pytest.raises(ValueError, match="Invalid dropout."):

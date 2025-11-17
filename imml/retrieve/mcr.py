@@ -137,6 +137,10 @@ class MCR(Module):
             raise ValueError(f"Invalid n_neighbors. It must be a integer. A {type(n_neighbors)} was passed.")
         if n_neighbors <= 0:
             raise ValueError(f"Invalid n_neighbors. It must be positive. A {type(n_neighbors)} was passed.")
+        if not isinstance(modalities, list):
+            raise ValueError(f"Invalid modalities. It must be a list. A {type(modalities)} was passed.")
+        if any([not isinstance(mod, str) for mod in modalities]):
+            raise ValueError(f"Invalid modalities. It must be a list of str. A list of {[type(mod) for mod in modalities]} was passed.")
         if not isinstance(device, str):
             raise ValueError(f"Invalid device. It must be a string. A {type(device)} was passed.")
         if not isinstance(generate_cap, bool):

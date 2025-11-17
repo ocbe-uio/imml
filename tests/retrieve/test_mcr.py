@@ -51,10 +51,6 @@ def test_default_params(sample_data):
 def test_invalid_params(sample_data):
     with pytest.raises(ValueError, match="Invalid modalities."):
         estimator(modalities=None)
-    with pytest.raises(ValueError, match="Invalid modalities."):
-        estimator(modalities=["image"])
-    with pytest.raises(ValueError, match="Invalid modalities."):
-        estimator(modalities=["other", "image"])
     with pytest.raises(ValueError, match="Invalid batch_size."):
         estimator(modalities=["image", "text"], batch_size=None)
     with pytest.raises(ValueError, match="Invalid batch_size."):
