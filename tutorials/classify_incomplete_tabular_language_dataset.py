@@ -60,7 +60,7 @@ random_state = 42
 L.seed_everything(random_state) # Set the seed
 
 ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
-                  split="train[:1000]") # Retrieve the first 1000 records
+                  split="train[:500]") # Retrieve the first 500 records
 df = ds.to_pandas()
 df.info()
 
