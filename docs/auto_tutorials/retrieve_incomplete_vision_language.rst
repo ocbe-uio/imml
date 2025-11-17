@@ -427,7 +427,7 @@ even in the presence of missing modalities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 48.458 seconds)
+   **Total running time of the script:** (3 minutes 52.821 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_retrieve_incomplete_vision_language.py:

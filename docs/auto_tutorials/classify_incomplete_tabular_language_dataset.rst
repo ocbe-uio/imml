@@ -88,13 +88,6 @@ Step 1: Import required libraries
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: '/home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/image.so: undefined symbol: _ZN3c1017RegisterOperatorsD1Ev'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-      warn(
-
 
 
 
@@ -127,7 +120,6 @@ We will use a synthetic employee dataset (available at `Hugging Face Datasets
 
  .. code-block:: none
 
-    Seed set to 42
     <class 'pandas.core.frame.DataFrame'>
     RangeIndex: 20 entries, 0 to 19
     Data columns (total 31 columns):
@@ -285,22 +277,7 @@ We will train the ``MUSE`` model with only 1 epochs for speed, using the
 
  .. code-block:: none
 
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-
-      | Name  | Type       | Params | Mode 
-    ---------------------------------------------
-    0 | model | MUSEModule | 342 K  | train
-    ---------------------------------------------
-    254 K     Trainable params
-    87.9 K    Non-trainable params
-    342 K     Total params
-    1.368     Total estimated model params size (MB)
-    47        Modules in train mode
-    102       Modules in eval mode
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/8 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/8 [00:00<?, ?it/s]     Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 87.02it/s]    Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 85.59it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 103.94it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 102.96it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 112.67it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 111.93it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 113.41it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 112.83it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 118.90it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 118.40it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 122.57it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 122.15it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 123.33it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 122.95it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 123.25it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 122.90it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 122.61it/s]`Trainer.fit` stopped: `max_epochs=1` reached.
-    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 122.24it/s]
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/8 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/8 [00:00<?, ?it/s]     Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 49.55it/s]    Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 48.94it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 55.62it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 55.20it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 58.08it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 57.77it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 58.61it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 58.38it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 60.44it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 60.25it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 60.40it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 60.25it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 60.59it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 60.46it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 60.55it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 60.43it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 60.33it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 60.20it/s]
 
 
 
@@ -338,7 +315,7 @@ Therefore, we will do some evaluation to choose the most appropriate probability
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:  12%|█▎        | 1/8 [00:00<00:00, 288.35it/s]    Predicting DataLoader 0:  25%|██▌       | 2/8 [00:00<00:00, 263.45it/s]    Predicting DataLoader 0:  38%|███▊      | 3/8 [00:00<00:00, 258.89it/s]    Predicting DataLoader 0:  50%|█████     | 4/8 [00:00<00:00, 271.97it/s]    Predicting DataLoader 0:  62%|██████▎   | 5/8 [00:00<00:00, 287.30it/s]    Predicting DataLoader 0:  75%|███████▌  | 6/8 [00:00<00:00, 288.06it/s]    Predicting DataLoader 0:  88%|████████▊ | 7/8 [00:00<00:00, 275.83it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 249.93it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 247.68it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:  12%|█▎        | 1/8 [00:00<00:00, 177.79it/s]    Predicting DataLoader 0:  25%|██▌       | 2/8 [00:00<00:00, 162.73it/s]    Predicting DataLoader 0:  38%|███▊      | 3/8 [00:00<00:00, 146.79it/s]    Predicting DataLoader 0:  50%|█████     | 4/8 [00:00<00:00, 151.51it/s]    Predicting DataLoader 0:  62%|██████▎   | 5/8 [00:00<00:00, 148.02it/s]    Predicting DataLoader 0:  75%|███████▌  | 6/8 [00:00<00:00, 150.93it/s]    Predicting DataLoader 0:  88%|████████▊ | 7/8 [00:00<00:00, 155.80it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 150.43it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 149.55it/s]
 
 
 
@@ -432,7 +409,7 @@ Let us evaluate now the performance with the test set:
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:  50%|█████     | 1/2 [00:00<00:00, 179.89it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 179.92it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 175.60it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:  50%|█████     | 1/2 [00:00<00:00, 163.11it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 165.08it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 161.32it/s]
     MCC: 0.0
     Accuracy: 0.25
 
@@ -459,7 +436,7 @@ modality incompleteness in tabular-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.480 seconds)
+   **Total running time of the script:** (0 minutes 3.471 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_tabular_language_dataset.py:
