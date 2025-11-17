@@ -60,52 +60,52 @@ random_state = 42
 L.seed_everything(random_state) # Set the seed
 
 ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
-                  split="train[:20]") # Retrieve the first 20 records
-df = ds.to_pandas()
-df.info()
-
-###################################
-# As it can be seen, the dataset contains multiple attributes per record (more than 30).
-
-###################################################
-# Step 3: Simulate missing modalities
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
-# column, which includes employee comments about the working conditions, and which will be our text modality.
-# Our response variable is the `left_company` column, which includes the label about whether the employee left the
-# company or not.
-Xs = [
-    df.select_dtypes(include='number').iloc[:,:-2], # Numeric modality
-    df[['recent_feedback']], # Text modality
-]
-y = df['left_company'].astype(np.float32) # Response variable
-
-# To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
-# randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
-# datasets so 10% of samples will have either tabular or text modalities missing.
-transformer = Amputer(p=0.1, random_state=random_state)
-Xs = transformer.fit_transform(Xs)
-
-# Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
-Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
-                                                               random_state=42, shuffle=True,
-                                                               stratify=y)
-print("Xs_train", Xs_train[0].shape)
-print("Xs_test", Xs_test[0].shape)
-
-########################################################
-# Step 4: Training the model
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# We will start by transforming the numeric variables using a `StandardScaler`:
-scaler = StandardScaler().set_output(transform="pandas")
-Xs_train[0] = scaler.fit_transform(Xs_train[0])
-Xs_test[0] = scaler.transform(Xs_test[0])
-###################################################
-# Now, we will create the loaders.
-train_data = MUSEDataset(Xs=Xs_train, y=y_train)
-train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=True)
-test_data = MUSEDataset(Xs=Xs_test, y=y_test)
-test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
+                  split="train[:10]") # Retrieve the first 10 records
+# df = ds.to_pandas()
+# df.info()
+#
+# ###################################
+# # As it can be seen, the dataset contains multiple attributes per record (more than 30).
+#
+# ###################################################
+# # Step 3: Simulate missing modalities
+# # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# # For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
+# # column, which includes employee comments about the working conditions, and which will be our text modality.
+# # Our response variable is the `left_company` column, which includes the label about whether the employee left the
+# # company or not.
+# Xs = [
+#     df.select_dtypes(include='number').iloc[:,:-2], # Numeric modality
+#     df[['recent_feedback']], # Text modality
+# ]
+# y = df['left_company'].astype(np.float32) # Response variable
+#
+# # To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
+# # randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
+# # datasets so 10% of samples will have either tabular or text modalities missing.
+# transformer = Amputer(p=0.1, random_state=random_state)
+# Xs = transformer.fit_transform(Xs)
+#
+# # Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
+# Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
+#                                                                random_state=42, shuffle=True,
+#                                                                stratify=y)
+# print("Xs_train", Xs_train[0].shape)
+# print("Xs_test", Xs_test[0].shape)
+#
+# ########################################################
+# # Step 4: Training the model
+# # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# # We will start by transforming the numeric variables using a `StandardScaler`:
+# scaler = StandardScaler().set_output(transform="pandas")
+# Xs_train[0] = scaler.fit_transform(Xs_train[0])
+# Xs_test[0] = scaler.transform(Xs_test[0])
+# ###################################################
+# # Now, we will create the loaders.
+# train_data = MUSEDataset(Xs=Xs_train, y=y_train)
+# train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=True)
+# test_data = MUSEDataset(Xs=Xs_test, y=y_test)
+# test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
 
 ########################################################
 # We will train the ``MUSE`` model with only 1 epochs for speed, using the
