@@ -98,6 +98,13 @@ Step 1: Import required libraries
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: '/home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/image.so: undefined symbol: _ZN3c1017RegisterOperatorsD1Ev'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+      warn(
+
 
 
 
@@ -124,7 +131,7 @@ the ``MCR`` class from the retrieve module.
     os.makedirs(folder_images, exist_ok=True)
 
     # Load the dataset
-    ds = load_dataset("visual-layer/oxford-iiit-pet-vl-enriched", split="train[:50]")
+    ds = load_dataset("visual-layer/oxford-iiit-pet-vl-enriched", split="train[:40]")
 
     # Build a DataFrame with image paths and captions. We persist images to disk because
     # the retriever expects paths.
@@ -155,10 +162,11 @@ the ``MCR`` class from the retrieve module.
 
  .. code-block:: none
 
+    Seed set to 42
 
     class
-    1    37
-    0    13
+    1    29
+    0    11
     Name: count, dtype: int64
 
 
@@ -191,9 +199,9 @@ Split into 40% bank memory, 40% train and 20% test sets
 
  .. code-block:: none
 
-    Xs_train (20, 1)
-    Xs_test (10, 1)
-    Xs_bank (20, 1)
+    Xs_train (16, 1)
+    Xs_test (8, 1)
+    Xs_bank (16, 1)
 
 
 
@@ -251,22 +259,23 @@ We use ``MCR`` (Multi-Channel Retriever) to construct a memory bank and generate
 
  .. code-block:: none
 
-    memory_bank (20, 8)
+    Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+    memory_bank (16, 8)
     <class 'pandas.core.frame.DataFrame'>
-    Index: 20 entries, 43 to 18
+    Index: 16 entries, 26 to 18
     Data columns (total 8 columns):
      #   Column             Non-Null Count  Dtype 
     ---  ------             --------------  ----- 
-     0   item_id            20 non-null     int64 
-     1   img_path           20 non-null     object
-     2   text               20 non-null     object
-     3   q_i                20 non-null     object
-     4   q_t                20 non-null     object
-     5   label              20 non-null     int64 
-     6   prompt_image_path  20 non-null     object
-     7   prompt_text_path   20 non-null     object
+     0   item_id            16 non-null     int64 
+     1   img_path           16 non-null     object
+     2   text               16 non-null     object
+     3   q_i                16 non-null     object
+     4   q_t                16 non-null     object
+     5   label              16 non-null     int64 
+     6   prompt_image_path  16 non-null     object
+     7   prompt_text_path   16 non-null     object
     dtypes: int64(2), object(6)
-    memory usage: 1.4+ KB
+    memory usage: 1.1+ KB
 
 
 
@@ -295,8 +304,8 @@ Load generated training and testing prompts.
 
  .. code-block:: none
 
-    train_db (20, 14)
-    test_db (10, 14)
+    train_db (16, 14)
+    test_db (8, 14)
 
 
 
@@ -347,7 +356,24 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
 
  .. code-block:: none
 
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]
+    GPU available: False, used: False
+    TPU available: False, using: 0 TPU cores
+    HPU available: False, using: 0 HPUs
+
+      | Name      | Type             | Params | Mode 
+    -------------------------------------------------------
+    0 | model     | RAGPTModule      | 118 M  | train
+    1 | loss_fn   | CrossEntropyLoss | 0      | train
+    2 | get_probs | Softmax          | 0      | train
+    -------------------------------------------------------
+    7.3 M     Trainable params
+    111 M     Non-trainable params
+    118 M     Total params
+    473.226   Total estimated model params size (MB)
+    21        Modules in train mode
+    232       Modules in eval mode
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]    Epoch 1: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]    Epoch 1: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
+    Epoch 1: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]
 
 
 
@@ -391,17 +417,34 @@ modify the internal functions. For instance, we can track loss and compute evalu
 
  .. code-block:: none
 
-    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.37it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]
+    GPU available: False, used: False
+    TPU available: False, using: 0 TPU cores
+    HPU available: False, using: 0 HPUs
+
+      | Name      | Type             | Params | Mode 
+    -------------------------------------------------------
+    0 | model     | RAGPTModule      | 118 M  | train
+    1 | loss_fn   | CrossEntropyLoss | 0      | train
+    2 | get_probs | Softmax          | 0      | train
+    -------------------------------------------------------
+    7.3 M     Trainable params
+    111 M     Non-trainable params
+    118 M     Total params
+    473.226   Total estimated model params size (MB)
+    21        Modules in train mode
+    232       Modules in eval mode
+    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.44it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]    Epoch 0: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.37it/s]
-                                                                              Epoch 0: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 0: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
+                                                                              Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.35it/s]
-                                                                              Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:16<00:00,  0.06it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
+                                                                              Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
+    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
 
 
 
@@ -458,7 +501,7 @@ After training, we can evaluate predictions and visualize the results.
 
 
 .. image-sg:: /auto_tutorials/images/sphx_glr_classify_incomplete_vision_language_001.png
-   :alt: Pred:cat; Real:cat, Pred:dog; Real:dog, Pred:dog; Real:dog, Pred:cat; Real:cat, Pred:dog; Real:dog, Pred:cat; Real:cat
+   :alt: Pred:dog; Real:dog, Pred:dog; Real:dog, Pred:cat; Real:cat, Pred:dog; Real:dog, Pred:dog; Real:dog, Pred:dog; Real:dog
    :srcset: /auto_tutorials/images/sphx_glr_classify_incomplete_vision_language_001.png
    :class: sphx-glr-single-img
 
@@ -467,7 +510,7 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
 
 
 
@@ -500,7 +543,7 @@ After training, we can evaluate predictions and visualize the results.
 
 .. GENERATED FROM PYTHON SOURCE LINES 243-244
 
-Despite using only 50 instances and minimal training, the performance was excellent thanks to the pretrained models.
+Despite using only 40 instances and minimal training, the performance was excellent thanks to the pretrained models.
 
 .. GENERATED FROM PYTHON SOURCE LINES 246-255
 
@@ -511,7 +554,7 @@ generate retrieval-augmented prompts with a multi-channel retriever (``MCR``). S
 using the ``RAGPT`` algorithm available in `iMML` under 25% randomly missing text and image modalities. The model
 demonstrated strong robustness on the test set.
 
-This example is intentionally simplified, using only 50 instances for demonstration.
+This example is intentionally simplified, using only 40 instances for demonstration.
 For stronger performance and more reliable results, the full dataset and longer training should be used.
 
 .. GENERATED FROM PYTHON SOURCE LINES 257-261
@@ -524,7 +567,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 3.003 seconds)
+   **Total running time of the script:** (2 minutes 42.801 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:

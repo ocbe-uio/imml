@@ -1582,7 +1582,7 @@
    "is_explicit": false,
    "module": "builtins",
    "module_short": "builtins",
-   "name": "float"
+   "name": "str"
   }
  ],
  "caption.split": [
@@ -1591,7 +1591,7 @@
    "is_explicit": false,
    "module": "builtins",
    "module_short": "builtins",
-   "name": "float"
+   "name": "builtin_function_or_method"
   }
  ],
  "compute_metric": [
@@ -1871,16 +1871,9 @@
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "PIL.Image",
-   "module_short": "PIL.Image",
-   "name": "Image"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "PIL",
-   "module_short": "PIL",
-   "name": "Image"
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "float"
   }
  ],
  "img": [

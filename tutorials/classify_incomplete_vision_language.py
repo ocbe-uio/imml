@@ -75,7 +75,7 @@ folder_images = os.path.join(data_folder, "imgs")
 os.makedirs(folder_images, exist_ok=True)
 
 # Load the dataset
-ds = load_dataset("visual-layer/oxford-iiit-pet-vl-enriched", split="train[:50]")
+ds = load_dataset("visual-layer/oxford-iiit-pet-vl-enriched", split="train[:40]")
 
 # Build a DataFrame with image paths and captions. We persist images to disk because
 # the retriever expects paths.
@@ -240,7 +240,7 @@ ConfusionMatrixDisplay.from_predictions(y_true=y_test, y_pred=preds)
 print("Testing metric:", round(matthews_corrcoef(y_true=y_test, y_pred=preds), 2))
 
 #######################################################
-# Despite using only 50 instances and minimal training, the performance was excellent thanks to the pretrained models.
+# Despite using only 40 instances and minimal training, the performance was excellent thanks to the pretrained models.
 
 ###################################
 # Summary of results
@@ -250,7 +250,7 @@ print("Testing metric:", round(matthews_corrcoef(y_true=y_test, y_pred=preds), 2
 # using the ``RAGPT`` algorithm available in `iMML` under 25% randomly missing text and image modalities. The model
 # demonstrated strong robustness on the test set.
 #
-# This example is intentionally simplified, using only 50 instances for demonstration.
+# This example is intentionally simplified, using only 40 instances for demonstration.
 # For stronger performance and more reliable results, the full dataset and longer training should be used.
 
 ###################################
