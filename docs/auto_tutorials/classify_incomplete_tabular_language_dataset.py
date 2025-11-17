@@ -60,122 +60,122 @@ random_state = 42
 L.seed_everything(random_state) # Set the seed
 
 ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
-                  split="train[:10]") # Retrieve the first 10 records
-# df = ds.to_pandas()
-# df.info()
-#
-# ###################################
-# # As it can be seen, the dataset contains multiple attributes per record (more than 30).
-#
-# ###################################################
-# # Step 3: Simulate missing modalities
-# # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# # For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
-# # column, which includes employee comments about the working conditions, and which will be our text modality.
-# # Our response variable is the `left_company` column, which includes the label about whether the employee left the
-# # company or not.
-# Xs = [
-#     df.select_dtypes(include='number').iloc[:,:-2], # Numeric modality
-#     df[['recent_feedback']], # Text modality
-# ]
-# y = df['left_company'].astype(np.float32) # Response variable
-#
-# # To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
-# # randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
-# # datasets so 10% of samples will have either tabular or text modalities missing.
-# transformer = Amputer(p=0.1, random_state=random_state)
-# Xs = transformer.fit_transform(Xs)
-#
-# # Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
-# Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
-#                                                                random_state=42, shuffle=True,
-#                                                                stratify=y)
-# print("Xs_train", Xs_train[0].shape)
-# print("Xs_test", Xs_test[0].shape)
-#
-# ########################################################
-# # Step 4: Training the model
-# # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# # We will start by transforming the numeric variables using a `StandardScaler`:
-# scaler = StandardScaler().set_output(transform="pandas")
-# Xs_train[0] = scaler.fit_transform(Xs_train[0])
-# Xs_test[0] = scaler.transform(Xs_test[0])
-# ###################################################
-# # Now, we will create the loaders.
-# train_data = MUSEDataset(Xs=Xs_train, y=y_train)
-# train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=True)
-# test_data = MUSEDataset(Xs=Xs_test, y=y_test)
-# test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
+                  split="train[:20]") # Retrieve the first 20 records
+df = ds.to_pandas()
+df.info()
+
+###################################
+# As it can be seen, the dataset contains multiple attributes per record (more than 30).
+
+###################################################
+# Step 3: Simulate missing modalities
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
+# column, which includes employee comments about the working conditions, and which will be our text modality.
+# Our response variable is the `left_company` column, which includes the label about whether the employee left the
+# company or not.
+Xs = [
+    df.select_dtypes(include='number').iloc[:,:-2], # Numeric modality
+    df[['recent_feedback']], # Text modality
+]
+y = df['left_company'].astype(np.float32) # Response variable
+
+# To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
+# randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
+# datasets so 10% of samples will have either tabular or text modalities missing.
+transformer = Amputer(p=0.1, random_state=random_state)
+Xs = transformer.fit_transform(Xs)
+
+# Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
+Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
+                                                               random_state=42, shuffle=True,
+                                                               stratify=y)
+print("Xs_train", Xs_train[0].shape)
+print("Xs_test", Xs_test[0].shape)
 
 ########################################################
+# Step 4: Training the model
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# We will start by transforming the numeric variables using a `StandardScaler`:
+scaler = StandardScaler().set_output(transform="pandas")
+Xs_train[0] = scaler.fit_transform(Xs_train[0])
+Xs_test[0] = scaler.transform(Xs_test[0])
+###################################################
+# Now, we will create the loaders.
+train_data = MUSEDataset(Xs=Xs_train, y=y_train)
+train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=True)
+test_data = MUSEDataset(Xs=Xs_test, y=y_test)
+test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
+
+#######################################################
 # We will train the ``MUSE`` model with only 1 epochs for speed, using the
 # `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
-# trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
-# estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
-#                  input_dim=[Xs_train[0].shape[1]],
-#                  bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
-#                  )
-# trainer.fit(estimator, train_dataloader)
+trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
+estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
+                 input_dim=[Xs_train[0].shape[1]],
+                 bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
+                 )
+trainer.fit(estimator, train_dataloader)
+
+########################################################
+# Step 5: Evaluation
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# After the training, we can evaluate the predictions. Given the small dataset and short training, the model does
+# not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
+# Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
+
+train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=False)
+preds_train = trainer.predict(estimator, train_dataloader)
+y_pred_train = torch.cat(preds_train)
+
+plt.hist(y_pred_train, bins=15)
+plt.show()
+
+########################################################
+# As it can be seen, the probabilities are distributed in just three repeated values. We will stablish a threshold
+# based on this to assign the classes.
+
+tuned_threshold = 0.31
+y_pred_train_labels = (y_pred_train > tuned_threshold).int()
+y_train_true = torch.from_numpy(y_train.values).int()
+
+ConfusionMatrixDisplay.from_predictions(y_true=y_train_true, y_pred=y_pred_train_labels)
+plt.title("Training Set Evaluation")
+
+print("MCC:", round(matthews_corrcoef(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
+print("Accuracy:", round(accuracy_score(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
+
+########################################################
+# It is not the best performance, but given the small data, the missing values, and short training, it is expected
+# that the model does not offer the best solution.
 #
-# ########################################################
-# # Step 5: Evaluation
-# # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# # After the training, we can evaluate the predictions. Given the small dataset and short training, the model does
-# # not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
-# # Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
-#
-# train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=False)
-# preds_train = trainer.predict(estimator, train_dataloader)
-# y_pred_train = torch.cat(preds_train)
-#
-# plt.hist(y_pred_train, bins=15)
-# plt.show()
-#
-# ########################################################
-# # As it can be seen, the probabilities are distributed in just three repeated values. We will stablish a threshold
-# # based on this to assign the classes.
-#
-# tuned_threshold = 0.31
-# y_pred_train_labels = (y_pred_train > tuned_threshold).int()
-# y_train_true = torch.from_numpy(y_train.values).int()
-#
-# ConfusionMatrixDisplay.from_predictions(y_true=y_train_true, y_pred=y_pred_train_labels)
-# plt.title("Training Set Evaluation")
-#
-# print("MCC:", round(matthews_corrcoef(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
-# print("Accuracy:", round(accuracy_score(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
-#
-# ########################################################
-# # It is not the best performance, but given the small data, the missing values, and short training, it is expected
-# # that the model does not offer the best solution.
-# #
-# # Let us evaluate now the performance with the test set:
-#
-# preds_test = trainer.predict(estimator, test_dataloader)
-# y_pred_test = torch.cat(preds_test)
-# y_pred_test_labels = y_pred_test > tuned_threshold
-# y_test_true = torch.from_numpy(y_test.values).bool()
-#
-# # Finally, let us plot and print some of the performance metrics:
-# fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-#
-# # Confusion matrix
-# ConfusionMatrixDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
-#                                         ax=axes[0])
-# axes[0].set_title("Testing Set Evaluation")
-#
-# # ROC Curve
-# RocCurveDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
-#                                  ax=axes[1])
-# axes[1].set_title("Testing Set ROC Curve")
-#
-# # Adjust layout
-# plt.tight_layout()
-# plt.show()
-#
-# print("MCC:", round(matthews_corrcoef(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
-# print("Accuracy:", round(accuracy_score(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
+# Let us evaluate now the performance with the test set:
+
+preds_test = trainer.predict(estimator, test_dataloader)
+y_pred_test = torch.cat(preds_test)
+y_pred_test_labels = y_pred_test > tuned_threshold
+y_test_true = torch.from_numpy(y_test.values).bool()
+
+# Finally, let us plot and print some of the performance metrics:
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# Confusion matrix
+ConfusionMatrixDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
+                                        ax=axes[0])
+axes[0].set_title("Testing Set Evaluation")
+
+# ROC Curve
+RocCurveDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
+                                 ax=axes[1])
+axes[1].set_title("Testing Set ROC Curve")
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+
+print("MCC:", round(matthews_corrcoef(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
+print("Accuracy:", round(accuracy_score(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
 
 ###################################
 # Summary of results

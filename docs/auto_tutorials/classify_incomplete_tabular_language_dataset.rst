@@ -88,6 +88,13 @@ Step 1: Import required libraries
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: '/home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/image.so: undefined symbol: _ZN3c1017RegisterOperatorsD1Ev'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+      warn(
+
 
 
 
@@ -99,7 +106,7 @@ We will use a synthetic employee dataset (available at `Hugging Face Datasets
 <https://huggingface.co/datasets>`__ as `Synthetic Employee Dataset
 <https://huggingface.co/datasets/BrotherTony/employee-burnout-turnover-prediction-800k>`__
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-110
+.. GENERATED FROM PYTHON SOURCE LINES 58-67
 
 .. code-block:: Python
 
@@ -108,52 +115,143 @@ We will use a synthetic employee dataset (available at `Hugging Face Datasets
     L.seed_everything(random_state) # Set the seed
 
     ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
-                      split="train[:10]") # Retrieve the first 10 records
-    # df = ds.to_pandas()
-    # df.info()
-    #
-    # ###################################
-    # # As it can be seen, the dataset contains multiple attributes per record (more than 30).
-    #
-    # ###################################################
-    # # Step 3: Simulate missing modalities
-    # # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    # # For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
-    # # column, which includes employee comments about the working conditions, and which will be our text modality.
-    # # Our response variable is the `left_company` column, which includes the label about whether the employee left the
-    # # company or not.
-    # Xs = [
-    #     df.select_dtypes(include='number').iloc[:,:-2], # Numeric modality
-    #     df[['recent_feedback']], # Text modality
-    # ]
-    # y = df['left_company'].astype(np.float32) # Response variable
-    #
-    # # To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
-    # # randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
-    # # datasets so 10% of samples will have either tabular or text modalities missing.
-    # transformer = Amputer(p=0.1, random_state=random_state)
-    # Xs = transformer.fit_transform(Xs)
-    #
-    # # Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
-    # Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
-    #                                                                random_state=42, shuffle=True,
-    #                                                                stratify=y)
-    # print("Xs_train", Xs_train[0].shape)
-    # print("Xs_test", Xs_test[0].shape)
-    #
-    # ########################################################
-    # # Step 4: Training the model
-    # # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    # # We will start by transforming the numeric variables using a `StandardScaler`:
-    # scaler = StandardScaler().set_output(transform="pandas")
-    # Xs_train[0] = scaler.fit_transform(Xs_train[0])
-    # Xs_test[0] = scaler.transform(Xs_test[0])
-    # ###################################################
-    # # Now, we will create the loaders.
-    # train_data = MUSEDataset(Xs=Xs_train, y=y_train)
-    # train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=True)
-    # test_data = MUSEDataset(Xs=Xs_test, y=y_test)
-    # test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
+                      split="train[:20]") # Retrieve the first 20 records
+    df = ds.to_pandas()
+    df.info()
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Seed set to 42
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 20 entries, 0 to 19
+    Data columns (total 31 columns):
+     #   Column                          Non-Null Count  Dtype  
+    ---  ------                          --------------  -----  
+     0   employee_id                     20 non-null     object 
+     1   role                            20 non-null     object 
+     2   job_level                       20 non-null     object 
+     3   department                      20 non-null     object 
+     4   tenure_months                   20 non-null     int64  
+     5   salary                          20 non-null     float64
+     6   performance_score               20 non-null     float64
+     7   satisfaction_score              20 non-null     float64
+     8   workload_score                  20 non-null     float64
+     9   team_sentiment                  20 non-null     float64
+     10  recent_feedback                 20 non-null     object 
+     11  communication_patterns          20 non-null     object 
+     12  project_completion_rate         20 non-null     float64
+     13  overtime_hours                  20 non-null     float64
+     14  training_participation          20 non-null     float64
+     15  collaboration_score             20 non-null     float64
+     16  technical_skills                20 non-null     object 
+     17  soft_skills                     20 non-null     object 
+     18  email_sentiment                 20 non-null     float64
+     19  slack_activity                  20 non-null     float64
+     20  meeting_participation           20 non-null     float64
+     21  goal_achievement_rate           20 non-null     float64
+     22  stress_level                    20 non-null     float64
+     23  burnout_risk                    20 non-null     float64
+     24  left_company                    20 non-null     bool   
+     25  turnover_reason                 20 non-null     object 
+     26  risk_factors_summary            20 non-null     object 
+     27  turnover_probability_generated  20 non-null     float64
+     28  persona_name                    20 non-null     object 
+     29  role_complexity_score           20 non-null     float64
+     30  career_progression_score        20 non-null     float64
+    dtypes: bool(1), float64(18), int64(1), object(11)
+    memory usage: 4.8+ KB
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
+
+As it can be seen, the dataset contains multiple attributes per record (more than 30).
+
+.. GENERATED FROM PYTHON SOURCE LINES 71-77
+
+Step 3: Simulate missing modalities
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
+column, which includes employee comments about the working conditions, and which will be our text modality.
+Our response variable is the `left_company` column, which includes the label about whether the employee left the
+company or not.
+
+.. GENERATED FROM PYTHON SOURCE LINES 77-96
+
+.. code-block:: Python
+
+    Xs = [
+        df.select_dtypes(include='number').iloc[:,:-2], # Numeric modality
+        df[['recent_feedback']], # Text modality
+    ]
+    y = df['left_company'].astype(np.float32) # Response variable
+
+    # To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
+    # randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
+    # datasets so 10% of samples will have either tabular or text modalities missing.
+    transformer = Amputer(p=0.1, random_state=random_state)
+    Xs = transformer.fit_transform(Xs)
+
+    # Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
+    Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
+                                                                   random_state=42, shuffle=True,
+                                                                   stratify=y)
+    print("Xs_train", Xs_train[0].shape)
+    print("Xs_test", Xs_test[0].shape)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Xs_train (16, 17)
+    Xs_test (4, 17)
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 97-100
+
+Step 4: Training the model
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+We will start by transforming the numeric variables using a `StandardScaler`:
+
+.. GENERATED FROM PYTHON SOURCE LINES 100-103
+
+.. code-block:: Python
+
+    scaler = StandardScaler().set_output(transform="pandas")
+    Xs_train[0] = scaler.fit_transform(Xs_train[0])
+    Xs_test[0] = scaler.transform(Xs_test[0])
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 104-105
+
+Now, we will create the loaders.
+
+.. GENERATED FROM PYTHON SOURCE LINES 105-110
+
+.. code-block:: Python
+
+    train_data = MUSEDataset(Xs=Xs_train, y=y_train)
+    train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=True)
+    test_data = MUSEDataset(Xs=Xs_test, y=y_test)
+    test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
 
 
 
@@ -167,80 +265,176 @@ We will use a synthetic employee dataset (available at `Hugging Face Datasets
 We will train the ``MUSE`` model with only 1 epochs for speed, using the
 `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-180
+.. GENERATED FROM PYTHON SOURCE LINES 113-121
 
 .. code-block:: Python
 
 
-    # trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
-    # estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
-    #                  input_dim=[Xs_train[0].shape[1]],
-    #                  bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
-    #                  )
-    # trainer.fit(estimator, train_dataloader)
-    #
-    # ########################################################
-    # # Step 5: Evaluation
-    # # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    # # After the training, we can evaluate the predictions. Given the small dataset and short training, the model does
-    # # not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
-    # # Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
-    #
-    # train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=False)
-    # preds_train = trainer.predict(estimator, train_dataloader)
-    # y_pred_train = torch.cat(preds_train)
-    #
-    # plt.hist(y_pred_train, bins=15)
-    # plt.show()
-    #
-    # ########################################################
-    # # As it can be seen, the probabilities are distributed in just three repeated values. We will stablish a threshold
-    # # based on this to assign the classes.
-    #
-    # tuned_threshold = 0.31
-    # y_pred_train_labels = (y_pred_train > tuned_threshold).int()
-    # y_train_true = torch.from_numpy(y_train.values).int()
-    #
-    # ConfusionMatrixDisplay.from_predictions(y_true=y_train_true, y_pred=y_pred_train_labels)
-    # plt.title("Training Set Evaluation")
-    #
-    # print("MCC:", round(matthews_corrcoef(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
-    # print("Accuracy:", round(accuracy_score(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
-    #
-    # ########################################################
-    # # It is not the best performance, but given the small data, the missing values, and short training, it is expected
-    # # that the model does not offer the best solution.
-    # #
-    # # Let us evaluate now the performance with the test set:
-    #
-    # preds_test = trainer.predict(estimator, test_dataloader)
-    # y_pred_test = torch.cat(preds_test)
-    # y_pred_test_labels = y_pred_test > tuned_threshold
-    # y_test_true = torch.from_numpy(y_test.values).bool()
-    #
-    # # Finally, let us plot and print some of the performance metrics:
-    # fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-    #
-    # # Confusion matrix
-    # ConfusionMatrixDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
-    #                                         ax=axes[0])
-    # axes[0].set_title("Testing Set Evaluation")
-    #
-    # # ROC Curve
-    # RocCurveDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
-    #                                  ax=axes[1])
-    # axes[1].set_title("Testing Set ROC Curve")
-    #
-    # # Adjust layout
-    # plt.tight_layout()
-    # plt.show()
-    #
-    # print("MCC:", round(matthews_corrcoef(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
-    # print("Accuracy:", round(accuracy_score(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
+    trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
+    estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
+                     input_dim=[Xs_train[0].shape[1]],
+                     bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
+                     )
+    trainer.fit(estimator, train_dataloader)
 
 
 
 
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    GPU available: False, used: False
+    TPU available: False, using: 0 TPU cores
+    HPU available: False, using: 0 HPUs
+
+      | Name  | Type       | Params | Mode 
+    ---------------------------------------------
+    0 | model | MUSEModule | 342 K  | train
+    ---------------------------------------------
+    254 K     Trainable params
+    87.9 K    Non-trainable params
+    342 K     Total params
+    1.368     Total estimated model params size (MB)
+    47        Modules in train mode
+    102       Modules in eval mode
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/8 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/8 [00:00<?, ?it/s]     Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 87.02it/s]    Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 85.59it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 103.94it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 102.96it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 112.67it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 111.93it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 113.41it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 112.83it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 118.90it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 118.40it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 122.57it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 122.15it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 123.33it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 122.95it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 123.25it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 122.90it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 122.61it/s]`Trainer.fit` stopped: `max_epochs=1` reached.
+    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 122.24it/s]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 122-127
+
+Step 5: Evaluation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+After the training, we can evaluate the predictions. Given the small dataset and short training, the model does
+not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
+Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
+
+.. GENERATED FROM PYTHON SOURCE LINES 127-135
+
+.. code-block:: Python
+
+
+    train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=False)
+    preds_train = trainer.predict(estimator, train_dataloader)
+    y_pred_train = torch.cat(preds_train)
+
+    plt.hist(y_pred_train, bins=15)
+    plt.show()
+
+
+
+
+.. image-sg:: /auto_tutorials/images/sphx_glr_classify_incomplete_tabular_language_dataset_001.png
+   :alt: classify incomplete tabular language dataset
+   :srcset: /auto_tutorials/images/sphx_glr_classify_incomplete_tabular_language_dataset_001.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:  12%|█▎        | 1/8 [00:00<00:00, 288.35it/s]    Predicting DataLoader 0:  25%|██▌       | 2/8 [00:00<00:00, 263.45it/s]    Predicting DataLoader 0:  38%|███▊      | 3/8 [00:00<00:00, 258.89it/s]    Predicting DataLoader 0:  50%|█████     | 4/8 [00:00<00:00, 271.97it/s]    Predicting DataLoader 0:  62%|██████▎   | 5/8 [00:00<00:00, 287.30it/s]    Predicting DataLoader 0:  75%|███████▌  | 6/8 [00:00<00:00, 288.06it/s]    Predicting DataLoader 0:  88%|████████▊ | 7/8 [00:00<00:00, 275.83it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 249.93it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 247.68it/s]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 136-138
+
+As it can be seen, the probabilities are distributed in just three repeated values. We will stablish a threshold
+based on this to assign the classes.
+
+.. GENERATED FROM PYTHON SOURCE LINES 138-149
+
+.. code-block:: Python
+
+
+    tuned_threshold = 0.31
+    y_pred_train_labels = (y_pred_train > tuned_threshold).int()
+    y_train_true = torch.from_numpy(y_train.values).int()
+
+    ConfusionMatrixDisplay.from_predictions(y_true=y_train_true, y_pred=y_pred_train_labels)
+    plt.title("Training Set Evaluation")
+
+    print("MCC:", round(matthews_corrcoef(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
+    print("Accuracy:", round(accuracy_score(y_true=y_train_true, y_pred=y_pred_train_labels), 2))
+
+
+
+
+.. image-sg:: /auto_tutorials/images/sphx_glr_classify_incomplete_tabular_language_dataset_002.png
+   :alt: Training Set Evaluation
+   :srcset: /auto_tutorials/images/sphx_glr_classify_incomplete_tabular_language_dataset_002.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    MCC: 0.0
+    Accuracy: 0.19
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 150-154
+
+It is not the best performance, but given the small data, the missing values, and short training, it is expected
+that the model does not offer the best solution.
+
+Let us evaluate now the performance with the test set:
+
+.. GENERATED FROM PYTHON SOURCE LINES 154-180
+
+.. code-block:: Python
+
+
+    preds_test = trainer.predict(estimator, test_dataloader)
+    y_pred_test = torch.cat(preds_test)
+    y_pred_test_labels = y_pred_test > tuned_threshold
+    y_test_true = torch.from_numpy(y_test.values).bool()
+
+    # Finally, let us plot and print some of the performance metrics:
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Confusion matrix
+    ConfusionMatrixDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
+                                            ax=axes[0])
+    axes[0].set_title("Testing Set Evaluation")
+
+    # ROC Curve
+    RocCurveDisplay.from_predictions(y_true=y_test_true, y_pred=y_pred_test_labels,
+                                     ax=axes[1])
+    axes[1].set_title("Testing Set ROC Curve")
+
+    # Adjust layout
+    plt.tight_layout()
+    plt.show()
+
+    print("MCC:", round(matthews_corrcoef(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
+    print("Accuracy:", round(accuracy_score(y_true=y_test_true, y_pred=y_pred_test_labels), 2))
+
+
+
+
+.. image-sg:: /auto_tutorials/images/sphx_glr_classify_incomplete_tabular_language_dataset_003.png
+   :alt: Testing Set Evaluation, Testing Set ROC Curve
+   :srcset: /auto_tutorials/images/sphx_glr_classify_incomplete_tabular_language_dataset_003.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:  50%|█████     | 1/2 [00:00<00:00, 179.89it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 179.92it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 175.60it/s]
+    MCC: 0.0
+    Accuracy: 0.25
 
 
 
@@ -265,7 +459,7 @@ modality incompleteness in tabular-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.595 seconds)
+   **Total running time of the script:** (0 minutes 7.480 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_tabular_language_dataset.py:

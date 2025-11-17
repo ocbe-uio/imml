@@ -111,23 +111,6 @@ Questions or feedback?
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to classify samples from an incomplete vision–language dataset using the iMML library. iMML supports robust classification even when some modalities (e.g., text or image) are missing, making it suitable for real‑world multi‑modal data where missingness is common.">
-
-.. only:: html
-
-  .. image:: /auto_tutorials/images/thumb/sphx_glr_classify_incomplete_vision_language_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_tutorials_classify_incomplete_vision_language.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Classify an incomplete vision–language dataset (Oxford‑IIIT Pets) with deep learning</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This tutorial illustrates how to classify samples from an incomplete tabular-language dataset using the iMML library. We will use the MUSE algorithm from the iMML classify module on the Synthetic Employee Dataset and evaluate its performance.">
 
 .. only:: html
@@ -140,6 +123,23 @@ Questions or feedback?
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Classify an incomplete tabular–language dataset (Synthetic Employee Dataset)</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to classify samples from an incomplete vision–language dataset using the iMML library. iMML supports robust classification even when some modalities (e.g., text or image) are missing, making it suitable for real‑world multi‑modal data where missingness is common.">
+
+.. only:: html
+
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_classify_incomplete_vision_language_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_tutorials_classify_incomplete_vision_language.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Classify an incomplete vision–language dataset (Oxford‑IIIT Pets) with deep learning</div>
     </div>
 
 
@@ -175,8 +175,8 @@ Questions or feedback?
    /auto_tutorials/cluster_incomplete_mmd
    /auto_tutorials/retrieve_incomplete_vision_language
    /auto_tutorials/impute_multi_modal_data
-   /auto_tutorials/classify_incomplete_vision_language
    /auto_tutorials/classify_incomplete_tabular_language_dataset
+   /auto_tutorials/classify_incomplete_vision_language
    /auto_tutorials/select_and_extract_features
 
 
