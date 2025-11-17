@@ -60,7 +60,7 @@ random_state = 42
 L.seed_everything(random_state) # Set the seed
 
 ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
-                  split="train[:20]") # Retrieve the first 20 records
+                  split="train[:1000]") # Retrieve the first 1000 records
 df = ds.to_pandas()
 df.info()
 
@@ -103,18 +103,17 @@ Xs_test[0] = scaler.transform(Xs_test[0])
 ###################################################
 # Now, we will create the loaders.
 train_data = MUSEDataset(Xs=Xs_train, y=y_train)
-train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=True)
+train_dataloader = DataLoader(dataset=train_data, batch_size=10, shuffle=True)
 test_data = MUSEDataset(Xs=Xs_test, y=y_test)
-test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
+test_dataloader = DataLoader(dataset=test_data, batch_size=10, shuffle=False)
 
 #######################################################
-# We will train the ``MUSE`` model with only 1 epochs for speed, using the
+# We will train the ``MUSE`` model with only 10 epochs for speed, using the
 # `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
-trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
+trainer = Trainer(max_epochs=10, logger=False, enable_checkpointing=False)
 estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
                  input_dim=[Xs_train[0].shape[1]],
-                 bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
                  )
 trainer.fit(estimator, train_dataloader)
 
@@ -125,7 +124,7 @@ trainer.fit(estimator, train_dataloader)
 # not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
 # Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
 
-train_dataloader = DataLoader(dataset=train_data, batch_size=2, shuffle=False)
+train_dataloader = DataLoader(dataset=train_data, batch_size=10, shuffle=False)
 preds_train = trainer.predict(estimator, train_dataloader)
 y_pred_train = torch.cat(preds_train)
 

@@ -66,6 +66,7 @@ jobs:
     - name: Test mac
       if: runner.os == 'macOS'
       run: |
+        export PATH="/opt/homebrew/bin:$PATH"
         brew update
         brew install gcc
         sudo ln -fs /opt/homebrew/bin/gfortran-12 /usr/local/bin/gfortran
