@@ -92,7 +92,7 @@ fig, ax = plot_pid(rus=rus, mod_names=["Genes", "Lipids"])
 
 ###################################################
 # Working with more than two modalities
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # If you have more than two modalities, PID statistics are computed pairwise; ``pid`` returns a list of
 # dictionaries (one per pair). For example, adding a third modality yields three pairwise results.
 rus = pid(Xs=Xs + [Xs[0]], y=y, random_state=random_state, normalize=True)

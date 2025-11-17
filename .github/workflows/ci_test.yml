@@ -72,7 +72,7 @@ jobs:
         sudo mkdir -p /usr/local/gfortran
         sudo ln -sf /opt/homebrew/Cellar/gcc@12/*/lib/gcc/12 /usr/local/gfortran/lib
         which gfortran || true gfortran --version
-        brew install texinfo
+        brew uninstall --ignore-dependencies --force texinfo || true brew install texinfo || true
         brew install octave
         octave --eval "pkg install -forge control; pkg install -forge statistics; pkg load control; pkg load statistics; ver"
         Rscript -e "install.packages(c('nnTensor', 'SNFtool'), repos='http://cran.r-project.org')"

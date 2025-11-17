@@ -193,7 +193,7 @@ we could just use a classical unimodal learner and, probably, still get the same
 .. GENERATED FROM PYTHON SOURCE LINES 94-98
 
 Working with more than two modalities
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If you have more than two modalities, PID statistics are computed pairwise; ``pid`` returns a list of
 dictionaries (one per pair). For example, adding a third modality yields three pairwise results.
 
@@ -440,7 +440,7 @@ feature engineering for downstream multi‑modal learning.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.601 seconds)
+   **Total running time of the script:** (0 minutes 18.772 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_multi_modal_data_statistics.py:
