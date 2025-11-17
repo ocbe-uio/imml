@@ -71,7 +71,7 @@ jobs:
         sudo ln -fs /opt/homebrew/bin/gfortran-12 /usr/local/bin/gfortran
         sudo mkdir -p /usr/local/gfortran
         sudo ln -sf /opt/homebrew/Cellar/gcc@12/*/lib/gcc/12 /usr/local/gfortran/lib
-        brew install octave
+        brew install octave || (brew update && brew upgrade && brew install octave)
         octave --eval "pkg install -forge control; pkg install -forge statistics; pkg load control; pkg load statistics; ver"
         Rscript -e "install.packages(c('nnTensor', 'SNFtool'), repos='http://cran.r-project.org')"
     - name: Test r

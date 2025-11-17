@@ -60,7 +60,7 @@ random_state = 42
 L.seed_everything(random_state) # Set the seed
 
 ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
-                  split="train[:500]") # Retrieve the first 500 records
+                  split="train[:100]") # Retrieve the first 100 records
 df = ds.to_pandas()
 df.info()
 
@@ -103,9 +103,9 @@ Xs_test[0] = scaler.transform(Xs_test[0])
 ###################################################
 # Now, we will create the loaders.
 train_data = MUSEDataset(Xs=Xs_train, y=y_train)
-train_dataloader = DataLoader(dataset=train_data, batch_size=10, shuffle=True)
+train_dataloader = DataLoader(dataset=train_data, batch_size=5, shuffle=True)
 test_data = MUSEDataset(Xs=Xs_test, y=y_test)
-test_dataloader = DataLoader(dataset=test_data, batch_size=10, shuffle=False)
+test_dataloader = DataLoader(dataset=test_data, batch_size=5, shuffle=False)
 
 ########################################################
 # We will train the ``MUSE`` model with only 10 epochs for speed, using the
@@ -123,7 +123,7 @@ trainer.fit(estimator, train_dataloader)
 # not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
 # Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
 
-train_dataloader = DataLoader(dataset=train_data, batch_size=10, shuffle=False)
+train_dataloader = DataLoader(dataset=train_data, batch_size=5, shuffle=False)
 preds_train = trainer.predict(estimator, train_dataloader)
 y_pred_train = torch.cat(preds_train)
 

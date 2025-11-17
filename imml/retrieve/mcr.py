@@ -129,13 +129,6 @@ class MCR(Module):
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
 
-        if not isinstance(modalities, list):
-            raise ValueError(f"Invalid modalities. It must be a list. A {type(modalities)} was passed.")
-        if len(modalities) < 2:
-            raise ValueError(f"Invalid modalities. It must have at least 2 modalities. Got {len(modalities)} modalities")
-        modalities_options = ["image", "text"]
-        if not all(mod in modalities_options for mod in modalities):
-            raise ValueError(f"Invalid modalities. Expected options are: {modalities_options}")
         if not isinstance(batch_size, int):
             raise ValueError(f"Invalid batch_size. It must be a integer. A {type(batch_size)} was passed.")
         if batch_size <= 0:
@@ -207,9 +200,7 @@ class MCR(Module):
         -------
         self :  Fitted estimator. Or memory_bank if save_memory_bank is False.
         """
-        if len(Xs) != len(self.modalities):
-            raise ValueError(f"Invalid Xs. It must have the same length as modalities. Got {len(Xs)} vs {len(self.modalities)}")
-        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True, enforce_modalities=len(self.modalities))
+        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True, modalities=self.modalities, mod_types=["image", "text"])
 
         Xs = self._convert_to_1dlist(Xs=Xs)
         q_i_list, q_t_list = self._encode_img_text(Xs=Xs)
@@ -404,7 +395,7 @@ class MCR(Module):
             - prompt_text_path: Path to the generated text prompt. Only if generate_cap is True.
 
         """
-        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True, enforce_modalities=len(self.modalities))
+        Xs = check_Xs_y(Xs=Xs, y=y, supervised=True, modalities=self.modalities, mod_types=["image", "text"])
 
         if n_neighbors is not None:
             if not isinstance(n_neighbors, int):
