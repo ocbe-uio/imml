@@ -113,7 +113,9 @@ test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
 
 trainer = Trainer(max_epochs=10, logger=False, enable_checkpointing=False)
 estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
-                 input_dim=[Xs_train[0].shape[1]])
+                 input_dim=[Xs_train[0].shape[1]],
+                 bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
+                 )
 trainer.fit(estimator, train_dataloader)
 
 ########################################################

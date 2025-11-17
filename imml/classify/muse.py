@@ -53,8 +53,6 @@ class MUSE(LightningModule):
         Optional normalization strategy in GNN layers (e.g., 'batchnorm', 'layernorm').
     loss_fn : callable, default=None
         Loss function. If None, defaults to `nn.BCEWithLogitsLoss()` if output_dim == <=2, else `nn.CrossEntropyLoss()`.
-    code_pretrained_embedding : bool, default=True
-        If True, initializes pretrained embeddings for text/code features.
     bert_type : str, default="prajjwal1/bert-tiny"
         HuggingFace model name or path for BERT backbone used in the text encoder.
     dropout : float, default=0.25
@@ -98,7 +96,7 @@ class MUSE(LightningModule):
     def __init__(self, input_dim: list = None, hidden_dim: int = 128, modalities: list = None,
                  tokenizer=None, learning_rate: float = 2e-4, weight_decay: float = 0., output_dim: int = 1,
                  extractors: list = None, gnn_layers: int = 2, gnn_norm: str = None, loss_fn: callable = None,
-                 code_pretrained_embedding: bool = True, bert_type: str = "prajjwal1/bert-tiny", dropout: float = 0.25):
+                 bert_type: str = "prajjwal1/bert-tiny", dropout: float = 0.25):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
@@ -136,8 +134,6 @@ class MUSE(LightningModule):
             raise ValueError(f"Invalid gnn_layers. It must be positive. {gnn_layers} was passed.")
         if gnn_norm is not None and not isinstance(gnn_norm, str):
             raise ValueError(f"Invalid gnn_norm. It must be a string. A {type(gnn_norm)} was passed.")
-        if not isinstance(code_pretrained_embedding, bool):
-            raise ValueError(f"Invalid code_pretrained_embedding. It must be a boolean. A {type(code_pretrained_embedding)} was passed.")
         if not isinstance(bert_type, str):
             raise ValueError(f"Invalid bert_type. It must be a string. A {type(bert_type)} was passed.")
         if not isinstance(dropout, float):
@@ -154,10 +150,9 @@ class MUSE(LightningModule):
         if loss_fn is None:
             loss_fn = nn.BCEWithLogitsLoss() if output_dim == 1 else nn.CrossEntropyLoss()
         self.model = MUSEModule(input_dim=input_dim, tokenizer=tokenizer, hidden_dim=hidden_dim,
-                               modalities=modalities, output_dim=output_dim, extractors=extractors,
-                               gnn_layers=gnn_layers, gnn_norm=gnn_norm, bert_type=bert_type, dropout=dropout,
-                               code_pretrained_embedding=code_pretrained_embedding, loss_fn=loss_fn,
-                                get_probs=get_probs)
+                                modalities=modalities, output_dim=output_dim, extractors=extractors,
+                                gnn_layers=gnn_layers, gnn_norm=gnn_norm, bert_type=bert_type,
+                                dropout=dropout, loss_fn=loss_fn, get_probs=get_probs)
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
 
@@ -209,8 +204,7 @@ class MUSEModule(Module):
 
     def __init__(self, input_dim: list = None, modalities: list = None, extractors: list = None, tokenizer=None,
                  hidden_dim: int = 128, output_dim: int = 1, gnn_layers: int = 2, gnn_norm: str = None, loss_fn=None,
-                 get_probs=None, code_pretrained_embedding: bool = True, bert_type: str = "prajjwal1/bert-tiny",
-                 dropout: float = 0.25):
+                 get_probs=None, bert_type: str = "prajjwal1/bert-tiny", dropout: float = 0.25):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
@@ -220,7 +214,6 @@ class MUSEModule(Module):
         self.tokenizer = tokenizer
         self.modalities = modalities
         self.hidden_dim = hidden_dim
-        self.code_pretrained_embedding = code_pretrained_embedding
         self.bert_type = bert_type
         self.dropout = dropout
         self.gnn_layers = gnn_layers
