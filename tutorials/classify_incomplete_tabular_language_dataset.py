@@ -60,7 +60,7 @@ random_state = 42
 L.seed_everything(random_state) # Set the seed
 
 ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
-                  split="train[:50]") # Retrieve the first 50 records
+                  split="train[:20]") # Retrieve the first 20 records
 df = ds.to_pandas()
 df.info()
 
@@ -108,10 +108,10 @@ test_data = MUSEDataset(Xs=Xs_test, y=y_test)
 test_dataloader = DataLoader(dataset=test_data, batch_size=2, shuffle=False)
 
 ########################################################
-# We will train the ``MUSE`` model with only 10 epochs for speed, using the
+# We will train the ``MUSE`` model with only 1 epochs for speed, using the
 # `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
-trainer = Trainer(max_epochs=10, logger=False, enable_checkpointing=False)
+trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
 estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
                  input_dim=[Xs_train[0].shape[1]],
                  bert_type="hf-internal-testing/tiny-random-bert" # Use a tiny random BERT model for speed
