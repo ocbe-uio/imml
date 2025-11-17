@@ -194,7 +194,7 @@ sphinx_gallery_conf = {
     'reference_url': {
         project: None,
     },
-    'ignore_pattern': r'noinclude\.py',
+    "ignore_pattern": r"classify_incomplete_tabular_language_dataset\.py",
     'filename_pattern': r'\.py',
     'capture_repr': ('_repr_html_', '__repr__'),
 }
