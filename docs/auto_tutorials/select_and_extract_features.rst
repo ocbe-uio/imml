@@ -29,6 +29,7 @@ number of features is often critical. Dimensionality reduction addresses these c
 computational efficiency, highlighting key features, reducing noise, and enabling better data visualization.
 
 Dimensionality reduction refers to two main approaches: feature selection and feature extraction.
+
 - Feature selection identifies the most relevant features from the dataset.
 - Feature extraction creates new features by transforming the original ones to capture essential information.
 
@@ -44,7 +45,7 @@ What you will learn:
 - How to assess modality importance and inspect the selected top features.
 - How to benchmark different dimensionality-reduction strategies.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-33
+.. GENERATED FROM PYTHON SOURCE LINES 30-34
 
 .. code-block:: Python
 
@@ -59,24 +60,23 @@ What you will learn:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-38
+.. GENERATED FROM PYTHON SOURCE LINES 35-39
 
 Step 0: Prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To run this tutorial, install the extra dependencies:
   pip install imml[r]
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-43
+.. GENERATED FROM PYTHON SOURCE LINES 42-44
 
 Step 1: Import required libraries
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-61
+.. GENERATED FROM PYTHON SOURCE LINES 44-61
 
 .. code-block:: Python
 
 
-    from sklearn.datasets import make_classification
     from sklearn.impute import SimpleImputer
     from sklearn.pipeline import make_pipeline
     from sklearn.preprocessing import MinMaxScaler
@@ -152,12 +152,11 @@ Step 2: Define plotting functions
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-111
+.. GENERATED FROM PYTHON SOURCE LINES 101-110
 
 Step 3: Load the dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^
-For reproducibility, we generate a small synthetic classification dataset and split the features into two
-modalities (Xs[0], Xs[1]).
+We will use the nutrimouse dataset.
 
 Using your own data:
 
@@ -165,18 +164,19 @@ Using your own data:
 - Each Xs[i] should be a 2D array-like (pandas DataFrame or NumPy array) of shape (n_samples, n_features_i).
 - All modalities must refer to the same samples and be aligned by row.
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-123
+.. GENERATED FROM PYTHON SOURCE LINES 110-123
 
 .. code-block:: Python
 
 
     random_state = 42
-    X, y = make_classification(n_samples=50, random_state=random_state, n_clusters_per_class=1, n_classes=3)
-    X, y = pd.DataFrame(X), pd.Series(y)
-    X.columns = X.columns.astype(str)
-    # Two modalities: first 10 features and last 10 features
-    Xs = [X.iloc[:, :10], X.iloc[:, 10:]]
-    names= ["Modality A", "Modality B"]
+    Xs = [
+        pd.read_csv("https://raw.githubusercontent.com/mvlearn/mvlearn/refs/heads/main/mvlearn/datasets/nutrimouse/gene.csv"),
+        pd.read_csv("https://raw.githubusercontent.com/mvlearn/mvlearn/refs/heads/main/mvlearn/datasets/nutrimouse/lipid.csv"),
+    ]
+    y = pd.read_csv("https://raw.githubusercontent.com/mvlearn/mvlearn/refs/heads/main/mvlearn/datasets/nutrimouse/genotype.csv")
+    y = y.squeeze()
+    names= ["Genes", "Lipids"]
     print("Samples:", len(Xs[0]), "\t", "Modalities:", len(Xs), "\t", "Features:", [X.shape[1] for X in Xs])
     n_clusters = len(np.unique(y))
     y.value_counts()
@@ -189,11 +189,11 @@ Using your own data:
 
  .. code-block:: none
 
-    Samples: 50      Modalities: 2   Features: [10, 10]
+    Samples: 40      Modalities: 2   Features: [120, 21]
 
-    0    17
-    1    17
-    2    16
+    genotype
+    wt      20
+    ppar    20
     Name: count, dtype: int64
 
 
@@ -941,31 +941,31 @@ We can identify and visualize the selected features.
       <tbody>
         <tr>
           <th>0</th>
-          <td>11</td>
-          <td>3.760145</td>
-          <td>4</td>
-          <td>Modality B</td>
+          <td>MDR1</td>
+          <td>3.512144</td>
+          <td>2</td>
+          <td>Genes</td>
         </tr>
         <tr>
           <th>1</th>
+          <td>Lpin</td>
+          <td>3.222102</td>
           <td>3</td>
-          <td>3.654930</td>
-          <td>3</td>
-          <td>Modality A</td>
+          <td>Genes</td>
         </tr>
         <tr>
           <th>2</th>
+          <td>C20.3n.6</td>
+          <td>3.188128</td>
           <td>4</td>
-          <td>3.220185</td>
-          <td>2</td>
-          <td>Modality A</td>
+          <td>Lipids</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>2</td>
-          <td>3.083059</td>
+          <td>L.FABP</td>
+          <td>3.089178</td>
           <td>1</td>
-          <td>Modality A</td>
+          <td>Genes</td>
         </tr>
       </tbody>
     </table>
@@ -1003,7 +1003,7 @@ We can identify and visualize the selected features.
 
 .. GENERATED FROM PYTHON SOURCE LINES 158-159
 
-The top features include attributes from both modalities, but Modality A appears to be more important overall.
+The top features include attributes from both modalities, but the genes seem to be more important overall.
 
 .. GENERATED FROM PYTHON SOURCE LINES 161-162
 
@@ -1018,7 +1018,7 @@ We can visualize the modality relative importance with a barplot.
         weights= pipeline[-1].weights_, names=names)
     selected_features.to_frame()
 
-    ax = selected_features.plot(kind= "bar", color= list(palette.values()), ylabel= "Modality Importance (\%)", rot=0)
+    ax = selected_features.plot(kind= "bar", color= list(palette.values()), ylabel= "Modality Importance (%)", rot=0)
 
 
 
@@ -1033,7 +1033,7 @@ We can visualize the modality relative importance with a barplot.
 
 .. GENERATED FROM PYTHON SOURCE LINES 169-170
 
-Yes, in fact Modality A is the most important modality in this example.
+Yes, in fact the genes are the most important modality in this example.
 
 .. GENERATED FROM PYTHON SOURCE LINES 172-173
 
@@ -1088,59 +1088,59 @@ We can also extract features and visualize the original features with the larges
       <tbody>
         <tr>
           <th>3</th>
-          <td>2</td>
-          <td>3.083059</td>
+          <td>L.FABP</td>
+          <td>3.089178</td>
           <td>1</td>
-          <td>Modality A</td>
+          <td>Genes</td>
         </tr>
         <tr>
           <th>7</th>
-          <td>6</td>
-          <td>2.511698</td>
+          <td>C18.1n.9</td>
+          <td>2.912200</td>
           <td>1</td>
-          <td>Modality A</td>
-        </tr>
-        <tr>
-          <th>2</th>
-          <td>4</td>
-          <td>3.220185</td>
-          <td>2</td>
-          <td>Modality A</td>
-        </tr>
-        <tr>
-          <th>5</th>
-          <td>12</td>
-          <td>3.211047</td>
-          <td>2</td>
-          <td>Modality B</td>
-        </tr>
-        <tr>
-          <th>1</th>
-          <td>3</td>
-          <td>3.654930</td>
-          <td>3</td>
-          <td>Modality A</td>
-        </tr>
-        <tr>
-          <th>6</th>
-          <td>15</td>
-          <td>2.932770</td>
-          <td>3</td>
-          <td>Modality B</td>
+          <td>Lipids</td>
         </tr>
         <tr>
           <th>0</th>
-          <td>11</td>
-          <td>3.760145</td>
-          <td>4</td>
-          <td>Modality B</td>
+          <td>MDR1</td>
+          <td>3.512144</td>
+          <td>2</td>
+          <td>Genes</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>8</td>
-          <td>3.395243</td>
+          <td>Bcl.3</td>
+          <td>3.155568</td>
+          <td>2</td>
+          <td>Genes</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>Lpin</td>
+          <td>3.222102</td>
+          <td>3</td>
+          <td>Genes</td>
+        </tr>
+        <tr>
+          <th>5</th>
+          <td>CYP24</td>
+          <td>3.010873</td>
+          <td>3</td>
+          <td>Genes</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>C20.3n.6</td>
+          <td>3.188128</td>
           <td>4</td>
-          <td>Modality A</td>
+          <td>Lipids</td>
+        </tr>
+        <tr>
+          <th>6</th>
+          <td>CYP2c29</td>
+          <td>2.963534</td>
+          <td>4</td>
+          <td>Genes</td>
         </tr>
       </tbody>
     </table>
@@ -1179,7 +1179,7 @@ We can also extract features and visualize the original features with the larges
  .. code-block:: none
 
 
-    [Text(3, 0, '6'), Text(3, 0, '15'), Text(3, 0, '2'), Text(3, 0, '12'), Text(3, 0, '4'), Text(3, 0, '8'), Text(3, 0, '3'), Text(3, 0, '11')]
+    [Text(3, 0, 'C18.1n.9'), Text(3, 0, 'CYP2c29'), Text(3, 0, 'CYP24'), Text(3, 0, 'L.FABP'), Text(3, 0, 'Bcl.3'), Text(3, 0, 'C20.3n.6'), Text(3, 0, 'Lpin'), Text(3, 0, 'MDR1')]
 
 
 
@@ -1309,35 +1309,35 @@ seeds to have robust results.
           <td>Feature extraction</td>
           <td>0</td>
           <td>0</td>
-          <td>0.86</td>
+          <td>0.900</td>
         </tr>
         <tr>
           <th>1</th>
           <td>Feature extraction</td>
           <td>0</td>
           <td>1</td>
-          <td>0.82</td>
+          <td>0.950</td>
         </tr>
         <tr>
           <th>2</th>
           <td>Feature extraction</td>
           <td>0</td>
           <td>2</td>
-          <td>0.78</td>
+          <td>1.000</td>
         </tr>
         <tr>
           <th>3</th>
           <td>Feature extraction</td>
           <td>0</td>
           <td>3</td>
-          <td>0.84</td>
+          <td>0.975</td>
         </tr>
         <tr>
           <th>4</th>
           <td>Feature extraction</td>
           <td>0</td>
           <td>4</td>
-          <td>0.78</td>
+          <td>0.900</td>
         </tr>
       </tbody>
     </table>
@@ -1403,7 +1403,7 @@ for your application.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.441 seconds)
+   **Total running time of the script:** (0 minutes 11.639 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_select_and_extract_features.py:

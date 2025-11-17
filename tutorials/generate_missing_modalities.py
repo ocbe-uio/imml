@@ -27,7 +27,7 @@ This tutorial is fully reproducible and uses a small synthetic dataset. You can 
 replace the data-loading section with your own data following the same structure.
 """
 
-# sphinx_gallery_thumbnail_number = 1
+# sphinx_gallery_thumbnail_number = 2
 
 # License: BSD 3-Clause License
 
@@ -42,7 +42,7 @@ from IPython.core.display_functions import display
 
 from imml.ampute import Amputer
 from imml.explore import get_summary
-from imml.visualize import plot_missing_modality
+from imml.visualize import plot_missing_modality, plot_combinations
 
 ##########################
 # Step 2: Load the dataset
@@ -66,9 +66,9 @@ Xs = [pd.DataFrame(rng.random((n_samples, 10))) for i in range(n_mods)]
 # Step 3: Simulate missing data
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # Using ``Amputer``, we introduce missing data to simulate a scenario where some modalities are missing. Here,
-# 80% of the samples will be incomplete following a mutually exclusive missing (MEM) pattern.
+# 80% of the samples will be incomplete following a random missing (MCAR) pattern.
 
-mechanism = "mem"
+mechanism = "mcar"
 p=0.8
 amputer = Amputer(mechanism=mechanism, p=p, random_state=random_state)
 transformed_Xs = amputer.fit_transform(Xs)
@@ -77,8 +77,11 @@ transformed_Xs = amputer.fit_transform(Xs)
 ###################################
 # We can visualize which modalities are missing using a binary color map (black = observed, white = missing).
 # Each row is a sample; each column is a modality.
-_ = plot_missing_modality(Xs=transformed_Xs, figsize= (3.18,2.2))
+_ = plot_missing_modality(Xs=transformed_Xs)
 
+###################################################
+# We can also show how is the distribution of the combinations using ``plot_combinations``.
+_ = plot_combinations(Xs=transformed_Xs)
 
 ###################################
 # Step 4: Compare amputation mechanisms

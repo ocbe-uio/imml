@@ -21,7 +21,7 @@ This tutorial is fully reproducible and uses a small dataset. You can easily
 replace the data‑loading section with your own data following the same structure.
 """
 
-# sphinx_gallery_thumbnail_number = 3
+# sphinx_gallery_thumbnail_number = 1
 
 # License: BSD 3-Clause License
 
@@ -30,7 +30,6 @@ replace the data‑loading section with your own data following the same structu
 # Step 1: Import required libraries
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-import copy
 import pandas as pd
 
 from imml.ampute import Amputer
@@ -76,7 +75,7 @@ rus  # a dict with keys: Redundancy, Uniqueness1, Uniqueness2, Synergy
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # You can directly pass the rus dict returned by ``pid`` to ``plot_pid``. Alternatively, ``plot_pid`` can also compute
 # PID internally if you pass Xs and y, which is convenient when you want a one‑liner.
-fig, ax = plot_pid(rus=rus, modalities=["Genes", "Lipids"])
+fig, ax = plot_pid(rus=rus, mod_names=["Genes", "Lipids"])
 
 ###################################################
 # Interpreting PID results
@@ -87,6 +86,9 @@ fig, ax = plot_pid(rus=rus, modalities=["Genes", "Lipids"])
 #
 # If redundancy is high while uniqueness and synergy are low, this may suggest that the dataset could be more
 # appropriately analyzed using classical unimodal modeling.
+#
+# In this case, the redundancy is very high, and the unique information provided by the modality 1 is zero. Therefore,
+# we could just use a classical unimodal learner and, probably, still get the same performance.
 
 ###################################################
 # Working with more than two modalities

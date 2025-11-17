@@ -50,7 +50,7 @@ replace the data-loading section with your own data following the same structure
 .. code-block:: Python
 
 
-    # sphinx_gallery_thumbnail_number = 1
+    # sphinx_gallery_thumbnail_number = 2
 
     # License: BSD 3-Clause License
 
@@ -78,7 +78,7 @@ Step 1: Import required libraries
 
     from imml.ampute import Amputer
     from imml.explore import get_summary
-    from imml.visualize import plot_missing_modality
+    from imml.visualize import plot_missing_modality, plot_combinations
 
 
 
@@ -123,14 +123,14 @@ Using your own data:
 Step 3: Simulate missing data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Using ``Amputer``, we introduce missing data to simulate a scenario where some modalities are missing. Here,
-80% of the samples will be incomplete following a mutually exclusive missing (MEM) pattern.
+80% of the samples will be incomplete following a random missing (MCAR) pattern.
 
 .. GENERATED FROM PYTHON SOURCE LINES 70-77
 
 .. code-block:: Python
 
 
-    mechanism = "mem"
+    mechanism = "mcar"
     p=0.8
     amputer = Amputer(mechanism=mechanism, p=p, random_state=random_state)
     transformed_Xs = amputer.fit_transform(Xs)
@@ -148,12 +148,11 @@ Using ``Amputer``, we introduce missing data to simulate a scenario where some m
 We can visualize which modalities are missing using a binary color map (black = observed, white = missing).
 Each row is a sample; each column is a modality.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-83
+.. GENERATED FROM PYTHON SOURCE LINES 80-82
 
 .. code-block:: Python
 
-    _ = plot_missing_modality(Xs=transformed_Xs, figsize= (3.18,2.2))
-
+    _ = plot_missing_modality(Xs=transformed_Xs)
 
 
 
@@ -167,14 +166,36 @@ Each row is a sample; each column is a modality.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-88
+.. GENERATED FROM PYTHON SOURCE LINES 83-84
+
+We can also show how is the distribution of the combinations using ``plot_combinations``.
+
+.. GENERATED FROM PYTHON SOURCE LINES 84-86
+
+.. code-block:: Python
+
+    _ = plot_combinations(Xs=transformed_Xs)
+
+
+
+
+.. image-sg:: /auto_tutorials/images/sphx_glr_generate_missing_modalities_002.png
+   :alt: generate missing modalities
+   :srcset: /auto_tutorials/images/sphx_glr_generate_missing_modalities_002.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 87-91
 
 Step 4: Compare amputation mechanisms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We now illustrate the four different amputation patterns: mutually exclusive missing (MEM),
 partial missing (PM), missing completely at random (MCAR), and missing not at random (MNAR).
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-109
+.. GENERATED FROM PYTHON SOURCE LINES 91-112
 
 .. code-block:: Python
 
@@ -202,21 +223,21 @@ partial missing (PM), missing completely at random (MCAR), and missing not at ra
 
 
 
-.. image-sg:: /auto_tutorials/images/sphx_glr_generate_missing_modalities_002.png
+.. image-sg:: /auto_tutorials/images/sphx_glr_generate_missing_modalities_003.png
    :alt: Mutually exclusive missing, Partial missing, Missing completely at random, Missing not at random
-   :srcset: /auto_tutorials/images/sphx_glr_generate_missing_modalities_002.png
+   :srcset: /auto_tutorials/images/sphx_glr_generate_missing_modalities_003.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-112
+.. GENERATED FROM PYTHON SOURCE LINES 113-115
 
 As shown in the table below, all cases have the same numbers of complete and incomplete samples overall.
 However, the number of observed samples in each modality varies with the missingness pattern.
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-115
+.. GENERATED FROM PYTHON SOURCE LINES 115-118
 
 .. code-block:: Python
 
@@ -301,14 +322,14 @@ However, the number of observed samples in each modality varies with the missing
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-120
+.. GENERATED FROM PYTHON SOURCE LINES 119-123
 
 Step 5: Vary the missingness rate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Next, we explore how patterns behave as we increase the percentage of incomplete samples. We amputate a
 random multi-modal dataset under each mechanism at different missingness rates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-140
+.. GENERATED FROM PYTHON SOURCE LINES 123-143
 
 .. code-block:: Python
 
@@ -340,15 +361,8 @@ random multi-modal dataset under each mechanism at different missingness rates.
 
     *
 
-      .. image-sg:: /auto_tutorials/images/sphx_glr_generate_missing_modalities_003.png
-         :alt: Mutually exclusive missing, Partial missing, Missing completely at random, Missing not at random
-         :srcset: /auto_tutorials/images/sphx_glr_generate_missing_modalities_003.png
-         :class: sphx-glr-multi-img
-
-    *
-
       .. image-sg:: /auto_tutorials/images/sphx_glr_generate_missing_modalities_004.png
-         :alt: generate missing modalities
+         :alt: Mutually exclusive missing, Partial missing, Missing completely at random, Missing not at random
          :srcset: /auto_tutorials/images/sphx_glr_generate_missing_modalities_004.png
          :class: sphx-glr-multi-img
 
@@ -399,6 +413,13 @@ random multi-modal dataset under each mechanism at different missingness rates.
       .. image-sg:: /auto_tutorials/images/sphx_glr_generate_missing_modalities_011.png
          :alt: generate missing modalities
          :srcset: /auto_tutorials/images/sphx_glr_generate_missing_modalities_011.png
+         :class: sphx-glr-multi-img
+
+    *
+
+      .. image-sg:: /auto_tutorials/images/sphx_glr_generate_missing_modalities_012.png
+         :alt: generate missing modalities
+         :srcset: /auto_tutorials/images/sphx_glr_generate_missing_modalities_012.png
          :class: sphx-glr-multi-img
 
 
@@ -455,7 +476,7 @@ random multi-modal dataset under each mechanism at different missingness rates.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-146
+.. GENERATED FROM PYTHON SOURCE LINES 144-149
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -466,7 +487,7 @@ machine learning models in the presence of incomplete data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.845 seconds)
+   **Total running time of the script:** (0 minutes 3.102 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_generate_missing_modalities.py:

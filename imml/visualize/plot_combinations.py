@@ -45,6 +45,10 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
     <https://imml.readthedocs.io/stable/auto_tutorials/multi_modal_data_statistics.html>`__:
     Tutorial demonstrating its usage on a multi-modal dataset.
 
+    `Modality-wise missing data simulation (Amputation)
+    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html>`__:
+    Tutorial demonstrating its usage on a multi-modal dataset.
+
     Examples
     --------
     >>> import numpy as np
@@ -112,7 +116,6 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
 
     ax = axes[1, 1]
     combs = combs.reset_index().drop(columns=0).map(lambda x: mod_names[int(x)])
-    # combs = combs.loc[mod_counts.index.astype(int)[::-1]].iloc[:max_combs]
     combs = combs.iloc[:max_combs]
     for col in combs.columns:
         ax = combs.reset_index().plot(kind="scatter", ax=ax, x="index", y=col, s=200, ylabel="", c="black")

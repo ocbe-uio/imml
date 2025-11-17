@@ -908,6 +908,22 @@
    "name": "from_dict"
   }
  ],
+ "plot_combinations": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml.visualize",
+   "module_short": "imml.visualize",
+   "name": "plot_combinations"
+  }
+ ],
  "plot_missing_modality": [
   {
    "is_class": false,

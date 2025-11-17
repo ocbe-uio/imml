@@ -10,6 +10,7 @@ number of features is often critical. Dimensionality reduction addresses these c
 computational efficiency, highlighting key features, reducing noise, and enabling better data visualization.
 
 Dimensionality reduction refers to two main approaches: feature selection and feature extraction.
+
 - Feature selection identifies the most relevant features from the dataset.
 - Feature extraction creates new features by transforming the original ones to capture essential information.
 
@@ -41,7 +42,6 @@ What you will learn:
 # Step 1: Import required libraries
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-from sklearn.datasets import make_classification
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import MinMaxScaler
@@ -100,8 +100,7 @@ def get_contributions(Xs, selected_features, weights, components, names):
 ##########################
 # Step 3: Load the dataset
 # ^^^^^^^^^^^^^^^^^^^^^^^^
-# For reproducibility, we generate a small synthetic classification dataset and split the features into two
-# modalities (Xs[0], Xs[1]).
+# We will use the nutrimouse dataset.
 #
 # Using your own data:
 #
@@ -110,12 +109,13 @@ def get_contributions(Xs, selected_features, weights, components, names):
 # - All modalities must refer to the same samples and be aligned by row.
 
 random_state = 42
-X, y = make_classification(n_samples=50, random_state=random_state, n_clusters_per_class=1, n_classes=3)
-X, y = pd.DataFrame(X), pd.Series(y)
-X.columns = X.columns.astype(str)
-# Two modalities: first 10 features and last 10 features
-Xs = [X.iloc[:, :10], X.iloc[:, 10:]]
-names= ["Modality A", "Modality B"]
+Xs = [
+    pd.read_csv("https://raw.githubusercontent.com/mvlearn/mvlearn/refs/heads/main/mvlearn/datasets/nutrimouse/gene.csv"),
+    pd.read_csv("https://raw.githubusercontent.com/mvlearn/mvlearn/refs/heads/main/mvlearn/datasets/nutrimouse/lipid.csv"),
+]
+y = pd.read_csv("https://raw.githubusercontent.com/mvlearn/mvlearn/refs/heads/main/mvlearn/datasets/nutrimouse/genotype.csv")
+y = y.squeeze()
+names= ["Genes", "Lipids"]
 print("Samples:", len(Xs[0]), "\t", "Modalities:", len(Xs), "\t", "Features:", [X.shape[1] for X in Xs])
 n_clusters = len(np.unique(y))
 y.value_counts()
@@ -155,7 +155,7 @@ ax = ax.legend(handles=[mpatches.Patch(color=color, label=modality) for modality
                loc="lower right")
 
 ###############################################################################
-# The top features include attributes from both modalities, but Modality A appears to be more important overall.
+# The top features include attributes from both modalities, but the genes seem to be more important overall.
 
 ###################################################################
 # We can visualize the modality relative importance with a barplot.
@@ -164,9 +164,9 @@ selected_features = get_modality_importance(
     weights= pipeline[-1].weights_, names=names)
 selected_features.to_frame()
 
-ax = selected_features.plot(kind= "bar", color= list(palette.values()), ylabel= "Modality Importance (\%)", rot=0)
+ax = selected_features.plot(kind= "bar", color= list(palette.values()), ylabel= "Modality Importance (%)", rot=0)
 ###############################################################################
-# Yes, in fact Modality A is the most important modality in this example.
+# Yes, in fact the genes are the most important modality in this example.
 
 ###############################################################################
 # We can also extract features and visualize the original features with the largest contribution to the components.

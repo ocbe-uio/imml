@@ -62,20 +62,25 @@ def plot_pid(rus = None, Xs = None, y = None,
     if any(key not in rus.keys() for key in ["Redundancy", "Uniqueness1", "Uniqueness2", "Synergy"]) or (len(rus) != 4):
         raise ValueError(f"Invalid rus. It should have the keys 'Redundancy', 'Uniqueness1', 'Uniqueness2' and 'Synergy'."
                          f" {rus} was provided.")
-    a_only = round(float(rus.get("Uniqueness1", 0)), 2)
-    b_only = round(float(rus.get("Uniqueness2", 0)), 2)
-    inter  = round(float(rus.get("Redundancy", 0)), 2)
-    outside = max(0.1, round(float(rus.get("Synergy", 0)), 2))
+    a_only = float(rus.get("Uniqueness1", 0))
+    b_only = float(rus.get("Uniqueness2", 0))
+    inter  = float(rus.get("Redundancy", 0))
+    outside = float(rus.get("Synergy", 0))
     A = a_only + inter
     B = b_only + inter
     r1 = math.sqrt(A / math.pi) if A>0 else 0.0
     r2 = math.sqrt(B / math.pi) if B>0 else 0.0
     d = _solve_distance_for_overlap(r1, r2, inter)
     max_r = max(r1, r2)
+    k = 1.15
 
     fig, ax = plt.subplots(figsize=figsize)
 
-    rect = Rectangle((-r1/outside, -max_r/outside), (d+r2)/outside, 2*max_r/outside,
+    x_min = -r1*(k+outside)
+    w = (r1 + r2 + d)*(k+outside)
+    y_min = -max_r*(k+outside)
+    h = (2*max_r)*(k+outside)
+    rect = Rectangle((x_min, y_min), w, h,
                      facecolor=colors[2], edgecolor="black", alpha=0.5)
     ax.add_patch(rect)
 
@@ -85,20 +90,27 @@ def plot_pid(rus = None, Xs = None, y = None,
     if abb:
         u1, u2, r, s = "U1", "U2", "R", "S"
     else:
-        u1, u2, r, s = "Uniqueness", "Uniqueness", "Redundancy", "Synergy"
-    ax.text(-r1/2, 0, f"{u1}\n{a_only}", ha='center', va='center')
-    ax.text(d + r2/2, 0, f"{u2}\n{b_only}", ha='center', va='center')
-    ax.text(max_r -d/2, 0, f"{r}\n{inter}", ha='center', va='center')
-    ax.text(max_r -d/2, max_r*1.2, f"{s} {outside}", ha='center', va='bottom')
+        u1, u2, r, s = "Uniqueness1", "Uniqueness2", "Redundancy", "Synergy"
+    if a_only <= 0.03:
+        x_pos_label1 = (d-r1)
+    else:
+        x_pos_label1 = (d-r1-r2)/2
+    if b_only <= 0.03:
+        x_pos_label2 = (r1+r2-d)/2
+    else:
+        x_pos_label2 = (d+r2+r1)/2
+    ax.text(x_pos_label1, 0, f"{u1}\n{round(a_only, 2)}", ha='center', va='center')
+    ax.text(x_pos_label2, 0, f"{u2}\n{round(b_only, 2)}", ha='center', va='center')
+    ax.text(-r1 + d + r2, 0, f"{r}\n{round(inter, 2)}", ha='center', va='center')
+    ax.text(-r1 + d + r2, (h + y_min + max_r)/2, f"{s} {round(outside, 2)}",
+            ha='center', va='center')
 
-    ax.text(-r1, -(max_r*1.1), mod_names[0], ha='left', va='top')
-    ax.text(d+r2, -(max_r*1.1), mod_names[1], ha='right', va='top')
+    ax.text(-r1, (-max_r+y_min)/2, mod_names[0], ha='left', va='bottom')
+    ax.text(d+r2, (-max_r+y_min)/2, mod_names[1], ha='right', va='bottom')
 
-    padding = max_r * 1.3 + d*0.1
-    ax.set_xlim(-padding, d + padding)
-    ax.set_ylim(-(max_r*1.6), max_r * 1.6)
-    ax.set_aspect('equal', adjustable='box')
+    ax.set_aspect('equal')
     ax.axis('off')
+    ax.autoscale()
     return fig, ax
 
 
