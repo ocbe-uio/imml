@@ -60,7 +60,7 @@ random_state = 42
 L.seed_everything(random_state) # Set the seed
 
 ds = load_dataset("BrotherTony/employee-burnout-turnover-prediction-800k",
-                  split="train[:1000]") # Retrieve the first 1000 records
+                  split="train[:100]") # Retrieve the first 100 records
 df = ds.to_pandas()
 df.info()
 
@@ -111,7 +111,7 @@ test_dataloader = DataLoader(dataset=test_data, batch_size=10, shuffle=False)
 # We will train the ``MUSE`` model with only 10 epochs for speed, using the
 # `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
-trainer = Trainer(max_epochs=10, logger=False, enable_checkpointing=False)
+trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
 estimator = MUSE(modalities= ["tabular", "text"], # Specify the two types of modalities
                  input_dim=[Xs_train[0].shape[1]],
                  )
@@ -153,8 +153,8 @@ print("Accuracy:", round(accuracy_score(y_true=y_train_true, y_pred=y_pred_train
 
 preds_test = trainer.predict(estimator, test_dataloader)
 y_pred_test = torch.cat(preds_test)
-y_pred_test_labels = y_pred_test > tuned_threshold
-y_test_true = torch.from_numpy(y_test.values).bool()
+y_pred_test_labels = (y_pred_test > tuned_threshold).int()
+y_test_true = torch.from_numpy(y_test.values).int()
 
 # Finally, let us plot and print some of the performance metrics:
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))

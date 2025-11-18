@@ -66,18 +66,12 @@ jobs:
     - name: Test mac
       if: runner.os == 'macOS'
       run: |
-        export PATH="/opt/homebrew/bin:$PATH"
         brew update
+        brew upgrade
         brew install gcc
         sudo ln -fs /opt/homebrew/bin/gfortran-12 /usr/local/bin/gfortran
         sudo mkdir -p /usr/local/gfortran
         sudo ln -sf /opt/homebrew/Cellar/gcc@12/*/lib/gcc/12 /usr/local/gfortran/lib
-        which gfortran || true gfortran --version
-        gfortran --version || true
-        brew uninstall --ignore-dependencies --force texinfo || true
-        brew install texinfo || true 
-        texinfo --version
-        brew doctor
         brew install octave
         octave --version
         octave --eval "pkg install -forge control; pkg install -forge statistics; pkg load control; pkg load statistics; ver"

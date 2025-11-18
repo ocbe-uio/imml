@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:27.440** total execution time for 8 files **from auto_tutorials**:
+**00:08.501** total execution time for 8 files **from auto_tutorials**:
 
 .. container::
 
@@ -33,7 +33,7 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_tutorials_classify_incomplete_tabular_language_dataset.py` (``classify_incomplete_tabular_language_dataset.py``)
-     - 00:27.440
+     - 00:08.501
      - 0.0
    * - :ref:`sphx_glr_auto_tutorials_classify_incomplete_vision_language.py` (``classify_incomplete_vision_language.py``)
      - 00:00.000
