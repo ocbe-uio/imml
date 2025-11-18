@@ -67,8 +67,9 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew update
-        brew install gcc
-        brew install gfortran
+        brew reinstall gcc
+        brew reinstall gfortran
+        echo "/opt/homebrew/bin" >> $GITHUB_PATH
         which gfortran
         gfortran --version
         brew install texinfo || true
