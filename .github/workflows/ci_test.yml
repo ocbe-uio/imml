@@ -68,7 +68,7 @@ jobs:
       run: |
         brew update
         brew install gcc
-        ln -sfn /opt/homebrew/bin/gfortran-12 /opt/homebrew/bin/gfortran
+        brew install gfortran
         which gfortran
         gfortran --version
         brew install texinfo || true
