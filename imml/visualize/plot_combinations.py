@@ -41,13 +41,8 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
 
     See Also
     --------
-    `Statistics and interaction structure of a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/multi_modal_data_statistics.html>`__:
-    Tutorial demonstrating its usage on a multi-modal dataset.
-
-    `Modality-wise missing data simulation (Amputation)
-    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html>`__:
-    Tutorial demonstrating its usage on a multi-modal dataset.
+    :class:`~imml.visualize.plot_missing_modality`
+    :class:`~imml.visualize.plot_summary`
 
     Examples
     --------

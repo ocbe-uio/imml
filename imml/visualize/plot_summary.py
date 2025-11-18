@@ -40,9 +40,9 @@ def plot_summary(Xs: list = None, summary: pd.DataFrame = None, mod_names: list 
 
     See Also
     --------
-    `Statistics and interaction structure of a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/multi_modal_data_statistics.html>`__:
-    Tutorial demonstrating its usage on a multi-modal dataset.
+    :class:`~imml.explore.get_summary`
+    :class:`~imml.visualize.plot_missing_modality`
+    :class:`~imml.visualize.plot_combinations`
 
     Example
     --------

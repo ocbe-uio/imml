@@ -65,6 +65,10 @@ class DFMF(TransformerMixin, BaseEstimator):
                     doi: 10.1109/TPAMI.2014.2343973.
     .. [#dfmfcode] https://github.com/mims-harvard/scikit-fusion/tree/master
 
+    See Also
+    --------
+    :class:`~imml.impute.DFMFImputer`
+
     Example
     --------
     >>> import numpy as np

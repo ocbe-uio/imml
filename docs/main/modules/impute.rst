@@ -10,6 +10,9 @@ DFMF Imputer
    :members:
    :show-inheritance:
 
+.. minigallery:: imml.impute.DFMFImputer
+   :add-heading: Tutorials
+
 MOFA Imputer
 -----------------------------
 
@@ -17,12 +20,18 @@ MOFA Imputer
    :members:
    :show-inheritance:
 
+.. minigallery:: imml.impute.MOFAImputer
+   :add-heading: Tutorials
+
 JNMF Imputer
 -----------------------------
 
 .. autoclass:: JNMFImputer
    :members:
    :show-inheritance:
+
+.. minigallery:: imml.impute.JNMFImputer
+   :add-heading: Tutorials
 
 Missing Modality Indicator
 -----------------------------
@@ -50,4 +59,7 @@ Simple Modality Imputer
 .. autoclass:: SimpleModImputer
    :members:
    :show-inheritance:
+
+.. minigallery:: imml.impute.SimpleModImputer
+   :add-heading: Tutorials
 

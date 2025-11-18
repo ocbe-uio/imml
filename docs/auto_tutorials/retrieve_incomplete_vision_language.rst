@@ -38,7 +38,7 @@ What you will learn:
 This tutorial is fully reproducible. You can swap the loading section with your own data by constructing two
 parallel lists: image paths and texts for each sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-27
+.. GENERATED FROM PYTHON SOURCE LINES 23-28
 
 .. code-block:: Python
 
@@ -54,7 +54,7 @@ parallel lists: image paths and texts for each sample.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-34
+.. GENERATED FROM PYTHON SOURCE LINES 29-35
 
 Step 0: Prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -63,12 +63,12 @@ To run this tutorial, install the extras for deep learning:
 Additionally, we will use the Hugging Face Datasets library to load Flickr30k:
   pip install datasets
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-39
+.. GENERATED FROM PYTHON SOURCE LINES 38-40
 
 Step 1: Import required libraries
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-52
+.. GENERATED FROM PYTHON SOURCE LINES 40-53
 
 .. code-block:: Python
 
@@ -92,7 +92,7 @@ Step 1: Import required libraries
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-59
+.. GENERATED FROM PYTHON SOURCE LINES 54-60
 
 Step 2: Prepare the dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -101,7 +101,7 @@ We use the Flickr30k dataset, a public vision–language dataset with images and
 <https://huggingface.co/datasets/nlphuji/flickr30k>`__. For retrieval, we will use the ``MCR`` method from the
 retrieve module.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-92
+.. GENERATED FROM PYTHON SOURCE LINES 60-93
 
 .. code-block:: Python
 
@@ -207,14 +207,14 @@ retrieve module.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-97
+.. GENERATED FROM PYTHON SOURCE LINES 94-98
 
 Step 3: Simulate missing modalities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To reflect realistic scenarios, we randomly introduce missing data using ``Amputer``. In this case, 80% of test samples
 will have either text or image missing. You can change this parameter for more or less amount of incompleteness.
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-103
+.. GENERATED FROM PYTHON SOURCE LINES 98-104
 
 .. code-block:: Python
 
@@ -231,13 +231,13 @@ will have either text or image missing. You can change this parameter for more o
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-107
+.. GENERATED FROM PYTHON SOURCE LINES 105-108
 
 Step 4: Generate the memory bank
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We build the retriever with ``MCR``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-118
+.. GENERATED FROM PYTHON SOURCE LINES 108-119
 
 .. code-block:: Python
 
@@ -259,13 +259,13 @@ We build the retriever with ``MCR``.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-122
+.. GENERATED FROM PYTHON SOURCE LINES 120-123
 
 Step 5: Retrieve
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We retrieved the most similar items for the test set.
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-125
+.. GENERATED FROM PYTHON SOURCE LINES 123-126
 
 .. code-block:: Python
 
@@ -279,11 +279,11 @@ We retrieved the most similar items for the test set.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-127
+.. GENERATED FROM PYTHON SOURCE LINES 127-128
 
 This is the content of the prediction.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-128
+.. GENERATED FROM PYTHON SOURCE LINES 128-129
 
 .. code-block:: Python
 
@@ -301,7 +301,7 @@ This is the content of the prediction.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
+.. GENERATED FROM PYTHON SOURCE LINES 130-131
 
 .. code-block:: Python
 
@@ -319,7 +319,7 @@ This is the content of the prediction.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-134
+.. GENERATED FROM PYTHON SOURCE LINES 132-135
 
 .. code-block:: Python
 
@@ -339,7 +339,7 @@ This is the content of the prediction.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-144
+.. GENERATED FROM PYTHON SOURCE LINES 136-145
 
 Step 6: Visualize the retrieved instances
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -351,7 +351,7 @@ The target instance is displayed in the leftmost column, followed by the most si
 order of similarity. Note that some instances have missing modalities, which will not appear in the plot. In this
 example, the first two instances are missing the image modality, while the last one is missing the text modality.
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-184
+.. GENERATED FROM PYTHON SOURCE LINES 145-185
 
 .. code-block:: Python
 
@@ -407,7 +407,7 @@ example, the first two instances are missing the image modality, while the last 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-192
+.. GENERATED FROM PYTHON SOURCE LINES 186-193
 
 Summary of results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -417,7 +417,7 @@ memory bank, even when one of the modalities (image or text) was missing.
 This example is intentionally simplified, using only a few instances for demonstration.
 For stronger performance and more reliable results, the full dataset should be used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-197
+.. GENERATED FROM PYTHON SOURCE LINES 195-198
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -427,7 +427,7 @@ even in the presence of missing modalities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (6 minutes 29.202 seconds)
+   **Total running time of the script:** (3 minutes 46.983 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_retrieve_incomplete_vision_language.py:

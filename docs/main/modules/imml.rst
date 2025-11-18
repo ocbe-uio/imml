@@ -14,6 +14,7 @@ The package is split up into modules.
     feature_selection
     impute
     load
+    model_selection
     preprocessing
     retrieve
     statistics

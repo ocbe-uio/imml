@@ -80,12 +80,6 @@ class EEIMVC(BaseEstimator, ClusterMixin):
                         1 Aug. 2021, doi: 10.1109/TPAMI.2020.2974828.
     .. [#eeimvccode] https://github.com/xinwangliu/TPAMI_EEIMVC
 
-    See Also
-    --------
-    `Clustering a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/cluster_incomplete_mmd.html>`__:
-    Tutorial demonstrating its usage on an (incomplete) multi-modal dataset.
-
     Example
     --------
     >>> import numpy as np

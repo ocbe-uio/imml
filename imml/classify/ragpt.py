@@ -61,9 +61,8 @@ class RAGPT(LightningModule):
 
     See Also
     --------
-    `Classify an incomplete vision–language dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html>`__:
-    Tutorial demonstrating its usage on an incomplete vision-language dataset.
+    :class:`~imml.load.RAGPTDataset`
+    :class:`~imml.retrieve.MCR`
 
     Example
     --------

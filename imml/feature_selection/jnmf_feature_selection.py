@@ -63,9 +63,8 @@ class JNMFFeatureSelector(JNMF):
 
     See Also
     --------
-    `Dimensionality reduction: Feature extraction and feature selection
-    <https://imml.readthedocs.io/stable/auto_tutorials/select_and_extract_features.html>`__:
-    Tutorial demonstrating its usage on an (incomplete) multi-modal dataset.
+    :class:`~imml.decomposition.JNMF`
+    :class:`~imml.impute.JNMFImputer`
 
     Example
     --------

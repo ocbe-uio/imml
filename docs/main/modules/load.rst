@@ -10,12 +10,18 @@ M3Care Dataset Loader
    :members:
    :show-inheritance:
 
+.. minigallery:: imml.load.M3CareDataset
+   :add-heading: Tutorials
+
 MRGCN Dataset Loader
 -------------------------------
 
 .. autoclass:: MRGCNDataset
    :members:
    :show-inheritance:
+
+.. minigallery:: imml.load.MRGCNDataset
+   :add-heading: Tutorials
 
 MUSE Dataset Loader
 -------------------------------
@@ -24,9 +30,15 @@ MUSE Dataset Loader
    :members:
    :show-inheritance:
 
+.. minigallery:: imml.load.MUSEDataset
+   :add-heading: Tutorials
+
 RAGPT Dataset Loader
 -------------------------------
 
 .. autoclass:: RAGPTDataset
    :members:
    :show-inheritance:
+
+.. minigallery:: imml.load.RAGPTDataset
+   :add-heading: Tutorials

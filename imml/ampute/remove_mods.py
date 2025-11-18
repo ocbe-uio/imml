@@ -21,6 +21,11 @@ class RemoveMods(FunctionTransformer):
     observed_mod_indicator: array-like of shape (n_samples, n_mods)
         Boolean array-like indicating observed modalities for each sample.
 
+    See Also
+    --------
+    :class:`~imml.ampute.Amputer`
+    :class:`~imml.ampute.remove_mods`
+
     Example
     --------
     >>> import numpy as np
@@ -53,6 +58,11 @@ def remove_mods(Xs: list, observed_mod_indicator):
     -------
     transformed_X : list of array-likes objects (n_samples, n_features_i)
         The transformed multi-modal dataset.
+
+    See Also
+    --------
+    :class:`~imml.ampute.Amputer`
+    :class:`~imml.ampute.RemoveMods`
 
     Example
     --------

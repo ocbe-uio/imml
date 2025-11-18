@@ -9,3 +9,6 @@ JNMF Feature Selector
 .. autoclass:: JNMFFeatureSelector
    :members:
    :show-inheritance:
+
+.. minigallery:: imml.feature_selection.JNMFFeatureSelector
+   :add-heading: Tutorials

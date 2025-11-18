@@ -1,0 +1,42 @@
+
+
+Examples using ``imml.visualize.plot_pid``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+.. start-sphx-glr-thumbnails
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. thumbnail-parent-div-open
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="A multi-modal dataset can be characterized beyond basic shape information. With iMML you can:">
+
+.. only:: html
+
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_multi_modal_data_statistics_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Statistics and interaction structure of a multi-modal dataset</div>
+    </div>
+
+
+.. only:: not html
+
+ * :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py`
+
+.. thumbnail-parent-div-close
+
+.. raw:: html
+
+    </div>
+

@@ -19,6 +19,12 @@ class MissingModIndicator(FunctionTransformer):
     Note that this component typically should not be used in a vanilla Pipeline consisting of preprocessing and
     an estimator.
 
+    See Also
+    --------
+    :class:`~imml.impute.ObservedModIndicator`
+    :class:`~imml.impute.missing_mod_indicator`
+    :class:`~imml.impute.observed_mod_indicator`
+
     Example
     --------
     >>> import numpy as np
@@ -53,6 +59,12 @@ def get_missing_mod_indicator(Xs : list, y = None):
     -------
     transformed_X : array-likes objects, shape (n_samples, n_mods)
         Binary indicator for missing modalities.
+
+    See Also
+    --------
+    :class:`~imml.impute.MissingModIndicator`
+    :class:`~imml.impute.ObservedModIndicator`
+    :class:`~imml.impute.observed_mod_indicator`
 
     Example
     --------

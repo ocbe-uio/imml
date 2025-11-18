@@ -1,3 +1,4 @@
+# tutorials/cluster_incomplete_mmd.py
 """
 ========================================
 Clustering a multi-modal dataset

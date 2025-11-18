@@ -11,6 +11,12 @@ class SelectCompleteSamples(FunctionTransformer):
     Remove incomplete samples from a multi-modal dataset. Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_ (from `Scikit-learn`)
     with `select_complete_samples` as a function.
 
+    See Also
+    --------
+    :class:`~imml.preprocessing.SelectIncompleteSamples`
+    :class:`~imml.preprocessing.select_complete_samples`
+    :class:`~imml.preprocessing.select_incomplete_samples`
+
     Example
     --------
     >>> import numpy as np
@@ -43,6 +49,12 @@ def select_complete_samples(Xs: list):
     -------
     transformed_Xs : list of array-likes objects, shape (n_samples, n_features_i)
         The transformed data.
+
+    See Also
+    --------
+    :class:`~imml.preprocessing.SelectCompleteSamples`
+    :class:`~imml.preprocessing.SelectIncompleteSamples`
+    :class:`~imml.preprocessing.select_incomplete_samples`
 
     Example
     --------

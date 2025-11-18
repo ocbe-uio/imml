@@ -23,12 +23,6 @@ class MultiModTransformer(BaseEstimator, TransformerMixin):
     same_transformer_ : boolean
         A booleaing indicating if the same transformer will be applied on each modality of data.
 
-    See Also
-    --------
-    `Clustering a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/cluster_incomplete_mmd.html>`__:
-    Tutorial demonstrating its usage on an (incomplete) multi-modal dataset.
-
     Example
     --------
     >>> import numpy as np

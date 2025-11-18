@@ -40,7 +40,7 @@ What you will learn:
 - How to train the ``RAGPT`` classifier when image or text may be missing.
 - How to track metrics during training and evaluate with MCC and a confusion matrix.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-29
+.. GENERATED FROM PYTHON SOURCE LINES 25-30
 
 .. code-block:: Python
 
@@ -56,7 +56,7 @@ What you will learn:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-36
+.. GENERATED FROM PYTHON SOURCE LINES 31-37
 
 Step 0: Prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -65,12 +65,12 @@ To run this tutorial, install the extras for deep learning:
 We also use the Hugging Face Datasets library to load Oxford‑IIIT Pets:
   pip install datasets
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-41
+.. GENERATED FROM PYTHON SOURCE LINES 40-42
 
 Step 1: Import required libraries
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-61
+.. GENERATED FROM PYTHON SOURCE LINES 42-62
 
 .. code-block:: Python
 
@@ -91,7 +91,7 @@ Step 1: Import required libraries
     from imml.ampute import Amputer
     from imml.classify import RAGPT
     from imml.load import RAGPTDataset, RAGPTCollator
-    from imml.model_selection import multi_train_test_split_Xs
+    from imml.model_selection import multi_train_test_split
     from imml.retrieve import MCR
 
 
@@ -101,7 +101,7 @@ Step 1: Import required libraries
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-68
+.. GENERATED FROM PYTHON SOURCE LINES 63-69
 
 Step 2: Prepare the dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -110,7 +110,7 @@ available on `Hugging Face Datasets
 <https://huggingface.co/datasets>`__ as visual-layer/oxford-iiit-pet-vl-enriched. For retrieval, we will use
 the ``MCR`` class from the retrieve module.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-101
+.. GENERATED FROM PYTHON SOURCE LINES 69-102
 
 .. code-block:: Python
 
@@ -163,22 +163,22 @@ the ``MCR`` class from the retrieve module.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-103
+.. GENERATED FROM PYTHON SOURCE LINES 103-104
 
 Split into 40% bank memory, 40% train and 20% test sets
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-115
+.. GENERATED FROM PYTHON SOURCE LINES 104-116
 
 .. code-block:: Python
 
     Xs = [df[["img"]],df[["text"]]]
     y = df["class"]
-    Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, test_size=0.2,
-                                                                   shuffle=True, stratify=y,
-                                                                   random_state=random_state)
-    Xs_train, Xs_bank, y_train, y_bank = multi_train_test_split_Xs(Xs_train, y_train, test_size=0.5,
-                                                                   shuffle=True, stratify=y_train,
-                                                                   random_state=random_state)
+    Xs_train, Xs_test, y_train, y_test = multi_train_test_split(Xs, y, test_size=0.2,
+                                                                shuffle=True, stratify=y,
+                                                                random_state=random_state)
+    Xs_train, Xs_bank, y_train, y_bank = multi_train_test_split(Xs_train, y_train, test_size=0.5,
+                                                                shuffle=True, stratify=y_train,
+                                                                random_state=random_state)
     print("Xs_train", Xs_train[0].shape)
     print("Xs_test", Xs_test[0].shape)
     print("Xs_bank", Xs_bank[0].shape)
@@ -198,7 +198,7 @@ Split into 40% bank memory, 40% train and 20% test sets
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-121
+.. GENERATED FROM PYTHON SOURCE LINES 117-122
 
 Step 3: Simulate missing modalities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -206,7 +206,7 @@ To reflect realistic scenarios, we randomly introduce missing data using ``Amput
 and test samples will have either text or image missing. You can change this parameter for more or less
 amount of incompleteness.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-126
+.. GENERATED FROM PYTHON SOURCE LINES 122-127
 
 .. code-block:: Python
 
@@ -222,14 +222,14 @@ amount of incompleteness.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-131
+.. GENERATED FROM PYTHON SOURCE LINES 128-132
 
 Step 4: Generate the prompts using a retriever
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``RAGPT`` needs prompts, which are created from a memory bank with a retriever.
 We use ``MCR`` (Multi-Channel Retriever) to construct a memory bank and generate prompts.
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-141
+.. GENERATED FROM PYTHON SOURCE LINES 132-142
 
 .. code-block:: Python
 
@@ -271,11 +271,11 @@ We use ``MCR`` (Multi-Channel Retriever) to construct a memory bank and generate
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-143
+.. GENERATED FROM PYTHON SOURCE LINES 143-144
 
 Load generated training and testing prompts.
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-151
+.. GENERATED FROM PYTHON SOURCE LINES 144-152
 
 .. code-block:: Python
 
@@ -301,13 +301,13 @@ Load generated training and testing prompts.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-155
+.. GENERATED FROM PYTHON SOURCE LINES 153-156
 
 Step 5: Training the model
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Create the loaders.
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-163
+.. GENERATED FROM PYTHON SOURCE LINES 156-164
 
 .. code-block:: Python
 
@@ -326,12 +326,12 @@ Create the loaders.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-166
+.. GENERATED FROM PYTHON SOURCE LINES 165-167
 
 Train the ``RAGPT`` model using the generated prompts. For speed in this demo we train for only 2 epochs using
 the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-170
+.. GENERATED FROM PYTHON SOURCE LINES 167-171
 
 .. code-block:: Python
 
@@ -347,19 +347,19 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
 
  .. code-block:: none
 
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-175
+.. GENERATED FROM PYTHON SOURCE LINES 172-176
 
 Step 6: Advanced Usage: Track Metrics During Training
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 As any other model in `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_, we can
 modify the internal functions. For instance, we can track loss and compute evaluation metrics during training.
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-195
+.. GENERATED FROM PYTHON SOURCE LINES 176-196
 
 .. code-block:: Python
 
@@ -391,28 +391,28 @@ modify the internal functions. For instance, we can track loss and compute evalu
 
  .. code-block:: none
 
-    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]    Epoch 0: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]
+    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.41it/s]
-                                                                              Epoch 0: 100%|██████████| 1/1 [00:14<00:00,  0.07it/s]    Epoch 0: 100%|██████████| 1/1 [00:14<00:00,  0.07it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]    Epoch 1: 100%|██████████| 1/1 [00:11<00:00,  0.09it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
+                                                                              Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.41it/s]
-                                                                              Epoch 1: 100%|██████████| 1/1 [00:14<00:00,  0.07it/s]    Epoch 1: 100%|██████████| 1/1 [00:14<00:00,  0.07it/s]    Epoch 1: 100%|██████████| 1/1 [00:14<00:00,  0.07it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
+                                                                              Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-199
+.. GENERATED FROM PYTHON SOURCE LINES 197-200
 
 Step 7: Evaluation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 After training, we can evaluate predictions and visualize the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-237
+.. GENERATED FROM PYTHON SOURCE LINES 200-238
 
 .. code-block:: Python
 
@@ -467,12 +467,12 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.40it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.40it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 238-242
+.. GENERATED FROM PYTHON SOURCE LINES 239-243
 
 .. code-block:: Python
 
@@ -498,11 +498,11 @@ After training, we can evaluate predictions and visualize the results.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 243-244
+.. GENERATED FROM PYTHON SOURCE LINES 244-245
 
 Despite using only 40 instances and minimal training, the performance was excellent thanks to the pretrained models.
 
-.. GENERATED FROM PYTHON SOURCE LINES 246-255
+.. GENERATED FROM PYTHON SOURCE LINES 247-256
 
 Summary of results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -514,7 +514,7 @@ demonstrated strong robustness on the test set.
 This example is intentionally simplified, using only 40 instances for demonstration.
 For stronger performance and more reliable results, the full dataset and longer training should be used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-261
+.. GENERATED FROM PYTHON SOURCE LINES 258-262
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -524,7 +524,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (3 minutes 1.097 seconds)
+   **Total running time of the script:** (2 minutes 27.070 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:

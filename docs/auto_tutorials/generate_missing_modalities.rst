@@ -45,7 +45,7 @@ Missingness mechanisms:
 This tutorial is fully reproducible and uses a small synthetic dataset. You can easily
 replace the data-loading section with your own data following the same structure.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-34
+.. GENERATED FROM PYTHON SOURCE LINES 30-35
 
 .. code-block:: Python
 
@@ -61,12 +61,12 @@ replace the data-loading section with your own data following the same structure
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-37
+.. GENERATED FROM PYTHON SOURCE LINES 36-38
 
 Step 1: Import required libraries
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-47
+.. GENERATED FROM PYTHON SOURCE LINES 38-48
 
 .. code-block:: Python
 
@@ -87,7 +87,7 @@ Step 1: Import required libraries
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-57
+.. GENERATED FROM PYTHON SOURCE LINES 49-58
 
 Step 2: Load the dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -99,7 +99,7 @@ Using your own data:
 - Each Xs[i] should be a 2D array-like (pandas DataFrame or NumPy array) of shape (n_samples, n_features_i).
 - All modalities must refer to the same samples and be aligned by row.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-65
+.. GENERATED FROM PYTHON SOURCE LINES 58-66
 
 .. code-block:: Python
 
@@ -118,14 +118,14 @@ Using your own data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-70
+.. GENERATED FROM PYTHON SOURCE LINES 67-71
 
 Step 3: Simulate missing data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Using ``Amputer``, we introduce missing data to simulate a scenario where some modalities are missing. Here,
 80% of the samples will be incomplete following a random missing (MCAR) pattern.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-77
+.. GENERATED FROM PYTHON SOURCE LINES 71-78
 
 .. code-block:: Python
 
@@ -143,12 +143,12 @@ Using ``Amputer``, we introduce missing data to simulate a scenario where some m
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-80
+.. GENERATED FROM PYTHON SOURCE LINES 79-81
 
 We can visualize which modalities are missing using a binary color map (black = observed, white = missing).
 Each row is a sample; each column is a modality.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-82
+.. GENERATED FROM PYTHON SOURCE LINES 81-83
 
 .. code-block:: Python
 
@@ -166,11 +166,11 @@ Each row is a sample; each column is a modality.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
+.. GENERATED FROM PYTHON SOURCE LINES 84-85
 
 We can also show how is the distribution of the combinations using ``plot_combinations``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-86
+.. GENERATED FROM PYTHON SOURCE LINES 85-87
 
 .. code-block:: Python
 
@@ -188,14 +188,14 @@ We can also show how is the distribution of the combinations using ``plot_combin
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-91
+.. GENERATED FROM PYTHON SOURCE LINES 88-92
 
 Step 4: Compare amputation mechanisms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We now illustrate the four different amputation patterns: mutually exclusive missing (MEM),
 partial missing (PM), missing completely at random (MCAR), and missing not at random (MNAR).
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-112
+.. GENERATED FROM PYTHON SOURCE LINES 92-113
 
 .. code-block:: Python
 
@@ -232,12 +232,12 @@ partial missing (PM), missing completely at random (MCAR), and missing not at ra
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-115
+.. GENERATED FROM PYTHON SOURCE LINES 114-116
 
 As shown in the table below, all cases have the same numbers of complete and incomplete samples overall.
 However, the number of observed samples in each modality varies with the missingness pattern.
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-118
+.. GENERATED FROM PYTHON SOURCE LINES 116-119
 
 .. code-block:: Python
 
@@ -322,14 +322,14 @@ However, the number of observed samples in each modality varies with the missing
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-123
+.. GENERATED FROM PYTHON SOURCE LINES 120-124
 
 Step 5: Vary the missingness rate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Next, we explore how patterns behave as we increase the percentage of incomplete samples. We amputate a
 random multi-modal dataset under each mechanism at different missingness rates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-143
+.. GENERATED FROM PYTHON SOURCE LINES 124-144
 
 .. code-block:: Python
 
@@ -476,7 +476,7 @@ random multi-modal dataset under each mechanism at different missingness rates.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-149
+.. GENERATED FROM PYTHON SOURCE LINES 145-150
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -487,7 +487,7 @@ machine learning models in the presence of incomplete data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.007 seconds)
+   **Total running time of the script:** (0 minutes 2.474 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_generate_missing_modalities.py:

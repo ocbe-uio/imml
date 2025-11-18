@@ -36,13 +36,8 @@ def plot_missing_modality(Xs, ax: matplotlib.axes.Axes = None, figsize: tuple = 
 
     See Also
     --------
-    `Modality-wise missing data simulation (Amputation)
-    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html>`__:
-    Tutorial demonstrating its usage on a multi-modal dataset.
-
-    `Clustering a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/cluster_incomplete_mmd.html>`__:
-    Tutorial demonstrating its usage on an (incomplete) multi-modal dataset.
+    :class:`~imml.visualize.plot_summary`
+    :class:`~imml.visualize.plot_combinations`
 
     Example
     --------

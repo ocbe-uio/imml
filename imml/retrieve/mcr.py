@@ -83,13 +83,8 @@ class MCR(Module):
 
     See Also
     --------
-    `Retrieval an incomplete vision–language dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/retrieve_incomplete_vision_language.html>`__:
-    Tutorial demonstrating its usage on a vision-language dataset.
-
-    `Classify an incomplete vision–language dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html>`__:
-    Tutorial demonstrating its usage on an incomplete vision-language dataset.
+    :class:`~imml.classify.RAGPT`
+    :class:`~imml.load.RAGPTDataset`
 
     Example
     --------

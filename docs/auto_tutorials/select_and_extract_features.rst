@@ -45,7 +45,7 @@ What you will learn:
 - How to assess modality importance and inspect the selected top features.
 - How to benchmark different dimensionality-reduction strategies.
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-34
+.. GENERATED FROM PYTHON SOURCE LINES 31-35
 
 .. code-block:: Python
 
@@ -60,19 +60,19 @@ What you will learn:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-39
+.. GENERATED FROM PYTHON SOURCE LINES 36-40
 
 Step 0: Prerequisites
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To run this tutorial, install the extra dependencies:
   pip install imml[r]
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-44
+.. GENERATED FROM PYTHON SOURCE LINES 43-45
 
 Step 1: Import required libraries
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-61
+.. GENERATED FROM PYTHON SOURCE LINES 45-62
 
 .. code-block:: Python
 
@@ -100,12 +100,12 @@ Step 1: Import required libraries
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-64
+.. GENERATED FROM PYTHON SOURCE LINES 63-65
 
 Step 2: Define plotting functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-100
+.. GENERATED FROM PYTHON SOURCE LINES 65-101
 
 .. code-block:: Python
 
@@ -152,7 +152,7 @@ Step 2: Define plotting functions
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-110
+.. GENERATED FROM PYTHON SOURCE LINES 102-111
 
 Step 3: Load the dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -164,7 +164,7 @@ Using your own data:
 - Each Xs[i] should be a 2D array-like (pandas DataFrame or NumPy array) of shape (n_samples, n_features_i).
 - All modalities must refer to the same samples and be aligned by row.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-123
+.. GENERATED FROM PYTHON SOURCE LINES 111-124
 
 .. code-block:: Python
 
@@ -198,12 +198,12 @@ Using your own data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-126
+.. GENERATED FROM PYTHON SOURCE LINES 125-127
 
 Step 4: Apply feature selection and feature extraction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-138
+.. GENERATED FROM PYTHON SOURCE LINES 127-139
 
 .. code-block:: Python
 
@@ -893,11 +893,11 @@ Step 4: Apply feature selection and feature extraction
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-140
+.. GENERATED FROM PYTHON SOURCE LINES 140-141
 
 We can identify and visualize the selected features.
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-145
+.. GENERATED FROM PYTHON SOURCE LINES 141-146
 
 .. code-block:: Python
 
@@ -974,7 +974,7 @@ We can identify and visualize the selected features.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-157
+.. GENERATED FROM PYTHON SOURCE LINES 147-158
 
 .. code-block:: Python
 
@@ -1001,15 +1001,15 @@ We can identify and visualize the selected features.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-159
+.. GENERATED FROM PYTHON SOURCE LINES 159-160
 
 The top features include attributes from both modalities, but the genes seem to be more important overall.
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-162
+.. GENERATED FROM PYTHON SOURCE LINES 162-163
 
 We can visualize the modality relative importance with a barplot.
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-168
+.. GENERATED FROM PYTHON SOURCE LINES 163-169
 
 .. code-block:: Python
 
@@ -1031,15 +1031,15 @@ We can visualize the modality relative importance with a barplot.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-170
+.. GENERATED FROM PYTHON SOURCE LINES 170-171
 
 Yes, in fact the genes are the most important modality in this example.
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-173
+.. GENERATED FROM PYTHON SOURCE LINES 173-174
 
 We can also extract features and visualize the original features with the largest contribution to the components.
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-183
+.. GENERATED FROM PYTHON SOURCE LINES 174-184
 
 .. code-block:: Python
 
@@ -1149,7 +1149,7 @@ We can also extract features and visualize the original features with the larges
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-196
+.. GENERATED FROM PYTHON SOURCE LINES 185-197
 
 .. code-block:: Python
 
@@ -1183,7 +1183,7 @@ We can also extract features and visualize the original features with the larges
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-204
+.. GENERATED FROM PYTHON SOURCE LINES 198-205
 
 Step 6: Analyzing an incomplete multi-modal dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1193,7 +1193,7 @@ support vector machine to predict the ground-truth labels. As the feature select
 values, an imputation step was applied prior the classification. We repeat the analysis 5 times with different
 seeds to have robust results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-272
+.. GENERATED FROM PYTHON SOURCE LINES 205-273
 
 .. code-block:: Python
 
@@ -1346,11 +1346,11 @@ seeds to have robust results.
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-274
+.. GENERATED FROM PYTHON SOURCE LINES 274-275
 
 Let's now visualize the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 274-280
+.. GENERATED FROM PYTHON SOURCE LINES 275-281
 
 .. code-block:: Python
 
@@ -1372,7 +1372,7 @@ Let's now visualize the results.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 281-295
+.. GENERATED FROM PYTHON SOURCE LINES 282-296
 
 Summary of results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1389,7 +1389,7 @@ Why feature extraction can be more resilient here:
 - The selection pipeline requires imputation after selecting features; simple imputers can inject bias,
   slightly hurting downstream classification in settings with substantial missingness.
 
-.. GENERATED FROM PYTHON SOURCE LINES 297-305
+.. GENERATED FROM PYTHON SOURCE LINES 298-306
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1403,7 +1403,7 @@ for your application.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.299 seconds)
+   **Total running time of the script:** (0 minutes 10.003 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_select_and_extract_features.py:

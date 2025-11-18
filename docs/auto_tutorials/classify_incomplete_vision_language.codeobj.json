@@ -2508,7 +2508,7 @@
    "name": "list"
   }
  ],
- "multi_train_test_split_Xs": [
+ "multi_train_test_split": [
   {
    "is_class": false,
    "is_explicit": false,
@@ -2521,7 +2521,7 @@
    "is_explicit": false,
    "module": "imml.model_selection",
    "module_short": "imml.model_selection",
-   "name": "multi_train_test_split_Xs"
+   "name": "multi_train_test_split"
   }
  ],
  "n_total": [

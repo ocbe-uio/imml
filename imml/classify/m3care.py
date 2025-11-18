@@ -63,6 +63,10 @@ class M3Care(LightningModule):
     .. [#m3carecode] https://github.com/choczhang/M3Care/
     .. [#m3carecode2] https://github.com/pcyin/pytorch_basic_nmt/tree/master
 
+    See Also
+    --------
+    :class:`~imml.load.M3CareDataset`
+
     Example
     --------
     >>> from lightning import Trainer

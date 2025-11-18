@@ -1,1 +1,1 @@
-from .multi_train_test_split import multi_train_test_split_Xs
+from .multi_train_test_split import multi_train_test_split

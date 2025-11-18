@@ -42,6 +42,10 @@ class IntegrAODataset(Dataset):
     idx : int
         Index.
 
+    See Also
+    --------
+    :class:`~imml.cluster.IntegrAO`
+
     Example
     --------
     >>> import numpy as np

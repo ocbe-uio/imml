@@ -16,12 +16,6 @@ class NormalizerNaN(Normalizer):
         The norm to use to normalize each non zero sample. If norm=’max’ is used, values will be rescaled by
         the maximum of the absolute values.
 
-    See Also
-    --------
-    `Clustering a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/cluster_incomplete_mmd.html>`__:
-    Tutorial demonstrating its usage on an (incomplete) multi-modal dataset.
-
     Example
     --------
     >>> import numpy as np

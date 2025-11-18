@@ -50,6 +50,10 @@ class MRGCN(LightningModule):
                     Issue 6, June 2023, btad353, https://doi.org/10.1093/bioinformatics/btad353
     .. [#mrgcncode] https://github.com/Polytech-bioinf/MRGCN
 
+    See Also
+    --------
+    :class:`~imml.load.MRGCNDataset`
+
     Example
     --------
     >>> import numpy as np

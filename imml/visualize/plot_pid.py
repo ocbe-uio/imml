@@ -45,9 +45,7 @@ def plot_pid(rus = None, Xs = None, y = None,
 
     See Also
     --------
-    `Statistics and interaction structure of a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/multil_modal_data_statistics.html#sphx-glr-auto-tutorials-multil-modal-data-statistics-py>`__:
-    Tutorial demonstrating its usage on a multi-modal dataset.
+    :class:`~imml.statistics.pid`
 
     Example
     --------

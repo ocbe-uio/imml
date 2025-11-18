@@ -417,13 +417,7 @@ def get_summary(Xs: list, mod_names: list = None, one_row: bool = False, compute
 
     See Also
     --------
-    `Statistics and interaction structure of a multi-modal dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/multil_modal_data_statistics.html#sphx-glr-auto-tutorials-multil-modal-data-statistics-py>`__:
-    Tutorial demonstrating its usage on a multi-modal dataset.
-
-    `Modality-wise missing data simulation (Amputation)
-    <https://imml.readthedocs.io/stable/auto_tutorials/generate_missing_modalities.html>`__:
-    Tutorial demonstrating its usage on a multi-modal dataset.
+    :class:`~imml.visualize.plot_summary``
 
     Example
     --------

@@ -35,6 +35,11 @@ class JNMFImputer(JNMF):
     .. [#jnmfcode1] https://rdrr.io/cran/nnTensor/man/JNMF.html
     .. [#jnmfcode2] https://github.com/rikenbit/nnTensor
 
+    See Also
+    --------
+    :class:`~imml.decomposition.JNMF`
+    :class:`~imml.feature_selection.JNMFFeatureSelector`
+
     Example
     --------
     >>> import numpy as np

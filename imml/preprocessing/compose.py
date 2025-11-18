@@ -38,12 +38,6 @@ class ConcatenateMods(FunctionTransformer):
     A transformer that concatenates all modalities from a multi-modal dataset. Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_
     (from `Scikit-learn`) with `concatenate_mods` as a function.
 
-    See Also
-    --------
-    `Dimensionality reduction: Feature extraction and feature selection
-    <https://imml.readthedocs.io/stable/auto_tutorials/select_and_extract_features.html>`__:
-    Tutorial demonstrating its usage on an (incomplete) multi-modal dataset.
-
     Example
     --------
     >>> import numpy as np

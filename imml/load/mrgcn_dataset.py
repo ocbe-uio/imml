@@ -21,6 +21,10 @@ class MRGCNDataset(Dataset):
     transform : list of callable, defult=None
         A list of functions or transformations to apply to each sample in the dataset.
 
+    See Also
+    --------
+    :class:`~imml.cluster.MRGCN`
+
     Example
     --------
     >>> import numpy as np

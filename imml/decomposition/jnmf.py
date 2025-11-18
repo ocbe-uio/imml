@@ -108,9 +108,8 @@ class JNMF(TransformerMixin, BaseEstimator):
 
     See Also
     --------
-    `Dimensionality reduction: Feature extraction and feature selection
-    <https://imml.readthedocs.io/stable/auto_tutorials/select_and_extract_features.html>`__:
-    Tutorial demonstrating its usage on an (incomplete) multi-modal dataset.
+    :class:`~imml.impute.JNMFImputer`
+    :class:`~imml.feature_selection.JNMFFeatureSelector`
 
     Example
     --------

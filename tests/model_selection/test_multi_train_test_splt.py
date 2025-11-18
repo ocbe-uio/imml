@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from imml.model_selection import multi_train_test_split_Xs
+from imml.model_selection import multi_train_test_split
 from imml import deepmodule_installed, Tensor
 
 if deepmodule_installed:
@@ -31,7 +31,7 @@ def test_list_input(sample_data):
             y = pd.Series(y)
         elif isinstance(Xs[0], Tensor):
             y = torch.from_numpy(y)
-        Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.6, shuffle=True)
+        Xs_train, Xs_test, y_train, y_test = multi_train_test_split(Xs, y, train_size=0.6, shuffle=True)
         X1_train, X2_train = Xs_train
         X1_test, X2_test = Xs_test
         assert len(X1_train) == int(0.6 * n)
@@ -51,8 +51,8 @@ def test_random_state(sample_data):
             y = pd.Series(y)
         elif isinstance(Xs[0], Tensor):
             y = torch.from_numpy(y)
-        Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, test_size=0.4, stratify=y,
-                                                                       random_state=42)
+        Xs_train, Xs_test, y_train, y_test = multi_train_test_split(Xs, y, test_size=0.4, stratify=y,
+                                                                    random_state=42)
         X1_train, X2_train = Xs_train
         X1_test, X2_test = Xs_test
         assert len(X1_train) == int(0.6 * n)
@@ -72,9 +72,9 @@ def test_three_input(sample_data):
             y = pd.Series(y)
         elif isinstance(Xs[0], Tensor):
             y = torch.from_numpy(y)
-        Xs_train, Xs_test, Xs_train1, Xs_test1, y_train, y_test = multi_train_test_split_Xs(Xs, Xs, y,
-                                                                                            train_size=0.6,
-                                                                                            shuffle=True)
+        Xs_train, Xs_test, Xs_train1, Xs_test1, y_train, y_test = multi_train_test_split(Xs, Xs, y,
+                                                                                         train_size=0.6,
+                                                                                         shuffle=True)
         X1_train, X2_train = Xs_train
         X1_test, X2_test = Xs_test
         assert len(X1_train) == int(0.6 * n)

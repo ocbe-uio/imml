@@ -1,3 +1,4 @@
+# tutorials/multi_modal_data_statistics.py
 """
 =============================================================
 Statistics and interaction structure of a multi-modal dataset

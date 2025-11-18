@@ -34,6 +34,10 @@ class M3CareDataset(Dataset):
     observed_mod_indicator: array-like of shape (1, n_mods)
         Boolean array-like indicating observed modalities for the sample.
 
+    See Also
+    --------
+    :class:`~imml.classify.M3Care`
+
     Example
     --------
     >>> from torch.utils.data import DataLoader

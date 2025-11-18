@@ -69,6 +69,10 @@ class MOFA(TransformerMixin, BaseEstimator):
                      Biology, 21. doi:10.1186/s13059-020-02015-1.
     .. [#mofacode] https://biofam.github.io/MOFA2/index.html
 
+    See Also
+    --------
+    :class:`~imml.impute.MOFAImputer`
+
     Example
     --------
     >>> import numpy as np

@@ -38,9 +38,7 @@ class MUSEDataset(Dataset):
 
     See Also
     --------
-    `Classify an incomplete tabular–language dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_tabular_language.html>`__:
-    Tutorial demonstrating its usage on an incomplete tabular-language dataset.
+    :class:`~imml.classify.MUSE`
 
     Example
     --------

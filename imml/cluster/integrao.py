@@ -72,6 +72,10 @@ class IntegrAO(LightningModule):
                         with Integrate Any Omics." Nature Machine Intelligence 7.1 (2025): 29-42.
     .. [#integraocode] https://github.com/bowang-lab/IntegrAO
 
+    See Also
+    --------
+    :class:`~imml.load.IntegrAODataset`
+
     Example
     --------
     >>> import numpy as np

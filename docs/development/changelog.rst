@@ -38,7 +38,8 @@ November 3, 2025
 Updates in this release:
 
 - |MajorFeature| We have created a new module :mod:`imml.model_selection`.
-- |Enhancement| We have added a "See also" section to link tutorials with classes.
+- |Enhancement| We have added a "See also" section to related classes.
+- |Enhancement| We have added a section to link tutorials with classes.
 - |Enhancement| `iMML` supports now Python 3.14.
 - |Enhancement| Added a tutorial for dealing with incomplete tabular-text data.
   By `RafRomB <https://github.com/RafRomB>`__. `#14 <https://github.com/ocbe-uio/imml/pull/14>`__

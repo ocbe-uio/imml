@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 
-def multi_train_test_split_Xs(*args, **kwargs):
+def multi_train_test_split(*args, **kwargs):
     """
     Split multi-modal datasets and labels into train and test sets.
 
@@ -26,23 +26,14 @@ def multi_train_test_split_Xs(*args, **kwargs):
         - For each list input (Xs): (list_train, list_test)
         - For each array input (y): (array_train, array_test)
 
-    See Also
-    --------
-    `Classify an incomplete tabular–language dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_tabular_language.html>`__:
-    Tutorial demonstrating its usage on an incomplete tabular-language dataset.
-
-    `Classify an incomplete vision–language dataset
-    <https://imml.readthedocs.io/stable/auto_tutorials/classify_incomplete_vision_language.html>`__:
-    Tutorial demonstrating its usage on an incomplete vision-language dataset.
-
     Example
     --------
     >>> import numpy as np
-    >>> from imml.model_selection import multi_train_test_split_Xs
+    >>> from imml.model_selection import multi_train_test_split
     >>> Xs = [np.random.rand(100, 10), np.random.rand(100, 20)]
     >>> y = np.random.randint(0, 2, 100)
-    >>> Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.7, random_state=42)
+    >>> Xs_train, Xs_test, y_train, y_test = multi_train_test_split(Xs, y, train_size=0.7,
+                                                                    random_state=42)
     """
     output = []
 
