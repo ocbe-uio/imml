@@ -43,7 +43,7 @@ task and check whether additional modules or dependencies are required.
    * - Clustering
      - :class:`~imml.cluster.IMSCAGL`
      - Numeric
-     - matlab
+     - octave
      - octave
    * - Clustering
      - :class:`~imml.cluster.IMSR`
@@ -63,7 +63,7 @@ task and check whether additional modules or dependencies are required.
    * - Clustering
      - :class:`~imml.cluster.MKKMIK`
      - Numeric
-     - matlab
+     - octave
      - octave
    * - Clustering
      - :class:`~imml.cluster.MONET`
@@ -83,22 +83,22 @@ task and check whether additional modules or dependencies are required.
    * - Clustering
      - :class:`~imml.cluster.OMVC`
      - Numeric
-     - matlab
+     - octave
      - octave
    * - Clustering
      - :class:`~imml.cluster.OPIMC`
      - Numeric
-     - matlab
+     - octave
      - octave
    * - Clustering
      - :class:`~imml.cluster.OSLFIMVC`
      - Numeric
-     - matlab
+     - octave
      - octave, octave-statistics
    * - Clustering
      - :class:`~imml.cluster.PIMVC`
      - Numeric
-     - matlab
+     - octave
      - octave
    * - Clustering
      - :class:`~imml.cluster.SIMCADC`
@@ -165,10 +165,10 @@ how to install a module.
 How to install extra dependencies
 ----------------------------------------------------------
 
-Extra dependencies when using "matlab" module
+Extra dependencies when using "octave" module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In order to use 'matlab' as an engine, you will need to have `Octave` (`MATLAB`) in your machine. In linux, you can
+In order to use 'octave' as an engine, you will need to have `Octave` in your machine. In linux, you can
 install it using the following commands:
 
 .. code:: bash
