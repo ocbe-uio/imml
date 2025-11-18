@@ -1,7 +1,8 @@
 # This workflow will install Python dependencies and run tests with a variety of Python versions
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 # Run locally with the command:
-# act --rm -j build --artifact-server-path ./artifacts; rm -rf ~/.cache/act; docker volume ls | awk '/act/ {print $2}' | xargs -r docker volume rm; docker stop $(docker ps -q); docker system prune -a --volumes
+# act -W local_ci_test.yml --rm --artifact-server-path ./artifacts; rm -rf ~/.cache/act;
+# docker volume ls | awk '/act/ {print $2}' | xargs -r docker volume rm; docker stop $(docker ps -q); docker system prune -a --volumes
 
 name: Local CI Tests
 

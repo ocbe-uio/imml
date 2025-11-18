@@ -2,20 +2,13 @@
 
 from ._ragpt import MMG, CAP
 from ._ragpt.vilt import ViltModel
+from .. import deepmodule_installed, deepmodule_error, LightningModule, Module
 
-try:
+if deepmodule_installed:
     from torch import nn
     import torch
-    import torch.nn.functional as F
-    import lightning as L
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-LightningModule = L.LightningModule if deepmodule_installed else object
-ViltModel = ViltModel if deepmodule_installed else object
-Module = nn.Module if deepmodule_installed else object
+else:
+    ViltModel = object
 
 
 class RAGPT(LightningModule):

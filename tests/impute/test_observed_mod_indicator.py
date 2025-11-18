@@ -2,11 +2,10 @@ import pytest
 import numpy as np
 import pandas as pd
 from imml.impute import ObservedModIndicator, get_observed_mod_indicator
-try:
+from imml import deepmodule_installed
+
+if deepmodule_installed:
     import torch
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
 
 
 @pytest.fixture
@@ -22,11 +21,14 @@ def sample_data():
         1: [True, False, True, True, True]
     })
     observed_mod_indicator = observed_mod_indicator.values
+    output = (Xs_pandas, Xs_numpy)
     if deepmodule_installed:
         Xs_torch = [torch.from_numpy(X) for X in Xs_numpy]
         observed_mod_indicator_torch = torch.from_numpy(observed_mod_indicator).bool()
-        return Xs_pandas, Xs_numpy, Xs_torch, observed_mod_indicator, observed_mod_indicator_torch
-    return Xs_pandas, Xs_numpy, observed_mod_indicator
+        output = output + (Xs_torch, observed_mod_indicator, observed_mod_indicator_torch,)
+    else:
+        output = output + (observed_mod_indicator,)
+    return output
 
 def test_get_missing_mod_indicator(sample_data):
     if deepmodule_installed:

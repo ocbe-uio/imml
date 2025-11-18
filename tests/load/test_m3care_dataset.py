@@ -24,10 +24,13 @@ def test_deepmodule_not_installed(sample_data):
     Xs, y = sample_data
     custom_dataset(Xs=Xs, y=y)
     with patch.dict(sys.modules, {"torch": None}):
+        import imml as imml_mock
         import imml.load.m3care_dataset as module_mock
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
         with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             custom_dataset(Xs=Xs, y=y)
+    importlib.reload(imml_mock)
     importlib.reload(module_mock)
 
 

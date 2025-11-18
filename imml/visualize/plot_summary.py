@@ -6,7 +6,7 @@ from ..explore import get_summary
 
 
 def plot_summary(Xs: list = None, summary: pd.DataFrame = None, mod_names: list = None,
-                 title: str = "Summary of the multi-modal dataset",
+                 figsize: tuple = None, title: str = "Summary of the multi-modal dataset",
                  xlabel: str = "Samples", ylabel: str = "Count"):
     r"""
     Plot a bar chart summarizing completeness across modalities in a multi-modal dataset.
@@ -24,6 +24,8 @@ def plot_summary(Xs: list = None, summary: pd.DataFrame = None, mod_names: list 
     mod_names : list, default=None
         Names of each modality to use when computing the summary from ``Xs``. If ``None``, it will default to the
         modality index.
+    figsize : tuple, default=None
+        Figure size in inches passed to ``pd.DataFrame.plot``.
     title : str, default="Summary of the multi-modal dataset"
         Title of the plot.
     xlabel : str, default="Samples"
@@ -52,11 +54,13 @@ def plot_summary(Xs: list = None, summary: pd.DataFrame = None, mod_names: list 
     >>> Xs = Amputer(p=0.3, random_state=42).fit_transform(Xs)
     >>> plot_summary(Xs = Xs)
     """
+    if (figsize is not None) and (not isinstance(figsize, tuple)):
+        raise ValueError(f"Invalid figsize. It must be a tuple. A {type(figsize)} was passed.")
     if summary is None:
         summary = get_summary(Xs=Xs, mod_names=mod_names, compute_pct=False, return_df=True)
     if not isinstance(summary, pd.DataFrame):
         raise ValueError(f"Invalid summary. It should be a pd.DataFrame. A {type(summary)} was passed. ")
     summary.index = summary.index.str.replace(" samples", "")
     ax = summary[[c for c in summary.columns if not c.startswith('%')]].plot(
-        kind="bar", xlabel=xlabel, ylabel=ylabel, rot=0, title=title)
+        kind="bar", xlabel=xlabel, ylabel=ylabel, rot=0, title=title, figsize=figsize)
     return ax

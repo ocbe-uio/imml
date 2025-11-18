@@ -2,16 +2,11 @@
 
 import math
 
-try:
-    import torch
-    from torch import nn
-    from torch.nn import Parameter
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
+from ... import deepmodule_installed, Module
 
-Module = nn.Module if deepmodule_installed else object
+if deepmodule_installed:
+    import torch
+    from torch.nn import Parameter
 
 
 class GraphConvolution(Module):

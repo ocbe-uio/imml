@@ -17,7 +17,9 @@ from typing import Any, Iterable, Optional, Union
 import PIL
 import numpy as np
 
-try:
+from .... import deepmodule_installed
+
+if deepmodule_installed:
     from transformers.image_processing_utils import BaseImageProcessor, BatchFeature, get_size_dict
     from transformers.image_transforms import PaddingMode, pad, resize, to_channel_dimension_format
     from transformers.image_utils import (
@@ -35,16 +37,10 @@ try:
         validate_kwargs,
         validate_preprocess_arguments,
     )
-    from transformers.utils import TensorType, is_vision_available, logging
+    from transformers.utils import logging
     logger = logging.get_logger(__name__)
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-if not deepmodule_installed:
+else:
     BaseImageProcessor = object
-    TensorType = object
     BatchFeature = object
     ImageInput = object
 
@@ -55,7 +51,6 @@ if not deepmodule_installed:
     class ChannelDimension: pass
     ChannelDimension = ChannelDimension()
     ChannelDimension.FIRST = object
-
 
 
 def max_across_indices(values: Iterable[Any]) -> list[Any]:

@@ -20,8 +20,9 @@ from dataclasses import dataclass
 from typing import Optional
 
 from .configuration_vilt import ViltConfig
+from .... import deepmodule_installed, Module
 
-try:
+if deepmodule_installed:
     import torch.utils.checkpoint
     from torch import nn
     from torch.nn import CrossEntropyLoss
@@ -43,12 +44,6 @@ try:
     from transformers.utils import add_start_docstrings, add_start_docstrings_to_model_forward, logging, \
         replace_return_docstrings
     logger = logging.get_logger(__name__)
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-Module = nn.Module if deepmodule_installed else object
 
 _CONFIG_FOR_DOC = "ViltConfig"
 _CHECKPOINT_FOR_DOC = "dandelin/vilt-b32-mlm"

@@ -6,14 +6,8 @@ import numpy as np
 import pandas as pd
 
 from imml.ampute import Amputer
-from imml.cluster import IMSR
-
-try:
-    import oct2py
-    matlabmodule_installed = True
-except ImportError:
-    matlabmodule_installed = False
-estimator = IMSR
+from imml.cluster import IMSR as estimator
+from imml import octavemodule_installed
 
 
 @pytest.fixture
@@ -25,23 +19,26 @@ def sample_data():
     return Xs_pandas, Xs_numpy
 
 
-def test_matlab_not_installed():
-    if matlabmodule_installed:
-        estimator(engine="matlab")
+def test_octave_not_installed():
+    if octavemodule_installed:
+        estimator(engine="octave")
         with patch.dict(sys.modules, {"oct2py": None}):
+            import imml as imml_mock
             import imml.cluster.imsr as module_mock
+            importlib.reload(imml_mock)
             importlib.reload(module_mock)
-            with pytest.raises(ImportError, match="Module 'matlab' needs to be installed."):
-                estimator(engine="matlab")
+            with pytest.raises(ImportError, match="Module 'octave' needs to be installed."):
+                estimator(engine="octave")
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
     else:
-        with pytest.raises(ImportError, match="Module 'matlab' needs to be installed."):
-            estimator(engine="matlab")
+        with pytest.raises(ImportError, match="Module 'octave' needs to be installed."):
+            estimator(engine="octave")
 
 
 def test_default_params(sample_data):
     model = estimator(random_state=42)
-    if matlabmodule_installed:
+    if octavemodule_installed:
         for Xs in sample_data:
             n_samples = len(Xs[0])
             labels = model.fit_predict(Xs)
@@ -58,8 +55,8 @@ def test_default_params(sample_data):
 
 def test_param_randomstate(sample_data):
     random_state = 42
-    for engine in ["matlab", "python"]:
-        if (engine == "matlab") and not matlabmodule_installed:
+    for engine in ["octave", "python"]:
+        if (engine == "octave") and not octavemodule_installed:
             continue
         labels = estimator(engine=engine, random_state=random_state).fit_predict(sample_data[0])
         assert all(labels == estimator(engine=engine, random_state=random_state).fit_predict(sample_data[0]))
@@ -80,8 +77,8 @@ def test_invalid_params(sample_data):
 
 def test_fit_predict(sample_data):
     n_clusters = 3
-    for engine in ["matlab", "python"]:
-        if (engine == "matlab") and not matlabmodule_installed:
+    for engine in ["octave", "python"]:
+        if (engine == "octave") and not octavemodule_installed:
             continue
         for Xs in sample_data:
             model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
@@ -99,8 +96,8 @@ def test_fit_predict(sample_data):
 
 def test_missing_values_handling(sample_data):
     n_clusters = 2
-    for engine in ["matlab", "python"]:
-        if (engine == "matlab") and not matlabmodule_installed:
+    for engine in ["octave", "python"]:
+        if (engine == "octave") and not octavemodule_installed:
             continue
         for Xs in sample_data:
             Xs = Amputer(p= 0.3, random_state=42).fit_transform(Xs)

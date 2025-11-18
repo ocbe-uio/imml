@@ -1,14 +1,9 @@
 # License: BSD-3-Clause
 
-try:
-    import torch
-    from torch import nn
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
+from ... import deepmodule_installed, Module
 
-Module = nn.Module if deepmodule_installed else object
+if deepmodule_installed:
+    from torch import nn
 
 
 class FFNEncoder(Module):

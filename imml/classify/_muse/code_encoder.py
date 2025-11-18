@@ -2,15 +2,11 @@
 
 import math
 
-try:
+from ... import deepmodule_installed, Module
+
+if deepmodule_installed:
     import torch
     import torch.nn as nn
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-Module = nn.Module if deepmodule_installed else object
 
 
 class RelTemporalEncoding(Module):

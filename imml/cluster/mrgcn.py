@@ -1,19 +1,13 @@
 # License: BSD-3-Clause
 
 from sklearn.cluster import KMeans
+from .. import deepmodule_installed, deepmodule_error, LightningModule
 
-
-try:
+if deepmodule_installed:
     import torch
     from torch import nn
-    import lightning as L
     from torch.nn import functional as F
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
 
-LightningModule = L.LightningModule if deepmodule_installed else object
 
 class MRGCN(LightningModule):
     r"""

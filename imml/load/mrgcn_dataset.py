@@ -1,14 +1,10 @@
 # License: BSD-3-Clause
 
 from ..utils import check_Xs_y
+from .. import deepmodule_installed, deepmodule_error, Dataset
 
-try:
+if deepmodule_installed:
     import torch
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-Dataset = torch.utils.data.Dataset if deepmodule_installed else object
 
 
 class MRGCNDataset(Dataset):

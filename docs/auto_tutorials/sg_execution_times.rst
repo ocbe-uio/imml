@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:09.271** total execution time for 8 files **from auto_tutorials**:
+**10:32.919** total execution time for 8 files **from auto_tutorials**:
 
 .. container::
 
@@ -32,27 +32,27 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_tutorials_classify_incomplete_tabular_language_dataset.py` (``classify_incomplete_tabular_language_dataset.py``)
-     - 00:09.271
+   * - :ref:`sphx_glr_auto_tutorials_retrieve_incomplete_vision_language.py` (``retrieve_incomplete_vision_language.py``)
+     - 06:29.202
      - 0.0
    * - :ref:`sphx_glr_auto_tutorials_classify_incomplete_vision_language.py` (``classify_incomplete_vision_language.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_cluster_incomplete_mmd.py` (``cluster_incomplete_mmd.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py` (``generate_missing_modalities.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_impute_multi_modal_data.py` (``impute_multi_modal_data.py``)
-     - 00:00.000
+     - 03:01.097
      - 0.0
    * - :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py` (``multi_modal_data_statistics.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_retrieve_incomplete_vision_language.py` (``retrieve_incomplete_vision_language.py``)
-     - 00:00.000
+     - 00:30.681
      - 0.0
    * - :ref:`sphx_glr_auto_tutorials_select_and_extract_features.py` (``select_and_extract_features.py``)
-     - 00:00.000
+     - 00:13.299
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py` (``generate_missing_modalities.py``)
+     - 00:06.007
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_classify_incomplete_tabular_language_dataset.py` (``classify_incomplete_tabular_language_dataset.py``)
+     - 00:05.975
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_impute_multi_modal_data.py` (``impute_multi_modal_data.py``)
+     - 00:03.566
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_cluster_incomplete_mmd.py` (``cluster_incomplete_mmd.py``)
+     - 00:03.093
      - 0.0

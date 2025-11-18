@@ -31,10 +31,13 @@ def sample_data():
 def test_deepmodule_not_installed(sample_data):
     estimator(Xs=sample_data[0])
     with patch.dict(sys.modules, {"torch": None}):
+        import imml as imml_mock
         import imml.cluster.mrgcn as module_mock
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
         with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             estimator(Xs=sample_data[0])
+    importlib.reload(imml_mock)
     importlib.reload(module_mock)
 
 

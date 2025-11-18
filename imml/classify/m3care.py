@@ -2,26 +2,18 @@
 
 import os
 import numpy as np
-import pandas as pd
 from PIL import Image
 
 from ._m3care import NMT_tran, MM_transformer_encoder, init_weights, PositionalEncoding, clones, \
     GraphConvolution, length_to_mask, guassian_kernel
+from .. import deepmodule_installed, deepmodule_error, LightningModule, Module
 
-try:
+if deepmodule_installed:
     import torch
     from torch import optim, nn
     from torchvision import models as models
-    import lightning as L
     import torch.nn.functional as F
     import torchvision.transforms as transforms
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-LightningModule = L.LightningModule if deepmodule_installed else object
-Module = nn.Module if deepmodule_installed else object
 
 
 class M3Care(LightningModule):

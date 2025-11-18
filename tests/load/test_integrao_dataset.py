@@ -27,10 +27,13 @@ def test_deepmodule_not_installed(sample_data):
     model = IntegrAO(Xs=Xs, n_clusters=n_clusters, random_state=42)
     IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
     with patch.dict(sys.modules, {"torch": None}):
+        import imml as imml_mock
         import imml.load.integrao_dataset as module_mock
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
         with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
+    importlib.reload(imml_mock)
     importlib.reload(module_mock)
 
 

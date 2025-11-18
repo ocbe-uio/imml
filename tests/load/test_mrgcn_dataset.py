@@ -19,10 +19,13 @@ def sample_data():
 def test_deepmodule_not_installed(sample_data):
     MRGCNDataset(Xs=sample_data)
     with patch.dict(sys.modules, {"torch": None}):
+        import imml as imml_mock
         import imml.load.mrgcn_dataset as module_mock
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
         with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             MRGCNDataset(Xs=sample_data)
+    importlib.reload(imml_mock)
     importlib.reload(module_mock)
 
 

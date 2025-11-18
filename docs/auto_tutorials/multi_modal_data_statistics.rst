@@ -77,6 +77,13 @@ Step 1: Import required libraries
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: '/home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/image.so: undefined symbol: _ZN3c1017RegisterOperatorsD1Ev'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+      warn(
+
 
 
 
@@ -440,7 +447,7 @@ feature engineering for downstream multi‑modal learning.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 23.032 seconds)
+   **Total running time of the script:** (0 minutes 30.681 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_multi_modal_data_statistics.py:

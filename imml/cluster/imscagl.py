@@ -10,14 +10,10 @@ from sklearn.cluster import KMeans
 from ..impute import get_observed_mod_indicator
 from ..utils import check_Xs_y
 from ..preprocessing import remove_missing_samples_by_mod
+from .. import octavemodule_installed, oct2py_module_error
 
-matlabmodule_installed = False
-oct2py_module_error = "Module 'matlab' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-try:
+if octavemodule_installed:
     import oct2py
-    matlabmodule_installed = True
-except ImportError:
-    pass
 
 
 class IMSCAGL(BaseEstimator, ClusterMixin):
@@ -52,12 +48,12 @@ class IMSCAGL(BaseEstimator, ClusterMixin):
         Constant for updating variables during the learning process.
     random_state : int, default=None
         Determines the randomness. Use an int to make the randomness deterministic.
-    engine : str, default=matlab
-        Engine to use for computing the model. Currently only 'matlab' is supported.
+    engine : str, default='octave'
+        Engine to use for computing the model. Currently only 'octave' is supported.
     verbose : bool, default=False
         Verbosity mode.
     clean_space : bool, default=True
-        If engine is 'matlab' and clean_space is True, the session will be closed after fitting the model.
+        If engine is 'octave' and clean_space is True, the session will be closed after fitting the model.
 
     Attributes
     ----------
@@ -89,16 +85,16 @@ class IMSCAGL(BaseEstimator, ClusterMixin):
 
     def __init__(self, n_clusters: int = 8, lambda1: float = 0.1, lambda2: float = 1000, lambda3: float = 100, k: int = 5,
                  neighbor_mode: str = 'KNN', weight_mode: str = 'Binary', max_iter: int = 100, miu: float = 0.01,
-                 rho: float = 1.1, random_state: int = None, engine: str = "matlab", verbose = False,
+                 rho: float = 1.1, random_state: int = None, engine: str = "octave", verbose = False,
                  clean_space: bool = True):
         if not isinstance(n_clusters, int):
             raise ValueError(f"Invalid n_clusters. It must be an int. A {type(n_clusters)} was passed.")
         if n_clusters < 2:
             raise ValueError(f"Invalid n_clusters. It must be an greater than 1. {n_clusters} was passed.")
-        engines_options = ["matlab"]
+        engines_options = ["octave"]
         if engine not in engines_options:
             raise ValueError(f"Invalid engine. Expected one of {engines_options}. {engine} was passed.")
-        if (engine == "matlab") and (not matlabmodule_installed):
+        if (engine == "octave") and (not octavemodule_installed):
             raise ImportError(oct2py_module_error)
 
         self.n_clusters = n_clusters
@@ -117,14 +113,14 @@ class IMSCAGL(BaseEstimator, ClusterMixin):
         self.verbose = verbose
         self.clean_space = clean_space
 
-        if self.engine == "matlab":
-            matlab_folder = dirname(__file__)
-            matlab_folder = os.path.join(matlab_folder, "_" + (os.path.basename(__file__).split(".")[0]))
-            self._matlab_folder = matlab_folder
-            matlab_files = [x for x in os.listdir(matlab_folder) if x.endswith(".m")]
-            self._oc = oct2py.Oct2Py(temp_dir= matlab_folder)
-            for matlab_file in matlab_files:
-                with open(os.path.join(matlab_folder, matlab_file)) as f:
+        if self.engine == "octave":
+            octave_folder = dirname(__file__)
+            octave_folder = os.path.join(octave_folder, "_" + (os.path.basename(__file__).split(".")[0]))
+            self._octave_folder = octave_folder
+            octave_files = [x for x in os.listdir(octave_folder) if x.endswith(".m")]
+            self._oc = oct2py.Oct2Py(temp_dir= octave_folder)
+            for octave_file in octave_files:
+                with open(os.path.join(octave_folder, octave_file)) as f:
                     self._oc.eval(f.read())
 
 
@@ -148,7 +144,7 @@ class IMSCAGL(BaseEstimator, ClusterMixin):
         """
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
-        if self.engine=="matlab":
+        if self.engine=="octave":
             if not isinstance(Xs[0], pd.DataFrame):
                 Xs = [pd.DataFrame(X) for X in Xs]
             observed_mod_indicator = get_observed_mod_indicator(Xs=Xs)
@@ -219,7 +215,7 @@ class IMSCAGL(BaseEstimator, ClusterMixin):
 
 
     def _clean_space(self):
-        [os.remove(os.path.join(self._matlab_folder, x)) for x in ["reader.mat", "writer.mat"]]
+        [os.remove(os.path.join(self._octave_folder, x)) for x in ["reader.mat", "writer.mat"]]
         self._oc.exit()
         del self._oc
         return None

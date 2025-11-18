@@ -6,6 +6,7 @@ import pandas as pd
 
 from ..utils import check_Xs_y
 from ..impute import get_observed_mod_indicator
+from .. import Tensor
 
 
 def get_n_mods(Xs: list) -> int:
@@ -432,7 +433,9 @@ def get_summary(Xs: list, mod_names: list = None, one_row: bool = False, compute
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
     >>> get_summary(Xs = Xs)
     """
-    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
+    Xs = check_Xs_y(Xs=Xs)
+    if isinstance(Xs[0], Tensor):
+        Xs = [pd.DataFrame(X) for X in Xs]
     n_samples = len(Xs[0])
     if one_row:
         summary = {

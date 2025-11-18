@@ -40,10 +40,13 @@ def test_rmodule_installed():
     if rmodule_installed:
         estimator(engine="r")
         with patch.dict(sys.modules, {"rpy2": None}):
+            import imml as imml_mock
             import imml.cluster.nemo as module_mock
+            importlib.reload(imml_mock)
             importlib.reload(module_mock)
             with pytest.raises(ImportError, match="Module 'r' needs to be installed to use r engine."):
                 estimator(engine="r")
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
     else:
         with pytest.raises(ImportError, match="Module 'r' needs to be installed to use r engine."):

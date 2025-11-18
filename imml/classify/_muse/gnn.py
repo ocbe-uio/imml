@@ -1,17 +1,14 @@
 # License: BSD-3-Clause
 
-try:
+from ... import deepmodule_installed, Module
+
+if deepmodule_installed:
     import torch
     import torch.nn as nn
     import torch.nn.functional as F
     from torch_geometric.nn import MessagePassing
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-Module = nn.Module if deepmodule_installed else object
-MessagePassing = MessagePassing if deepmodule_installed else object
+else:
+    MessagePassing = object
 
 
 class EdgeSAGEConv(MessagePassing):

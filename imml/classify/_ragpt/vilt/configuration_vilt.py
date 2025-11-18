@@ -14,16 +14,14 @@
 # limitations under the License.
 """VilT model configuration"""
 
-try:
+from .... import deepmodule_installed
+
+if deepmodule_installed:
     from transformers.configuration_utils import PretrainedConfig
     from transformers.utils import logging
     logger = logging.get_logger(__name__)
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-PretrainedConfig = PretrainedConfig if deepmodule_installed else object
+else:
+    PretrainedConfig = object
 
 
 class ViltConfig(PretrainedConfig):

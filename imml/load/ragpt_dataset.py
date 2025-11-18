@@ -7,19 +7,14 @@ from PIL import Image
 
 from ..classify._ragpt.core_tools import resize_image
 from ..classify._ragpt.vilt import ViltImageProcessor
+from .. import deepmodule_installed, deepmodule_error, Dataset
 
-try:
-    import lightning as L
-    from transformers import BertTokenizer
+if deepmodule_installed:
     import torch
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-Dataset = torch.utils.data.Dataset if deepmodule_installed else object
-BertTokenizer = BertTokenizer if deepmodule_installed else object
-ViltImageProcessor = ViltImageProcessor if deepmodule_installed else object
+    from transformers import BertTokenizer
+else:
+    BertTokenizer = object
+    ViltImageProcessor = object
 
 
 class RAGPTDataset(Dataset):

@@ -53,7 +53,7 @@ Tracker = "https://github.com/ocbe-uio/imml/issues"
 Changelog = "https://imml.readthedocs.io/stable/development/changelog.html"
 
 [project.optional-dependencies]
-matlab = [
+octave = [
     "ipython>=8.20.0,<9.0.0",
     "oct2py>=5.8.0",
 ]

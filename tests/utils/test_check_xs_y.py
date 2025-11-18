@@ -2,13 +2,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-try:
-    import torch
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-
 from imml.utils import check_Xs_y
+from imml import deepmodule_installed
+
+if deepmodule_installed:
+    import torch
 
 
 def test_valid_inputs():

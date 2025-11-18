@@ -2,15 +2,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-try:
-    import torch
-    from torch import Tensor
-    deepmodule_installed = True
-except ImportError:
-    Tensor = str
-    deepmodule_installed = False
-
 from imml.model_selection import multi_train_test_split_Xs
+from imml import deepmodule_installed, Tensor
+
+if deepmodule_installed:
+    import torch
 
 
 @pytest.fixture

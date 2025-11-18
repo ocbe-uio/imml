@@ -5,17 +5,13 @@ import math
 from collections import Counter
 from itertools import chain
 
-try:
+from ... import deepmodule_installed, Module
+
+if deepmodule_installed:
     import torch
     import torch.nn.functional as F
     from torch import nn
     from torch.autograd import Variable
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-Module = nn.Module if deepmodule_installed else object
 
 
 def clones(module, N):

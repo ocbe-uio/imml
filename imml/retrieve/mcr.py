@@ -6,23 +6,13 @@ import pandas as pd
 from PIL import Image
 
 from ..utils import check_Xs_y
+from ..classify._ragpt.vilt import ViltModel, ViltImageProcessor
+from .. import deepmodule_installed, deepmodule_error, Module
 
-try:
+if deepmodule_installed:
     import torch
     import torch.nn.functional as F
-    from torch import nn
     from transformers import AutoModel, AutoProcessor, BertTokenizer
-    from ..classify._ragpt.vilt import ViltModel, ViltImageProcessor
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-Module = nn.Module if deepmodule_installed else object
-AutoProcessor = AutoProcessor if deepmodule_installed else object
-ViltModel = ViltModel if deepmodule_installed else object
-BertTokenizer = BertTokenizer if deepmodule_installed else object
-ViltImageProcessor = ViltImageProcessor if deepmodule_installed else object
 
 
 class MCR(Module):

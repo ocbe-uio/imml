@@ -53,12 +53,15 @@ def test_deepmodule_not_installed(sample_database):
     database, _ = sample_database
     RAGPTDataset(database=database)
     with patch.dict(sys.modules, {"torch": None}):
+        import imml as imml_mock
         import imml.load.ragpt_dataset as module_mock
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
         with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             RAGPTDataset(database=database)
         with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             RAGPTCollator()
+    importlib.reload(imml_mock)
     importlib.reload(module_mock)
 
 

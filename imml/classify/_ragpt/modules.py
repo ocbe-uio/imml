@@ -1,15 +1,11 @@
 # License: BSD-3-Clause
 
-try:
+from ... import deepmodule_installed, Module
+
+if deepmodule_installed:
     import torch
     from torch import nn
     import torch.nn.functional as F
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-Module = nn.Module if deepmodule_installed else object
 
 
 class MMG(Module):

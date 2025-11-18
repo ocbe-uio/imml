@@ -59,20 +59,13 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
     >>> Xs = Amputer(p=0.3, random_state=42).fit_transform(Xs)
     >>> fig, axes = plot_combinations(Xs=Xs, mod_names=['RNA', 'Protein', 'Metabolite'], max_combs=8)
     """
-    Xs = check_Xs_y(Xs=Xs)
+    Xs = check_Xs_y(Xs=Xs, modalities=mod_names)
     if (figsize is not None) and (not isinstance(figsize, tuple)):
         raise ValueError(f"Invalid figsize. It must be a tuple. A {type(figsize)} was passed.")
     if not isinstance(max_combs, int):
         raise ValueError(f"Invalid max_combs. It must be a bool. A {type(max_combs)} was passed.")
     if mod_names is None:
         mod_names = [str(i) for i in range(len(Xs))]
-    else:
-        if not isinstance(mod_names, list):
-            raise ValueError(f"Invalid mod_names. It must be a list. A {type(mod_names)} was passed.")
-        if len(mod_names) != len(Xs):
-            raise ValueError(f"Invalid mod_names. It must have the same number of elements as Xs. Got {len(mod_names)} mod_names")
-        if set(type(mod) for mod in mod_names) != set("str"):
-            raise ValueError(f"Invalid mod_names. List of strings should be passes. Got {[type(mod) for mod in mod_names]} mod_names")
 
     if not isinstance(Xs[0], pd.DataFrame):
         Xs = [pd.DataFrame(X) for X in Xs]

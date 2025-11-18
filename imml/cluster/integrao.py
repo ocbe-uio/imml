@@ -11,19 +11,12 @@ from snf.compute import _find_dominate_set
 from ._integrao._aux_integrao import data_indexing, dist2, _stable_normalized_pd, _scaling_normalized_pd, p_preprocess, \
     _stable_normalized
 from ..preprocessing import remove_missing_samples_by_mod
+from .. import deepmodule_installed, deepmodule_error, LightningModule, Module
 
-try:
+if deepmodule_installed:
     import torch
-    import lightning as L
     from torch import nn, optim, autograd
     from torch_geometric.nn import GraphSAGE
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-LightningModule = L.LightningModule if deepmodule_installed else object
-Module = nn.Module if deepmodule_installed else object
 
 
 class IntegrAO(LightningModule):

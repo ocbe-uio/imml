@@ -7,9 +7,7 @@ import numpy as np
 import pandas as pd
 
 from imml.ampute import Amputer
-from imml.cluster import PIMVC
-
-estimator = PIMVC
+from imml.cluster import PIMVC as estimator
 
 
 @pytest.fixture
@@ -20,13 +18,16 @@ def sample_data():
     Xs_pandas, Xs_numpy = [X1, X2, X3], [X1.values, X2.values, X3.values]
     return Xs_pandas, Xs_numpy
 
-def test_matlab_not_installed():
-    estimator(engine="matlab")
+def test_octave_not_installed():
+    estimator(engine="octave")
     with patch.dict(sys.modules, {"oct2py": None}):
+        import imml as imml_mock
         import imml.cluster.pimvc as module_mock
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
-        with pytest.raises(ImportError, match="Module 'matlab' needs to be installed."):
-            estimator(engine="matlab")
+        with pytest.raises(ImportError, match="Module 'octave' needs to be installed."):
+            estimator(engine="octave")
+    importlib.reload(imml_mock)
     importlib.reload(module_mock)
 
 

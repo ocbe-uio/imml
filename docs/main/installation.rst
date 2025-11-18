@@ -97,7 +97,7 @@ Optional dependencies
 `iMML` supports additional features that require optional dependencies. You can install these dependencies by
 specifying extras during installation. For example:
 
-- [matlab]: Some algorithms were originally developed in Matlab. If you want to use the original implementation,
+- [octave]: Some algorithms were originally developed in Matlab. If you want to use the original implementation,
   use this module.
 - [r]: Some algorithms were originally developed in R. If you want to use the original implementation, use this module.
 - [deep]: Deep learning methods are included in this module.
@@ -114,7 +114,7 @@ where 'keyword' is from the list above. For example:
 
     pip install imml[deep] # to install "deep" module
 
-    pip install imml[matlab] # to install "matlab" module
+    pip install imml[octave] # to install "octave" module
 
     pip install imml[r] # to install "r" module
 

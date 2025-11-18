@@ -3,13 +3,11 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
-
-try:
-    import torch
-    from torch import Tensor
-except ImportError:
-    Tensor = str
 from ..utils import check_Xs_y
+from .. import deepmodule_installed, Tensor
+
+if deepmodule_installed:
+    import torch
 
 
 class ObservedModIndicator(FunctionTransformer):

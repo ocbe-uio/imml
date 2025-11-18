@@ -1,19 +1,10 @@
 # License: BSD-3-Clause
 
 from ._muse import FFNEncoder, RNNEncoder, TextEncoder, MML
+from .. import deepmodule_installed, deepmodule_error, LightningModule, Module
 
-try:
-    import torch
+if deepmodule_installed:
     from torch import optim, nn
-    import lightning as L
-    import torch.nn.functional as F
-    deepmodule_installed = True
-except ImportError:
-    deepmodule_installed = False
-    deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-LightningModule = L.LightningModule if deepmodule_installed else object
-Module = nn.Module if deepmodule_installed else object
 
 
 class MUSE(LightningModule):

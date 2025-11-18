@@ -28,10 +28,13 @@ def sample_data():
 def test_deepmodule_not_installed():
     estimator(modalities=["image", "text"])
     with patch.dict(sys.modules, {"torch": None}):
+        import imml as imml_mock
         import imml.classify.m3care as module_mock
+        importlib.reload(imml_mock)
         importlib.reload(module_mock)
         with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
             estimator(modalities=["image", "text"])
+    importlib.reload(imml_mock)
     importlib.reload(module_mock)
 
 
