@@ -13,6 +13,8 @@ if deepmodule_installed:
     import torch
     import torch.nn.functional as F
     from transformers import AutoModel, AutoProcessor, BertTokenizer
+else:
+    BertTokenizer = object
 
 
 class MCR(Module):
@@ -219,7 +221,7 @@ class MCR(Module):
         return output
 
 
-    def predict(self, Xs: list = None, memory_bank: pd.DataFrame = None, n_neighbors: int = None):
+    def predict(self, Xs: list, memory_bank: pd.DataFrame = None, n_neighbors: int = None):
         r"""
         Retrieve the most similar instances.
 
@@ -240,9 +242,6 @@ class MCR(Module):
         -------
         pred :  Dictionary with the ids, similarities and labels of the retrieved items for each modality.
         """
-        if len(Xs) != len(self.modalities):
-            raise ValueError(f"Invalid Xs. It must have the same length as modalities. Got {len(Xs)} vs {len(self.modalities)}")
-
         if n_neighbors is not None:
             if not isinstance(n_neighbors, int):
                 raise ValueError(f"Invalid n_neighbors. It must be a integer. A {type(n_neighbors)} was passed.")
@@ -263,21 +262,8 @@ class MCR(Module):
                 raise ValueError("Invalid memory_bank_. No memory_bank_ available. Either provide a memory_bank_ or call fit first.")
             memory_bank = self.memory_bank_
 
-        if Xs is not None:
-            if not isinstance(Xs, list):
-                raise ValueError(f"Invalid Xs. It must be a list. A {type(Xs)} was passed.")
-            if len(Xs) != len(self.modalities):
-                raise ValueError(f"Invalid Xs. It must have the same length as modalities. Got {len(Xs)} vs {len(self.modalities)}")
-            if any(len(X) == 0 for X in Xs):
-                raise ValueError("Invalid Xs. All elements must have at least one sample.")
-            if len(set(len(X) for X in Xs)) > 1:
-                raise ValueError("Invalid Xs. All elements must have the same number of samples.")
-        if Xs is not None:
-            Xs = self._convert_to_1dlist(Xs=Xs)
-            q_i, q_t = self._encode_img_text(Xs=Xs)
-        else:
-            q_i = memory_bank['q_i'].tolist()
-            q_t = memory_bank['q_t'].tolist()
+        Xs = self._convert_to_1dlist(Xs=Xs)
+        q_i, q_t = self._encode_img_text(Xs=Xs)
 
         r_v_i = memory_bank['q_i'].tolist()
         r_v_t = memory_bank['q_t'].tolist()

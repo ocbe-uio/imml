@@ -34,6 +34,8 @@ def test_invalid_params(sample_data):
         plot_missing_modality(sample_data[0], figsize=2)
     with pytest.raises(ValueError, match="Invalid sort."):
         plot_missing_modality(sample_data[0], sort=2)
+    with pytest.raises(ValueError, match="Invalid ax."):
+        plot_missing_modality(sample_data[0], ax=2)
 
 
 if __name__ == "__main__":

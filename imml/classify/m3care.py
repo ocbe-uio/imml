@@ -1,6 +1,8 @@
 # License: BSD-3-Clause
 
 import os
+import zipfile
+from os.path import dirname
 import numpy as np
 from PIL import Image
 
@@ -136,7 +138,27 @@ class M3Care(LightningModule):
         if extractors is not None and not isinstance(extractors, list):
             raise ValueError(f"Invalid extractors. It must be a list. A {type(extractors)} was passed.")
         if vocab is None:
-            vocab = [os.path.join("imml", "classify", "_m3care", "test.de-en.en"), 50000, 2]
+            vocab_folder = dirname(__file__)
+            vocab_filename = "test.de-en.en"
+            vocab_folder = os.path.join(vocab_folder, "_" + (os.path.basename(__file__).split(".")[0]))
+            vocab_path = os.path.join(vocab_folder, vocab_filename)
+            if not os.path.exists(vocab_path):
+                download_vocab = input(
+                    "You have not provided a vocab. If you want to use the default vocab, could you allow the download? Enter a bool"
+                )
+                if not bool(download_vocab):
+                    raise ValueError("You have not provided a vocab. Please provide a vocab or allow the download.")
+                try:
+                    os.system("wget http://www.cs.cmu.edu/~pengchey/iwslt2014_ende.zip")
+                    with zipfile.ZipFile("iwslt2014_ende.zip", 'r') as zip_ref:
+                        file_path = zip_ref.getinfo(os.path.join("data", vocab_filename))
+                        file_path.filename = os.path.basename(file_path.filename)
+                        zip_ref.extract(file_path, vocab_folder)
+                except:
+                    raise
+                finally:
+                    os.remove("iwslt2014_ende.zip")
+            vocab = [vocab_path, 50000, 2]
         elif not isinstance(vocab, list):
             raise ValueError(f"Invalid vocab. It must be a list. A {type(vocab)} was passed.")
 

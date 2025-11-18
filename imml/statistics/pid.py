@@ -95,8 +95,6 @@ def pid(Xs, y, n_clusters = 20, n_components = .95, random_state = None, normali
     if len(n_components) != len(Xs):
         raise ValueError(f"Invalid n_components. n_components must have the same length as Xs."
                          f" {len(n_components)} clusters for {len(Xs)} modalities were passed.")
-    if len(Xs) < 2:
-        raise ValueError(f"Invalid Xs. At least two modalities are required. Xs with {len(Xs)} modalities were passed.")
     if not isinstance(normalize, bool):
         raise ValueError(f"Invalid normalize. normalize must be a boolean. type{normalize} was passed.")
     if not isinstance(return_index, bool):
@@ -181,8 +179,6 @@ def _UI(P, cond_id=0):
     J= P.sum(axis=(0,2)) # marginal of x1
     for i in range(P.shape[1]):
       sum += _MI(P[:,i, :] / P[:,i, :].sum()) * J[i]
-  else:
-    assert False
 
   return sum
 

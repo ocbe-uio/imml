@@ -105,14 +105,15 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
     ax = axes[1, 1]
     combs = combs.reset_index().drop(columns=0).map(lambda x: mod_names[int(x)])
     combs = combs.iloc[:max_combs]
-    for col in combs.columns:
-        ax = combs.reset_index().plot(kind="scatter", ax=ax, x="index", y=col, s=200, ylabel="", c="black")
-    ax.get_xaxis().set_visible(False)
-    ax.set_xlim(axes[0,1].get_xlim())
-    ax.set_ylim(axes[1,0].get_ylim())
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
-    ax.spines['left'].set_visible(False)
+    with plt.style.context('seaborn-v0_8-darkgrid'):
+        for col in combs.columns:
+            ax = combs.reset_index().plot(kind="scatter", ax=ax, x="index", y=col, s=200, ylabel="", c="black")
+        ax.get_xaxis().set_visible(False)
+        ax.set_xlim(axes[0,1].get_xlim())
+        ax.set_ylim(axes[1,0].get_ylim())
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['bottom'].set_visible(False)
+        ax.spines['left'].set_visible(False)
 
     return fig, axes

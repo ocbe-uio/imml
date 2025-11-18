@@ -1,3 +1,5 @@
+import os
+
 import pytest
 torch = pytest.importorskip("torch")
 transformers = pytest.importorskip("transformers")
@@ -5,14 +7,15 @@ L = pytest.importorskip("lightning")
 import numpy as np
 import pandas as pd
 import importlib
+import io
 import sys
 from unittest.mock import patch
 from torch.utils.data import DataLoader
 
-from imml.classify import M3Care
+from imml.classify import M3Care as estimator
 from imml.load import M3CareDataset
 
-estimator = M3Care
+vocab_path = os.path.join("imml", "classify", "_m3care", "test.de-en.en")
 
 
 @pytest.fixture
@@ -23,6 +26,16 @@ def sample_data():
     y = torch.tensor([0, 1], dtype=torch.float)
     observed_mod_indicator = torch.ones((batch_size, n_modalities), dtype=torch.bool)
     return Xs, y, observed_mod_indicator
+
+
+def test_vocab_download():
+    if os.path.exists(vocab_path):
+        os.remove(vocab_path)
+    with patch('sys.stdin', new=io.StringIO('False')):
+        estimator(modalities=["text", "text"])
+    with patch('sys.stdin', new=io.StringIO('True')):
+        estimator(modalities=["text", "text"])
+    estimator(modalities=["text", "text"], vocab=[vocab_path, 50000, 2])
 
 
 def test_deepmodule_not_installed():
@@ -213,6 +226,14 @@ def test_example(sample_data):
     estimator = M3Care(modalities=modalities, input_dim=[X.shape[1] for X,mod in zip(Xs, modalities) if mod=="tabular"])
     trainer.fit(estimator, train_dataloader)
     trainer.predict(estimator, train_dataloader)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def cleanup_after_all_tests(request):
+    def finalizer_function():
+        if os.path.exists(vocab_path):
+            os.remove(vocab_path)
+    request.addfinalizer(finalizer_function)
 
 
 if __name__ == "__main__":

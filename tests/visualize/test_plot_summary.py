@@ -34,3 +34,5 @@ def test_plot_combinations(sample_data):
 def test_invalid_params(sample_data):
     with pytest.raises(ValueError, match="Invalid figsize."):
         plot_summary(sample_data[0], figsize=2)
+    with pytest.raises(ValueError, match="Invalid summary."):
+        plot_summary(summary=1)
