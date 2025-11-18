@@ -170,20 +170,16 @@ We will use a synthetic employee dataset (available at `Hugging Face Datasets
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 68-74
 
 As it can be seen, the dataset contains multiple attributes per record (more than 30).
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-77
-
-Step 3: Simulate missing modalities
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
 column, which includes employee comments about the working conditions, and which will be our text modality.
 Our response variable is the `left_company` column, which includes the label about whether the employee left the
 company or not.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-96
+.. GENERATED FROM PYTHON SOURCE LINES 74-80
 
 .. code-block:: Python
 
@@ -193,13 +189,43 @@ company or not.
     ]
     y = df['left_company'].astype(np.float32) # Response variable
 
-    # To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
-    # randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
-    # datasets so 10% of samples will have either tabular or text modalities missing.
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 81-86
+
+Step 3: Simulate missing modalities
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
+randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
+datasets so 10% of samples will have either tabular or text modalities missing.
+
+.. GENERATED FROM PYTHON SOURCE LINES 86-89
+
+.. code-block:: Python
+
     transformer = Amputer(p=0.1, random_state=random_state)
     Xs = transformer.fit_transform(Xs)
 
-    # Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 90-91
+
+Let us create the training (80%) and testing (20%) partition:
+
+.. GENERATED FROM PYTHON SOURCE LINES 91-97
+
+.. code-block:: Python
+
     Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
                                                                    random_state=42, shuffle=True,
                                                                    stratify=y)
@@ -220,13 +246,13 @@ company or not.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-100
+.. GENERATED FROM PYTHON SOURCE LINES 98-101
 
 Step 4: Training the model
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We will start by transforming the numeric variables using a `StandardScaler`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-103
+.. GENERATED FROM PYTHON SOURCE LINES 101-104
 
 .. code-block:: Python
 
@@ -240,11 +266,11 @@ We will start by transforming the numeric variables using a `StandardScaler`:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-105
+.. GENERATED FROM PYTHON SOURCE LINES 105-106
 
 Now, we will create the loaders.
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-110
+.. GENERATED FROM PYTHON SOURCE LINES 106-111
 
 .. code-block:: Python
 
@@ -260,12 +286,12 @@ Now, we will create the loaders.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-113
+.. GENERATED FROM PYTHON SOURCE LINES 112-114
 
-We will train the ``MUSE`` model with only 10 epochs for speed, using the
+We will train the ``MUSE`` model with only 2 epochs for speed, using the
 `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-120
+.. GENERATED FROM PYTHON SOURCE LINES 114-121
 
 .. code-block:: Python
 
@@ -298,13 +324,13 @@ We will train the ``MUSE`` model with only 10 epochs for speed, using the
     18.609    Total estimated model params size (MB)
     47        Modules in train mode
     48        Modules in eval mode
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/8 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/8 [00:00<?, ?it/s]     Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 46.36it/s]    Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 45.81it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 50.17it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 49.85it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 52.76it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 52.52it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 52.25it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 52.07it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 52.00it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 51.86it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 53.25it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 53.14it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 53.53it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 53.43it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 54.07it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 53.98it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 53.89it/s]    Epoch 0:   0%|          | 0/8 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/8 [00:00<?, ?it/s]    Epoch 1:  12%|█▎        | 1/8 [00:00<00:00, 58.55it/s]    Epoch 1:  12%|█▎        | 1/8 [00:00<00:00, 57.66it/s]    Epoch 1:  25%|██▌       | 2/8 [00:00<00:00, 58.34it/s]    Epoch 1:  25%|██▌       | 2/8 [00:00<00:00, 57.87it/s]    Epoch 1:  38%|███▊      | 3/8 [00:00<00:00, 55.60it/s]    Epoch 1:  38%|███▊      | 3/8 [00:00<00:00, 55.34it/s]    Epoch 1:  50%|█████     | 4/8 [00:00<00:00, 55.75it/s]    Epoch 1:  50%|█████     | 4/8 [00:00<00:00, 55.54it/s]    Epoch 1:  62%|██████▎   | 5/8 [00:00<00:00, 54.78it/s]    Epoch 1:  62%|██████▎   | 5/8 [00:00<00:00, 54.64it/s]    Epoch 1:  75%|███████▌  | 6/8 [00:00<00:00, 55.05it/s]    Epoch 1:  75%|███████▌  | 6/8 [00:00<00:00, 54.92it/s]    Epoch 1:  88%|████████▊ | 7/8 [00:00<00:00, 55.51it/s]    Epoch 1:  88%|████████▊ | 7/8 [00:00<00:00, 55.39it/s]    Epoch 1: 100%|██████████| 8/8 [00:00<00:00, 55.76it/s]    Epoch 1: 100%|██████████| 8/8 [00:00<00:00, 55.66it/s]    Epoch 1: 100%|██████████| 8/8 [00:00<00:00, 55.56it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
-    Epoch 1: 100%|██████████| 8/8 [00:00<00:00, 55.45it/s]
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/8 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/8 [00:00<?, ?it/s]     Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 45.83it/s]    Epoch 0:  12%|█▎        | 1/8 [00:00<00:00, 45.27it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 48.79it/s]    Epoch 0:  25%|██▌       | 2/8 [00:00<00:00, 48.46it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 51.41it/s]    Epoch 0:  38%|███▊      | 3/8 [00:00<00:00, 51.16it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 50.03it/s]    Epoch 0:  50%|█████     | 4/8 [00:00<00:00, 49.88it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 51.11it/s]    Epoch 0:  62%|██████▎   | 5/8 [00:00<00:00, 50.98it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 52.19it/s]    Epoch 0:  75%|███████▌  | 6/8 [00:00<00:00, 52.07it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 52.32it/s]    Epoch 0:  88%|████████▊ | 7/8 [00:00<00:00, 52.22it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 52.72it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 52.63it/s]    Epoch 0: 100%|██████████| 8/8 [00:00<00:00, 52.55it/s]    Epoch 0:   0%|          | 0/8 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/8 [00:00<?, ?it/s]    Epoch 1:  12%|█▎        | 1/8 [00:00<00:00, 56.58it/s]    Epoch 1:  12%|█▎        | 1/8 [00:00<00:00, 55.73it/s]    Epoch 1:  25%|██▌       | 2/8 [00:00<00:00, 57.04it/s]    Epoch 1:  25%|██▌       | 2/8 [00:00<00:00, 56.59it/s]    Epoch 1:  38%|███▊      | 3/8 [00:00<00:00, 54.16it/s]    Epoch 1:  38%|███▊      | 3/8 [00:00<00:00, 53.89it/s]    Epoch 1:  50%|█████     | 4/8 [00:00<00:00, 54.61it/s]    Epoch 1:  50%|█████     | 4/8 [00:00<00:00, 54.43it/s]    Epoch 1:  62%|██████▎   | 5/8 [00:00<00:00, 59.07it/s]    Epoch 1:  62%|██████▎   | 5/8 [00:00<00:00, 58.94it/s]    Epoch 1:  75%|███████▌  | 6/8 [00:00<00:00, 62.56it/s]    Epoch 1:  75%|███████▌  | 6/8 [00:00<00:00, 62.45it/s]    Epoch 1:  88%|████████▊ | 7/8 [00:00<00:00, 66.19it/s]    Epoch 1:  88%|████████▊ | 7/8 [00:00<00:00, 66.04it/s]    Epoch 1: 100%|██████████| 8/8 [00:00<00:00, 65.20it/s]    Epoch 1: 100%|██████████| 8/8 [00:00<00:00, 65.07it/s]    Epoch 1: 100%|██████████| 8/8 [00:00<00:00, 64.95it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
+    Epoch 1: 100%|██████████| 8/8 [00:00<00:00, 64.80it/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-126
+.. GENERATED FROM PYTHON SOURCE LINES 122-127
 
 Step 5: Evaluation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -312,7 +338,7 @@ After the training, we can evaluate the predictions. Given the small dataset and
 not perform very well, and the resulting probabilities are distributed in just a few of concrete values.
 Therefore, we will do some evaluation to choose the most appropriate probability threshold to assign the classes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-134
+.. GENERATED FROM PYTHON SOURCE LINES 127-135
 
 .. code-block:: Python
 
@@ -337,17 +363,17 @@ Therefore, we will do some evaluation to choose the most appropriate probability
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:  12%|█▎        | 1/8 [00:00<00:00, 126.76it/s]    Predicting DataLoader 0:  25%|██▌       | 2/8 [00:00<00:00, 128.52it/s]    Predicting DataLoader 0:  38%|███▊      | 3/8 [00:00<00:00, 117.15it/s]    Predicting DataLoader 0:  50%|█████     | 4/8 [00:00<00:00, 119.73it/s]    Predicting DataLoader 0:  62%|██████▎   | 5/8 [00:00<00:00, 122.07it/s]    Predicting DataLoader 0:  75%|███████▌  | 6/8 [00:00<00:00, 123.86it/s]    Predicting DataLoader 0:  88%|████████▊ | 7/8 [00:00<00:00, 123.95it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 124.95it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 124.26it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/8 [00:00<?, ?it/s]    Predicting DataLoader 0:  12%|█▎        | 1/8 [00:00<00:00, 154.98it/s]    Predicting DataLoader 0:  25%|██▌       | 2/8 [00:00<00:00, 156.47it/s]    Predicting DataLoader 0:  38%|███▊      | 3/8 [00:00<00:00, 131.98it/s]    Predicting DataLoader 0:  50%|█████     | 4/8 [00:00<00:00, 127.42it/s]    Predicting DataLoader 0:  62%|██████▎   | 5/8 [00:00<00:00, 129.40it/s]    Predicting DataLoader 0:  75%|███████▌  | 6/8 [00:00<00:00, 124.46it/s]    Predicting DataLoader 0:  88%|████████▊ | 7/8 [00:00<00:00, 125.50it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 125.37it/s]    Predicting DataLoader 0: 100%|██████████| 8/8 [00:00<00:00, 124.88it/s]
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-137
+.. GENERATED FROM PYTHON SOURCE LINES 136-138
 
 As it can be seen, the probabilities are distributed in just three repeated values. We will stablish a threshold
 based on this to assign the classes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-148
+.. GENERATED FROM PYTHON SOURCE LINES 138-149
 
 .. code-block:: Python
 
@@ -381,14 +407,14 @@ based on this to assign the classes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-153
+.. GENERATED FROM PYTHON SOURCE LINES 150-154
 
 It is not the best performance, but given the small data, the missing values, and short training, it is expected
 that the model does not offer the best solution.
 
 Let us evaluate now the performance with the test set:
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-179
+.. GENERATED FROM PYTHON SOURCE LINES 154-180
 
 .. code-block:: Python
 
@@ -431,14 +457,14 @@ Let us evaluate now the performance with the test set:
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:  50%|█████     | 1/2 [00:00<00:00, 169.51it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 177.32it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 173.27it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]    Predicting DataLoader 0:  50%|█████     | 1/2 [00:00<00:00, 119.97it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 125.40it/s]    Predicting DataLoader 0: 100%|██████████| 2/2 [00:00<00:00, 122.56it/s]
     MCC: 0.0
     Accuracy: 0.15
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-187
+.. GENERATED FROM PYTHON SOURCE LINES 181-188
 
 Summary of results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -448,7 +474,7 @@ It is not strange that the classification performance obtained by the model is r
 subsample of the dataset and the little training of the model, but it serves as an example on how to use `iMML`.
 For a better performance and more reliable results, the full dataset and longer training should be used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-193
+.. GENERATED FROM PYTHON SOURCE LINES 190-194
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -458,7 +484,7 @@ modality incompleteness in tabular-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.501 seconds)
+   **Total running time of the script:** (0 minutes 9.271 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_tabular_language_dataset.py:

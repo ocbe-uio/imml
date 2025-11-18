@@ -66,10 +66,7 @@ df.info()
 
 ###################################
 # As it can be seen, the dataset contains multiple attributes per record (more than 30).
-
-###################################################
-# Step 3: Simulate missing modalities
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#
 # For the illustrative purpose of this tutorial, we will use only the numeric attributes, and the `recent_feedback`
 # column, which includes employee comments about the working conditions, and which will be our text modality.
 # Our response variable is the `left_company` column, which includes the label about whether the employee left the
@@ -80,13 +77,17 @@ Xs = [
 ]
 y = df['left_company'].astype(np.float32) # Response variable
 
+###################################################
+# Step 3: Simulate missing modalities
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # To exemplify the use of ``MUSE`` in a common scenario in which the dataset contains missing modalities, we will
 # randomly introduce missing data using ``Amputer``. Using this function we will transform the training and test
 # datasets so 10% of samples will have either tabular or text modalities missing.
 transformer = Amputer(p=0.1, random_state=random_state)
 Xs = transformer.fit_transform(Xs)
 
-# Let us retrieve the data of interest and create the training (80%) and testing (20%) partition:
+###################################################
+# Let us create the training (80%) and testing (20%) partition:
 Xs_train, Xs_test, y_train, y_test = multi_train_test_split_Xs(Xs, y, train_size=0.8,
                                                                random_state=42, shuffle=True,
                                                                stratify=y)
@@ -108,7 +109,7 @@ test_data = MUSEDataset(Xs=Xs_test, y=y_test)
 test_dataloader = DataLoader(dataset=test_data, batch_size=10, shuffle=False)
 
 #######################################################
-# We will train the ``MUSE`` model with only 10 epochs for speed, using the
+# We will train the ``MUSE`` model with only 2 epochs for speed, using the
 # `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.html>`_ library.
 
 trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)

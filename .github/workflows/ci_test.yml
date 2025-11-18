@@ -69,9 +69,7 @@ jobs:
         brew update
         brew upgrade
         brew install gcc
-        sudo ln -fs /opt/homebrew/bin/gfortran-12 /usr/local/bin/gfortran
-        sudo mkdir -p /usr/local/gfortran
-        sudo ln -sf /opt/homebrew/Cellar/gcc@12/*/lib/gcc/12 /usr/local/gfortran/lib
+        echo "/opt/homebrew/bin" >> $GITHUB_PATH
         brew install texinfo || true
         brew link --overwrite texinfo
         brew postinstall texinfo || true
