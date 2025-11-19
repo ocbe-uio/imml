@@ -197,6 +197,7 @@ sphinx_gallery_conf = {
     'filename_pattern': r'\.py',
     'capture_repr': ('_repr_html_', '__repr__'),
     'backreferences_dir': 'backreferences',
+    'inspect_global_variables': True,
 }
 
 
