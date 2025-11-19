@@ -96,4 +96,4 @@ include-package-data = true
 version = {attr = "imml.__version__"}
 
 [tool.setuptools.package-data]
-"imml" = ["**/*.R", "**/*.m", "**/test.de-en.en"]
+"imml" = ["**/*.R", "**/*.m"]
