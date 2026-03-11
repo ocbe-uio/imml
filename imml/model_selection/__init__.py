@@ -1,3 +1,3 @@
 from ._multi_modal_dataset import _MultiModalDataset
-from .mm_splitter import mm_splitter
+from .mm_splitter import MMSplitter
 from .train_test_mm_split import train_test_mm_split

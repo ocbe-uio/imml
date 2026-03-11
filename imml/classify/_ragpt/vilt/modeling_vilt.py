@@ -37,7 +37,6 @@ if deepmodule_installed:
     )
     from transformers.modeling_utils import PreTrainedModel
     from transformers.pytorch_utils import (
-        find_pruneable_heads_and_indices,
         meshgrid,
         prune_linear_layer,
     )
@@ -65,6 +64,7 @@ if not deepmodule_installed:
     MaskedLMOutput = object
     TokenClassifierOutput = object
     SequenceClassifierOutput = object
+
 
 
 @dataclass
@@ -1508,3 +1508,16 @@ class ViltForTokenClassification(ViltPreTrainedModel):
             hidden_states=outputs.hidden_states,
             attentions=outputs.attentions,
         )
+
+
+
+def find_pruneable_heads_and_indices(heads, n_heads, head_size, already_pruned_heads):
+    """Fallback for finding heads to prune"""
+    mask = torch.ones(n_heads, head_size)
+    heads = set(heads) - already_pruned_heads
+    for head in heads:
+        head = head - sum(1 if h < head else 0 for h in already_pruned_heads)
+        mask[head] = 0
+    mask = mask.view(-1).contiguous().eq(1)
+    index = torch.arange(len(mask))[mask].long()
+    return heads, index

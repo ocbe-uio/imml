@@ -4,7 +4,7 @@ import pytest
 from sklearn.model_selection import StratifiedShuffleSplit, ShuffleSplit
 
 from imml import deepmodule_installed
-from imml.model_selection import mm_splitter
+from imml.model_selection import MMSplitter
 
 if deepmodule_installed:
     import torch
@@ -30,9 +30,10 @@ def test_mmsplitter_with_y(sample_data):
     for i in range(0, len(sample_data) - 1, 2):
         Xs = sample_data[i]
         y = sample_data[i+1]
-        gen = mm_splitter(splitter=StratifiedShuffleSplit(n_splits=5, random_state=42),
-                          Xs=Xs, y=y, return_type="split")
-        Xs_tr, Xs_te, ytr, yte = next(gen)
+        splitter = StratifiedShuffleSplit(n_splits=5, random_state=42)
+        gen = MMSplitter(splitter=splitter, return_type="split")
+        assert gen.get_n_splits() == 5
+        Xs_tr, Xs_te, ytr, yte = next(gen.split(Xs=Xs, y=y))
         assert isinstance(Xs_tr, list) and isinstance(Xs_te, list)
         assert len(Xs_tr) == len(Xs_te) == len(Xs)
         # Check lengths per modality are consistent and match y
@@ -48,12 +49,14 @@ def test_mmsplitter_indices_and_y_none(sample_data):
         Xs = sample_data[i]
         y = sample_data[i+1]
         # return indices
-        tr, te = next(mm_splitter(splitter=StratifiedShuffleSplit(n_splits=5, random_state=42),
-                                  Xs=Xs, y=y, return_type="indices"))
+        splitter = StratifiedShuffleSplit(n_splits=5, random_state=42)
+        gen = MMSplitter(splitter=splitter, return_type="indices")
+        tr, te = next(gen.split(Xs=Xs, y=y))
         assert len(tr) + len(te) == len(Xs[0])
         # y=None path
-        Xs_tr, Xs_te = next(mm_splitter(splitter=ShuffleSplit(n_splits=5, random_state=42), Xs=Xs,
-                                        y=None, return_type="split"))
+        splitter = ShuffleSplit(n_splits=5, random_state=42)
+        gen = MMSplitter(splitter=splitter, return_type="split")
+        Xs_tr, Xs_te = next(gen.split(Xs=Xs, y=None))
         assert isinstance(Xs_tr, list) and isinstance(Xs_te, list)
         assert len(Xs_tr) == len(Xs_te) == len(Xs)
 
@@ -61,7 +64,8 @@ def test_mmsplitter_indices_and_y_none(sample_data):
 def test_mmsplitter_bad_return_type_raises(sample_data):
     Xs, y = sample_data[:2]
     with pytest.raises(ValueError):
-        next(mm_splitter(splitter=StratifiedShuffleSplit(n_splits=5, random_state=42), Xs=Xs, y=y, return_type="bad"))
+        splitter = StratifiedShuffleSplit(n_splits=5, random_state=42)
+        gen = MMSplitter(splitter=splitter, return_type="bad")
 
 
 if __name__ == "__main__":
