@@ -2,7 +2,6 @@
 
 import numpy as np
 import pandas as pd
-import snf
 from sklearn.cluster import SpectralClustering
 from sklearn.manifold import spectral_embedding
 from sklearn.utils import check_symmetric
