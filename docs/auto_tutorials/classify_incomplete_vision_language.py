@@ -56,7 +56,7 @@ from datasets import load_dataset
 from imml.ampute import Amputer
 from imml.classify import RAGPT
 from imml.load import RAGPTDataset, RAGPTCollator
-from imml.model_selection import multi_train_test_split
+from imml.model_selection import train_test_mm_split
 from imml.retrieve import MCR
 
 ################################
@@ -103,12 +103,12 @@ df["class"].value_counts()
 # Split into 40% bank memory, 40% train and 20% test sets
 Xs = [df[["img"]],df[["text"]]]
 y = df["class"]
-Xs_train, Xs_test, y_train, y_test = multi_train_test_split(Xs, y, test_size=0.2,
-                                                            shuffle=True, stratify=y,
-                                                            random_state=random_state)
-Xs_train, Xs_bank, y_train, y_bank = multi_train_test_split(Xs_train, y_train, test_size=0.5,
-                                                            shuffle=True, stratify=y_train,
-                                                            random_state=random_state)
+Xs_train, Xs_test, y_train, y_test = train_test_mm_split(Xs, y, test_size=0.2,
+                                                         shuffle=True, stratify=y,
+                                                         random_state=random_state)
+Xs_train, Xs_bank, y_train, y_bank = train_test_mm_split(Xs_train, y_train, test_size=0.5,
+                                                         shuffle=True, stratify=y_train,
+                                                         random_state=random_state)
 print("Xs_train", Xs_train[0].shape)
 print("Xs_test", Xs_test[0].shape)
 print("Xs_bank", Xs_bank[0].shape)

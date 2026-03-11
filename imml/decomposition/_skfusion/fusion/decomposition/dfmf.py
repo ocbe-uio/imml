@@ -184,6 +184,7 @@ class DfmfTransform(FusionTransform):
                 if np.ma.is_masked(data):
                     data.fill_value = self.fill_value
                     data = data.filled()
+                data = np.copy(data)
                 data[~np.isfinite(data)] = self.fill_value
                 X = R if relation.row_type != relation.col_type else T
                 X[relation.row_type, relation.col_type] = X.get((

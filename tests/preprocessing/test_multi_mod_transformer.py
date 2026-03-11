@@ -5,7 +5,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils.validation import check_is_fitted
 
-from imml.preprocessing import MultiModTransformer
+from imml.preprocessing import MMTransformer
 
 @pytest.fixture
 def sample_data():
@@ -22,7 +22,7 @@ def sample_data():
     return [X1, X2]
 
 def test_single_transformer(sample_data):
-    transformer = MultiModTransformer(transformer=SimpleImputer(strategy='mean'))
+    transformer = MMTransformer(transformer=SimpleImputer(strategy='mean'))
     transformer.fit(sample_data)
     transformed_Xs = transformer.transform(sample_data)
 
@@ -36,7 +36,7 @@ def test_single_transformer(sample_data):
 
 def test_multiple_transformers(sample_data):
     transformers = [SimpleImputer(strategy='mean'), StandardScaler()]
-    transformer = MultiModTransformer(transformer=transformers)
+    transformer = MMTransformer(transformer=transformers)
     transformer.fit(sample_data)
     transformed_Xs = transformer.transform(sample_data)
 
@@ -48,7 +48,7 @@ def test_multiple_transformers(sample_data):
             raise
 
 def test_single_transformer_different_mods(sample_data):
-    transformer = MultiModTransformer(transformer=SimpleImputer(strategy='mean'))
+    transformer = MMTransformer(transformer=SimpleImputer(strategy='mean'))
     transformer.fit(sample_data)
     transformed_Xs = transformer.transform(sample_data)
 
@@ -57,11 +57,11 @@ def test_single_transformer_different_mods(sample_data):
 
 def test_invalid_transformer():
     with pytest.raises(ValueError, match="transformer must be a scikit-learn transformer like object"):
-        MultiModTransformer(transformer="a")
+        MMTransformer(transformer="a")
     with pytest.raises(ValueError, match="transformer must be a scikit-learn transformer like object"):
-        MultiModTransformer(transformer=["a"])
+        MMTransformer(transformer=["a"])
 
 def test_fit_no_transform(sample_data):
-    transformer = MultiModTransformer(transformer=SimpleImputer(strategy='mean'))
+    transformer = MMTransformer(transformer=SimpleImputer(strategy='mean'))
     transformer.fit(sample_data)
     assert len(transformer.transformer_list_) == len(sample_data)

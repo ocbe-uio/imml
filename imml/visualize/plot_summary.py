@@ -6,8 +6,8 @@ from ..explore import get_summary
 
 
 def plot_summary(Xs: list = None, summary: pd.DataFrame = None, mod_names: list = None,
-                 figsize: tuple = None, title: str = "Summary of the multi-modal dataset",
-                 xlabel: str = "Samples", ylabel: str = "Count"):
+                 figsize: tuple = None, title: str = None,
+                 xlabel: str = None, ylabel: str = "Count"):
     r"""
     Plot a bar chart summarizing completeness across modalities in a multi-modal dataset.
 

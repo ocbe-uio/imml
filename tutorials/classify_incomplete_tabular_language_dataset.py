@@ -48,7 +48,7 @@ from datasets import load_dataset
 from imml.classify import MUSE
 from imml.ampute import Amputer
 from imml.load import MUSEDataset
-from imml.model_selection import multi_train_test_split
+from imml.model_selection import train_test_mm_split
 
 ################################
 # Step 2: Prepare the dataset
@@ -89,9 +89,9 @@ Xs = transformer.fit_transform(Xs)
 
 ###################################################
 # Let us create the training (80%) and testing (20%) partition:
-Xs_train, Xs_test, y_train, y_test = multi_train_test_split(Xs, y, train_size=0.8,
-                                                            random_state=42, shuffle=True,
-                                                            stratify=y)
+Xs_train, Xs_test, y_train, y_test = train_test_mm_split(Xs, y, train_size=0.8,
+                                                         random_state=42, shuffle=True,
+                                                         stratify=y)
 print("Xs_train", Xs_train[0].shape)
 print("Xs_test", Xs_test[0].shape)
 

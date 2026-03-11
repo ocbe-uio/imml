@@ -3,13 +3,18 @@ Model selection
 
 .. currentmodule:: imml.model_selection
 
-
-Multi train-test split
+Multi-Modal Splitter
 --------------------------------
 
-.. autoclass:: multi_train_test_split
-   :members:
-   :show-inheritance:
+.. autofunction:: MMSplitter
 
-.. minigallery:: imml.model_selection.multi_train_test_split
+.. minigallery:: imml.model_selection.MMSplitter
+   :add-heading: Tutorials
+
+Train-Test Multi-Modal Split
+--------------------------------
+
+.. autofunction:: train_test_mm_split
+
+.. minigallery:: imml.model_selection.train_test_mm_split
    :add-heading: Tutorials

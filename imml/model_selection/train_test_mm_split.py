@@ -1,8 +1,13 @@
+# License: BSD-3-Clause
+
 import numpy as np
 from sklearn.model_selection import train_test_split
 
+from ..model_selection._multi_modal_dataset import _MultiModalDataset
+from ..utils import check_Xs_y
 
-def multi_train_test_split(*args, **kwargs):
+
+def train_test_mm_split(Xs, y=None, **kwargs):
     """
     Split multi-modal datasets and labels into train and test sets.
 
@@ -29,34 +34,25 @@ def multi_train_test_split(*args, **kwargs):
     Example
     --------
     >>> import numpy as np
-    >>> from imml.model_selection import multi_train_test_split
+    >>> from imml.model_selection import train_test_mm_split
     >>> Xs = [np.random.rand(100, 10), np.random.rand(100, 20)]
     >>> y = np.random.randint(0, 2, 100)
-    >>> Xs_train, Xs_test, y_train, y_test = multi_train_test_split(Xs, y, train_size=0.7,
-                                                                    random_state=42)
+    >>> Xs_train, Xs_test, y_train, y_test = train_test_mm_split(Xs, y, train_size=0.7, random_state=42)
     """
-    output = []
+    check_Xs_y(Xs=Xs, y=y)
 
-    for Xs in args:
-        if isinstance(Xs, list):
-            train_list = []
-            test_list = []
-
-            if ('random_state' not in kwargs) or (kwargs["random_state"] is None):
-                random_state = np.random.randint(0, 2 ** 31 - 1)
-                kwargs = {**kwargs, 'random_state': random_state}
-            else:
-                kwargs = kwargs
-
-            for X in Xs:
-                X_train, X_test = train_test_split(X, **kwargs)
-                train_list.append(X_train)
-                test_list.append(X_test)
-
-            output.extend([train_list, test_list])
-
+    Xs = _MultiModalDataset(Xs)
+    idxs = np.arange(len(Xs))
+    tr, te = train_test_split(idxs, **kwargs)
+    Xtr = Xs[tr].to_list()
+    Xte = Xs[te].to_list()
+    output = (Xtr, Xte)
+    if y is not None:
+        if hasattr(y, "iloc"):
+            ytr = y.iloc[tr]
+            yte = y.iloc[te]
         else:
-            X_train, X_test = train_test_split(Xs, **kwargs)
-            output.extend([X_train, X_test])
-
-    return tuple(output)
+            ytr = y[tr]
+            yte = y[te]
+        output = (*output, ytr, yte)
+    return output

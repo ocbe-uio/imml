@@ -7,8 +7,9 @@ from sklearn.gaussian_process import kernels
 from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 from scipy.sparse.linalg import eigs
+from sklearn.impute import SimpleImputer
 
-from ..impute import simple_mod_imputer
+from ..preprocessing import MMTransformer
 from ..utils import check_Xs_y
 from .. import octavemodule_installed, oct2py_module_error
 
@@ -129,7 +130,8 @@ class LFIMVC(BaseEstimator, ClusterMixin):
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
         if self.engine=="octave":
-            transformed_Xs = simple_mod_imputer(Xs)
+            imputer = MMTransformer(transformer=SimpleImputer())
+            transformed_Xs = imputer.fit_transform(Xs)
             transformed_Xs = [self.kernel(X) for X in transformed_Xs]
             transformed_Xs = np.array(transformed_Xs).swapaxes(0, -1)
 
@@ -142,7 +144,8 @@ class LFIMVC(BaseEstimator, ClusterMixin):
                 self._clean_space()
 
         elif self.engine=="python":
-            transformed_Xs = simple_mod_imputer(Xs)
+            imputer = MMTransformer(transformer=SimpleImputer())
+            transformed_Xs = imputer.fit_transform(Xs)
             transformed_Xs = [self.kernel(X) for X in transformed_Xs]
             transformed_Xs = np.array(transformed_Xs).swapaxes(0, -1)
             U, WP, HP, obj = self._incomplete_multikernel_late_fusion_clustering(transformed_Xs, self.n_clusters,

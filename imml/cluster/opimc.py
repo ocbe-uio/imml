@@ -5,8 +5,10 @@ from os.path import dirname
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClusterMixin
+from sklearn.impute import SimpleImputer
 
-from ..impute import get_observed_mod_indicator, simple_mod_imputer
+from ..impute import get_observed_mod_indicator
+from ..preprocessing import MMTransformer
 from ..utils import check_Xs_y
 from .. import octavemodule_installed, oct2py_module_error
 
@@ -130,7 +132,8 @@ class OPIMC(BaseEstimator, ClusterMixin):
             elif isinstance(Xs[0], np.ndarray):
                 transformed_Xs = Xs
             observed_mod_indicator = get_observed_mod_indicator(transformed_Xs)
-            transformed_Xs = simple_mod_imputer(transformed_Xs, value="zeros")
+            imputer = MMTransformer(transformer=SimpleImputer(strategy="constant", fill_value=0))
+            transformed_Xs = imputer.fit_transform(transformed_Xs)
             transformed_Xs = [X.T for X in transformed_Xs]
             transformed_Xs = tuple(transformed_Xs)
 

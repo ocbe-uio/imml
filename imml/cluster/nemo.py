@@ -10,6 +10,7 @@ from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import SpectralClustering
 from sklearn.manifold import spectral_embedding
 
+from ._nemo import make_affinity
 from ..impute import get_observed_mod_indicator
 from ..utils import check_Xs_y
 from ..preprocessing import remove_missing_samples_by_mod
@@ -155,8 +156,8 @@ class NEMO(BaseEstimator, ClusterMixin):
             affinity_matrix = pd.DataFrame(np.zeros((len(samples), len(samples))), columns = samples, index = samples)
             for X, neigh, mod_idx in zip(Xs, self.num_neighbors_, range(len(Xs))):
                 X = X.loc[observed_mod_indicator[mod_idx]]
-                sim_data = pd.DataFrame(snf.make_affinity(X, metric = self.metric, K=neigh, normalize=False),
-                                            index= X.index, columns= X.index)
+                sim_data = pd.DataFrame(make_affinity(X, metric = self.metric, K=neigh, normalize=False),
+                                        index= X.index, columns= X.index)
                 sim_data = sim_data.mask(sim_data.rank(axis=1, method='min', ascending=False) > neigh, 0)
                 row_sum = sim_data.sum(1)
 

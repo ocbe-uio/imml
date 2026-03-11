@@ -8,9 +8,9 @@ from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 from scipy.linalg import svd
 from scipy.stats import zscore
+from sklearn.impute import SimpleImputer
 
-from ..impute import simple_mod_imputer
-from ..preprocessing import select_complete_samples
+from ..preprocessing import select_complete_samples, MMTransformer
 from ..utils import check_Xs_y
 from ..explore import get_missing_samples_by_mod
 from .. import octavemodule_installed, oct2py_module_error
@@ -144,7 +144,8 @@ class SIMCADC(BaseEstimator, ClusterMixin):
             mean_mod_profile = [pd.DataFrame(np.tile(means, len(incom))).values for means, incom in
                                   zip(mean_mod_profile, incomplete_samples)]
 
-            transformed_Xs = simple_mod_imputer(Xs, value="zeros")
+            imputer = MMTransformer(transformer=SimpleImputer(strategy="constant", fill_value=0))
+            transformed_Xs = imputer.fit_transform(Xs)
             transformed_Xs, mean_mod_profile = tuple(transformed_Xs), tuple(mean_mod_profile)
 
             w = [pd.DataFrame(np.eye(len(X)), index=X.index, columns=X.index) for X in Xs]
@@ -171,7 +172,8 @@ class SIMCADC(BaseEstimator, ClusterMixin):
             mean_mod_profile = [pd.DataFrame(np.tile(means, len(incom))).values for means, incom in
                                  zip(mean_mod_profile, incomplete_samples)]
 
-            transformed_Xs = simple_mod_imputer(Xs, value="zeros")
+            imputer = MMTransformer(transformer=SimpleImputer(strategy="constant", fill_value=0))
+            transformed_Xs = imputer.fit_transform(Xs)
             # transformed_Xs, mean_view_profile = tuple(transformed_Xs), tuple(mean_view_profile)
 
             w = [pd.DataFrame(np.eye(len(X)), index=X.index, columns=X.index) for X in Xs]

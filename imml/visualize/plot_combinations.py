@@ -80,9 +80,12 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
     ax = axes[0, 0]
     ax.axis("off")
 
-    combs = pd.Series(common_indices).sort_values(ascending=False)
+    combs = pd.DataFrame(common_indices.keys())
+    combs["size"] = common_indices.values()
+    combs = combs.sort_values(by="size", ascending=False)
+    combs = pd.concat([combs.iloc[:(max_combs-1)], combs.loc[~combs.isna().any(axis=1)]])
     ax = axes[0, 1]
-    ax = combs.iloc[:max_combs].plot(kind="bar", ax=ax, ylabel="Intersection size", color="black")
+    ax = combs.plot(kind="bar", y="size", ax=ax, ylabel="Intersection size", color="black", legend=False)
     ax.get_xaxis().set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -91,8 +94,11 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
 
     ax = axes[1, 0]
     mod_counts = pd.Series([len(X) for X in Xs], index=mod_names).sort_values(ascending=True)
-    selected_combs = np.unique(np.array([list(i) for i in combs.iloc[:max_combs].index.values]).flatten())
+    selected_combs = [list(i) for i in combs.drop(columns="size").values]
+    selected_combs = np.unique([i for comb in selected_combs for i in comb if i is not None])
     mod_counts = mod_counts.loc[[id for id in mod_counts.index if id in selected_combs]]
+    mod_names = mod_counts.index.tolist()
+    cat_to_y = {cat: i for i, cat in enumerate(mod_names)}
     ax = mod_counts.plot(kind="barh", ax=ax, xlabel="Set size", color="black")
     ax.invert_xaxis()
     ax.get_yaxis().set_visible(False)
@@ -103,14 +109,20 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
         ax.bar_label(container, padding=2)
 
     ax = axes[1, 1]
-    combs = combs.reset_index().drop(columns=0).map(lambda x: mod_names[int(x)])
-    combs = combs.iloc[:max_combs]
+    combs = combs.drop(columns="size").reset_index(drop=True)
+    combs = combs.iloc[::-1]
     with plt.style.context('seaborn-v0_8-darkgrid'):
         for col in combs.columns:
-            ax = combs.reset_index().plot(kind="scatter", ax=ax, x="index", y=col, s=200, ylabel="", c="black")
+            current_col = combs.reset_index()
+            current_col[col] = current_col[col].astype("category")
+            current_col = current_col[current_col[col].isin(mod_names)]
+            current_col[col] = current_col[col].map(cat_to_y)
+            ax = current_col.plot(kind="scatter", ax=ax, x="index", y=col, s=200, ylabel="", c="black")
         ax.get_xaxis().set_visible(False)
         ax.set_xlim(axes[0,1].get_xlim())
         ax.set_ylim(axes[1,0].get_ylim())
+        ax.set_yticks(list(cat_to_y.values()))
+        ax.set_yticklabels(mod_names)
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['bottom'].set_visible(False)

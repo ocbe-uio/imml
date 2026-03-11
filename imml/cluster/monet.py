@@ -327,10 +327,11 @@ class MONET(BaseEstimator, ClusterMixin):
         data = {}
         for X_idx, X in enumerate(Xs):
             X_t = X.copy().T
-            X_t.columns = X_t.columns
+            X_t.columns = X.T.columns
             X_t = X_t.corr()
-            np.fill_diagonal(X_t.values, 0)
-            data[str(X_idx)] = X_t
+            X_t = np.copy(X_t.values)
+            np.fill_diagonal(X_t, 0)
+            data[str(X_idx)] = pd.DataFrame(X_t, columns=X.T.columns, index=X.T.columns)
         return data
 
 

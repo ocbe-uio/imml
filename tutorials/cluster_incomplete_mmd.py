@@ -35,7 +35,7 @@ from sklearn.metrics import ConfusionMatrixDisplay, adjusted_mutual_info_score
 import numpy as np
 import pandas as pd
 
-from imml.preprocessing import MultiModTransformer, NormalizerNaN
+from imml.preprocessing import MMTransformer, NormalizerNaN
 from imml.ampute import Amputer
 from imml.cluster import EEIMVC
 from imml.visualize import plot_missing_modality
@@ -69,7 +69,7 @@ y.value_counts()
 # example, we build a pipeline where we first normalize the data and then the samples are clustered.
 
 pipeline = make_pipeline(
-    MultiModTransformer(NormalizerNaN()),
+    MMTransformer(NormalizerNaN()),
     EEIMVC(n_clusters = n_clusters, random_state=random_state)
 )
 labels = pipeline.fit_predict(Xs)
@@ -108,7 +108,7 @@ _ = plot_missing_modality(Xs=amputed_Xs, sort=False)
 # Now, we repeat the clustering analysis, but this time with the amputed (incomplete) data.
 
 pipeline = make_pipeline(
-    MultiModTransformer(NormalizerNaN()),
+    MMTransformer(NormalizerNaN()),
     EEIMVC(n_clusters = n_clusters, random_state=random_state)
 )
 labels = pipeline.fit_predict(amputed_Xs)
@@ -138,11 +138,11 @@ for method in methods:
     for p in ps:
         for i in range(n_times):
             pipeline = make_pipeline(
-                MultiModTransformer(NormalizerNaN().set_output(transform="pandas")),
+                MMTransformer(NormalizerNaN().set_output(transform="pandas")),
                 EEIMVC(n_clusters=n_clusters, random_state=i))
             if method == "Baseline imputation":
                 pipeline = make_pipeline(
-                    MultiModTransformer(SimpleImputer().set_output(transform="pandas")),
+                    MMTransformer(SimpleImputer().set_output(transform="pandas")),
                     *pipeline)
             pipeline = make_pipeline(Amputer(p=p, mechanism="mcar", random_state=i), *pipeline)
             clusters = pipeline.fit_predict(Xs)

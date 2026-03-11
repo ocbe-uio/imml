@@ -21,11 +21,11 @@ class NormalizerNaN(Normalizer):
     >>> import numpy as np
     >>> import pandas as pd
     >>> from imml.ampute import Amputer
-    >>> from imml.preprocessing import NormalizerNaN, MultiModTransformer
+    >>> from imml.preprocessing import NormalizerNaN, MMTransformer
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
     >>> amp = Amputer(p=0.3)
     >>> Xs = amp.fit_transform(Xs)
-    >>> transformer = MultiModTransformer(NormalizerNaN())
+    >>> transformer = MMTransformer(NormalizerNaN())
     >>> transformer.fit_transform(Xs)
     """
 

@@ -86,11 +86,11 @@ Sort Data
 Multi-Modal Transformer
 --------------------------------------------------
 
-.. autoclass:: MultiModTransformer
+.. autoclass:: MMTransformer
    :members:
    :show-inheritance:
 
-.. minigallery:: imml.preprocessing.MultiModTransformer
+.. minigallery:: imml.preprocessing.MMTransformer
    :add-heading: Tutorials
 
 Normalizer NaN

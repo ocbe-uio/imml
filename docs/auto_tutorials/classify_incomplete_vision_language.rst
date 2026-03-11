@@ -91,7 +91,7 @@ Step 1: Import required libraries
     from imml.ampute import Amputer
     from imml.classify import RAGPT
     from imml.load import RAGPTDataset, RAGPTCollator
-    from imml.model_selection import multi_train_test_split
+    from imml.model_selection import train_test_mm_split
     from imml.retrieve import MCR
 
 
@@ -173,12 +173,12 @@ Split into 40% bank memory, 40% train and 20% test sets
 
     Xs = [df[["img"]],df[["text"]]]
     y = df["class"]
-    Xs_train, Xs_test, y_train, y_test = multi_train_test_split(Xs, y, test_size=0.2,
-                                                                shuffle=True, stratify=y,
-                                                                random_state=random_state)
-    Xs_train, Xs_bank, y_train, y_bank = multi_train_test_split(Xs_train, y_train, test_size=0.5,
-                                                                shuffle=True, stratify=y_train,
-                                                                random_state=random_state)
+    Xs_train, Xs_test, y_train, y_test = train_test_mm_split(Xs, y, test_size=0.2,
+                                                             shuffle=True, stratify=y,
+                                                             random_state=random_state)
+    Xs_train, Xs_bank, y_train, y_bank = train_test_mm_split(Xs_train, y_train, test_size=0.5,
+                                                             shuffle=True, stratify=y_train,
+                                                             random_state=random_state)
     print("Xs_train", Xs_train[0].shape)
     print("Xs_test", Xs_test[0].shape)
     print("Xs_bank", Xs_bank[0].shape)
@@ -347,7 +347,7 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
 
  .. code-block:: none
 
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]
 
 
 
@@ -391,17 +391,17 @@ modify the internal functions. For instance, we can track loss and compute evalu
 
  .. code-block:: none
 
-    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.49it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]
+    Sanity Checking: |          | 0/? [00:00<?, ?it/s]    Sanity Checking:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Sanity Checking DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.45it/s]                                                                               Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]    Epoch 0: 100%|██████████| 1/1 [00:10<00:00,  0.09it/s]
+    Validation: |          | 0/? [00:00<?, ?it/s]
+    Validation:   0%|          | 0/1 [00:00<?, ?it/s]
+    Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
+    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.45it/s]
+                                                                              Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]
     Validation: |          | 0/? [00:00<?, ?it/s]
     Validation:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
     Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
-                                                                              Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0: 100%|██████████| 1/1 [00:13<00:00,  0.07it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]    Epoch 1: 100%|██████████| 1/1 [00:10<00:00,  0.10it/s]
-    Validation: |          | 0/? [00:00<?, ?it/s]
-    Validation:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]
-    Validation DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
-                                                                              Epoch 1: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:13<00:00,  0.08it/s]
+                                                                              Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]    Epoch 1: 100%|██████████| 1/1 [00:12<00:00,  0.08it/s]
 
 
 
@@ -467,7 +467,7 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.46it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.45it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.45it/s]
 
 
 
@@ -524,7 +524,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (2 minutes 29.675 seconds)
+   **Total running time of the script:** (2 minutes 29.552 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:

@@ -2508,22 +2508,6 @@
    "name": "list"
   }
  ],
- "multi_train_test_split": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "function"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.model_selection",
-   "module_short": "imml.model_selection",
-   "name": "multi_train_test_split"
-  }
- ],
  "n_total": [
   {
    "is_class": false,
@@ -3711,6 +3695,22 @@
    "module": "pandas",
    "module_short": "pandas",
    "name": "DirNamesMixin.shape"
+  }
+ ],
+ "train_test_mm_split": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml.model_selection",
+   "module_short": "imml.model_selection",
+   "name": "train_test_mm_split"
   }
  ],
  "trainer": [

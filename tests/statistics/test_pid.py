@@ -21,14 +21,14 @@ def test_default_params(sample_data):
         assert isinstance(stats_list, list)
         assert len(stats_list) == 3
         for stats in stats_list:
-            assert set(stats.keys()) == {"Redundancy", "Uniqueness1", "Uniqueness2", "Synergy"}
+            assert set(stats.keys()) == {"Redundancy", "Uniqueness1", "Uniqueness2", "Synergy", "Information"}
 
 def test_pid_two_modalities_basic(sample_data):
     for (Xs,y) in [sample_data[:2], sample_data[2:]]:
         Xs = Xs[:2]
         stats = pid(Xs=Xs, y=y, random_state=42)
         assert isinstance(stats, dict)
-        for key in ["Redundancy", "Uniqueness1", "Uniqueness2", "Synergy"]:
+        for key in ["Redundancy", "Uniqueness1", "Uniqueness2", "Synergy", "Information"]:
             assert key in stats
             assert np.isfinite(stats[key])
 
@@ -61,6 +61,7 @@ def test_pid_two_modalities_normalized_and_indices_and_params_as_lists(sample_da
         )
         assert isinstance(stats, dict)
         assert idxs == [(0, 1)]
+        del stats["Information"]
         total = sum(stats.values())
         assert np.isfinite(total)
         assert pytest.approx(1.0, rel=1e-6, abs=1e-6) == total
@@ -71,7 +72,8 @@ def test_pid_three_modalities_list_output_and_order(sample_data):
         assert isinstance(stats_list, list)
         assert len(stats_list) == 3
         for stats in stats_list:
-            assert set(stats.keys()) == {"Redundancy", "Uniqueness1", "Uniqueness2", "Synergy"}
+            assert set(stats.keys()) == {"Redundancy", "Uniqueness1", "Uniqueness2", "Synergy", "Information"}
+            del stats["Information"]
             assert pytest.approx(1.0, rel=1e-6, abs=1e-6) == sum(stats.values())
 
 if __name__ == "__main__":

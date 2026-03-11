@@ -86,6 +86,7 @@ def remove_mods(Xs: list, observed_mod_indicator):
         if isinstance(transformed_X, np.ndarray):
             if np.issubdtype(transformed_X.dtype, np.integer):
                 transformed_X = transformed_X.astype(float)
+            transformed_X = np.copy(transformed_X)
             transformed_X[idxs_to_remove, :] = np.nan
         elif isinstance(transformed_X, Tensor):
             if torch.is_floating_point(transformed_X):

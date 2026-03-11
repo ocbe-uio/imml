@@ -19,7 +19,7 @@ def sample_data():
 
 @pytest.mark.skipif(sys.platform.startswith("win"), reason="Plot tests never ends on Windows")
 def test_plot_pid_with_rus_abbreviations():
-    rus = {"Uniqueness1": 1.2, "Uniqueness2": 0.8, "Redundancy": 0.5, "Synergy": 0.3}
+    rus = {"Uniqueness1": 1.2, "Uniqueness2": 0.8, "Redundancy": 0.5, "Synergy": 0.3, "Information": 0.3}
     fig, ax = plot_pid(rus=rus, abb=True)
     assert fig is not None and ax is not None
     texts = [t.get_text() for t in ax.texts]

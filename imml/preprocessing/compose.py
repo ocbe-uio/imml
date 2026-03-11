@@ -83,7 +83,7 @@ class AddMissingMods(FunctionTransformer):
      Apply `FunctionTransformer <https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html>`_ (from `Scikit-learn`) with `add_missing_mods` as a function.
 
     This transformer is applied on individual modalities, so for applying in a multi-modal dataset, we recommend
-    to use it with `MultiModTransformer`.
+    to use it with `MMTransformer`.
 
     Parameters
     ----------

@@ -1291,22 +1291,6 @@
    "name": "matthews_corrcoef"
   }
  ],
- "multi_train_test_split": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "function"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.model_selection",
-   "module_short": "imml.model_selection",
-   "name": "multi_train_test_split"
-  }
- ],
  "np.float32": [
   {
    "is_class": true,
@@ -1943,6 +1927,22 @@
    "module": "torch",
    "module_short": "torch",
    "name": "DataLoader"
+  }
+ ],
+ "train_test_mm_split": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml.model_selection",
+   "module_short": "imml.model_selection",
+   "name": "train_test_mm_split"
   }
  ],
  "trainer": [

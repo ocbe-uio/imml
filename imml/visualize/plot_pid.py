@@ -57,9 +57,9 @@ def plot_pid(rus = None, Xs = None, y = None,
     """
     if Xs is not None:
         rus = pid(Xs=Xs, y=y, **kwargs)
-    if any(key not in rus.keys() for key in ["Redundancy", "Uniqueness1", "Uniqueness2", "Synergy"]) or (len(rus) != 4):
-        raise ValueError(f"Invalid rus. It should have the keys 'Redundancy', 'Uniqueness1', 'Uniqueness2' and 'Synergy'."
-                         f" {rus} was provided.")
+    if any(key not in rus.keys() for key in ["Redundancy", "Uniqueness1", "Uniqueness2", "Synergy", "Information"]) or (len(rus) != 5):
+        raise ValueError(f"Invalid rus. It should have the keys 'Redundancy', 'Uniqueness1', 'Uniqueness2', 'Total' "
+                         f"and 'Synergy'. {rus} was provided.")
     a_only = float(rus.get("Uniqueness1", 0))
     b_only = float(rus.get("Uniqueness2", 0))
     inter  = float(rus.get("Redundancy", 0))

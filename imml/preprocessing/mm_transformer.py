@@ -6,7 +6,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from ..utils import check_Xs_y
 
 
-class MultiModTransformer(BaseEstimator, TransformerMixin):
+class MMTransformer(BaseEstimator, TransformerMixin):
     r"""
     A transformer that applies the same transformation to multiple modalities of data.
 
@@ -27,10 +27,10 @@ class MultiModTransformer(BaseEstimator, TransformerMixin):
     --------
     >>> import numpy as np
     >>> import pandas as pd
-    >>> from imml.preprocessing import MultiModTransformer
+    >>> from imml.preprocessing import MMTransformer
     >>> from sklearn.impute import SimpleImputer
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
-    >>> transformer = MultiModTransformer(transformer = SimpleImputer.set_output(transform = 'pandas'))
+    >>> transformer = MMTransformer(transformer = SimpleImputer().set_output(transform = 'pandas'))
     >>> transformer.fit_transform(Xs)
     """
 

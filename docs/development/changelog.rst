@@ -45,10 +45,15 @@ Updates in this release:
   By `RafRomB <https://github.com/RafRomB>`__. `#14 <https://github.com/ocbe-uio/imml/pull/14>`__
 - |API| Matlab module and arguments were replaced by Octave to better reflect their usage.
 - |Efficiency| Imports of optional modules have been centralized.
+- |Enhancement| :class:`~imml.statistics.pid` now returns also the total information.
+- |API| Multi_Mod_Transformer was renamed to :class:`~imml.preprocessing.MMTransformer`.
+- |API| SimpleModImputer and simple_mod_imputer was removed. You can use  MMTransformer(transformer = SimpleImputer())
+  instead.
 
 :mod:`imml.model_selection`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |Feature| :class:`~imml.model_selection.multi_train_test_split` was added.
+- |Feature| :class:`~imml.model_selection.MMSplitter` was added.
+- |Feature| :class:`~imml.model_selection.train_test_mm_split` was added.
 
 :mod:`imml.utils`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

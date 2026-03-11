@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 from lightning import Trainer
 
 from imml.ampute import Amputer
-from imml.preprocessing import MultiModTransformer
+from imml.preprocessing import MMTransformer
 from imml.cluster import MRGCN
 from imml.load import MRGCNDataset
 
@@ -92,7 +92,7 @@ def test_missing_values_handling(sample_data):
     amputer = Amputer(p= 0.3, random_state=42)
     imputer = SimpleImputer(strategy="constant", fill_value=0.0).set_output(transform="pandas")
     transformer = FunctionTransformer(lambda x: torch.from_numpy(x.values.astype(np.float32)))
-    pipeline = make_pipeline(amputer, MultiModTransformer(imputer), MultiModTransformer(transformer))
+    pipeline = make_pipeline(amputer, MMTransformer(imputer), MMTransformer(transformer))
     transformed_Xs = pipeline.fit_transform(Xs)
     train_data = MRGCNDataset(Xs=transformed_Xs)
     train_dataloader = DataLoader(dataset=train_data, batch_size=len(transformed_Xs[0]), shuffle=True)

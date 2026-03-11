@@ -54,7 +54,7 @@ from sklearn.metrics import accuracy_score
 import matplotlib.patches as mpatches
 
 from imml.decomposition import JNMF
-from imml.preprocessing import MultiModTransformer, ConcatenateMods
+from imml.preprocessing import MMTransformer, ConcatenateMods
 from imml.ampute import Amputer
 from imml.feature_selection import JNMFFeatureSelector
 
@@ -127,12 +127,12 @@ y.value_counts()
 
 n_components = 4
 # Feature extraction
-pipeline = make_pipeline(MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                          JNMF(n_components=n_components, random_state=random_state))
 pipeline.fit(Xs)
 
 # Feature selection
-pipeline = make_pipeline(MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                          JNMFFeatureSelector(n_components=n_components, random_state=random_state))
 pipeline.fit(Xs)
 
@@ -172,7 +172,7 @@ ax = selected_features.plot(kind= "bar", color= list(palette.values()), ylabel= 
 ###############################################################################
 # We can also extract features and visualize the original features with the largest contribution to the components.
 
-pipeline = make_pipeline(MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                          JNMFFeatureSelector(n_components = n_components, select_by="component",
                                              random_state=42, f_per_component=2))
 pipeline.fit(Xs)
@@ -224,19 +224,19 @@ for algorithm in algorithms:
                     ampute = False
             if algorithm == "Feature extraction":
                 pipeline = make_pipeline(
-                    MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+                    MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                     JNMF(n_components = n_components, random_state=i),
                 )
             elif algorithm == "Feature selection":
                 pipeline = make_pipeline(
-                    MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+                    MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                     JNMFFeatureSelector(n_components = n_components, random_state=i),
                     ConcatenateMods(),
                     SimpleImputer(),
                 )
             elif algorithm == "Randomly selected features":
                 pipeline = make_pipeline(
-                    MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+                    MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                     ConcatenateMods(),
                     SimpleImputer().set_output(transform="pandas"),
                     FunctionTransformer(lambda x:
@@ -245,7 +245,7 @@ for algorithm in algorithms:
                  )
             elif algorithm == "All features":
                 pipeline = make_pipeline(
-                    MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+                    MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                     ConcatenateMods(),
                     SimpleImputer().set_output(transform="pandas"),
                  )
