@@ -49,6 +49,7 @@ Updates in this release:
 - |API| Multi_Mod_Transformer was renamed to :class:`~imml.preprocessing.MMTransformer`.
 - |API| SimpleModImputer and simple_mod_imputer was removed. You can use  MMTransformer(transformer = SimpleImputer())
   instead.
+- |Efficiency| snfpy package was removed from the requirements.
 
 :mod:`imml.model_selection`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

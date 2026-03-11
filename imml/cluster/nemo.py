@@ -5,12 +5,11 @@ from os.path import dirname
 from typing import Union
 import numpy as np
 import pandas as pd
-import snf
 from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import SpectralClustering
 from sklearn.manifold import spectral_embedding
 
-from ._nemo import make_affinity
+from ._snf import get_n_clusters, make_affinity
 from ..impute import get_observed_mod_indicator
 from ..utils import check_Xs_y
 from ..preprocessing import remove_missing_samples_by_mod
@@ -168,7 +167,7 @@ class NEMO(BaseEstimator, ClusterMixin):
             affinity_matrix /= observed_mod_indicator.sum(1)
 
             self.n_clusters_ = self.n_clusters if isinstance(self.n_clusters, int) else \
-                snf.get_n_clusters(arr= affinity_matrix.values, n_clusters= self.n_clusters)[0]
+                get_n_clusters(arr= affinity_matrix.values, n_clusters= self.n_clusters)[0]
 
             model = SpectralClustering(n_clusters= self.n_clusters_, random_state= self.random_state,
                                        affinity="precomputed")

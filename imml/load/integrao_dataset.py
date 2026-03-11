@@ -4,7 +4,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from sklearn.utils import check_symmetric
-from snf.compute import _find_dominate_set
+from ..cluster._snf import _find_dominate_set
 
 from .. import deepmodule_installed, deepmodule_error, Dataset
 

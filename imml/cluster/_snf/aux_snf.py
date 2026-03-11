@@ -4,7 +4,6 @@ import numpy as np
 from scipy import stats
 from scipy.spatial.distance import cdist
 from sklearn.utils import check_array, check_consistent_length, check_symmetric
-from snf.compute import _flatten
 
 
 def make_affinity(*data, metric='sqeuclidean', K=20, mu=0.5, normalize=True):
@@ -230,3 +229,102 @@ def affinity_matrix(dist, *, K=20, mu=0.5):
     W = check_symmetric(W, raise_warning=False)
 
     return W
+
+
+def _find_dominate_set(W, K=20):
+    """
+    Retains `K` strongest edges for each sample in `W`
+
+    Parameters
+    ----------
+    W : (N, N) array_like
+        Input data
+    K : (0, N) int, optional
+        Number of neighbors to retain. Default: 20
+
+    Returns
+    -------
+    Wk : (N, N) np.ndarray
+        Thresholded version of `W`
+    """
+
+    # let's not modify W in place
+    Wk = W.copy()
+
+    # determine percentile cutoff that will keep only `K` edges for each sample
+    # remove everything below this cutoff
+    cutoff = 100 - (100 * (K / len(W)))
+    Wk[Wk < np.percentile(Wk, cutoff, axis=1, keepdims=True)] = 0
+
+    # normalize by strength of remaining edges
+    Wk = Wk / np.nansum(Wk, axis=1, keepdims=True)
+
+    return Wk
+
+
+def _flatten(messy):
+    """
+    Flattens a messy list of mixed iterables / not-iterables
+
+    Parameters
+    ----------
+    messy : list of ???
+        Combined list of iterables / non-iterables
+
+    Yields
+    ------
+    data : ???
+        Entries from `messy`
+
+    Notes
+    -----
+    Thanks to https://stackoverflow.com/a/2158532 :chef-kissing-fingers-emoji:
+    """
+
+    for m in messy:
+        if isinstance(m, (list, tuple)):
+            yield from _flatten(m)
+        else:
+            yield m
+
+
+def get_n_clusters(arr, n_clusters=range(2, 6)):
+    """
+    Finds optimal number of clusters in `arr` via eigengap method
+
+    Parameters
+    ----------
+    arr : (N, N) array_like
+        Input array (e.g., the output of :py:func`snf.compute.snf`)
+    n_clusters : array_like
+        Numbers of clusters to choose between
+
+    Returns
+    -------
+    opt_cluster : int
+        Optimal number of clusters
+    second_opt_cluster : int
+        Second best number of clusters
+    """
+
+    # confirm inputs are appropriate
+    n_clusters = check_array(n_clusters, ensure_2d=False)
+    n_clusters = n_clusters[n_clusters > 1]
+
+    # don't overwrite provided array!
+    graph = arr.copy()
+
+    graph = (graph + graph.T) / 2
+    graph[np.diag_indices_from(graph)] = 0
+    degree = graph.sum(axis=1)
+    degree[np.isclose(degree, 0)] += np.spacing(1)
+    di = np.diag(1 / np.sqrt(degree))
+    laplacian = di @ (np.diag(degree) - graph) @ di
+
+    # perform eigendecomposition and find eigengap
+    eigs = np.sort(np.linalg.eig(laplacian)[0])
+    eigengap = np.abs(np.diff(eigs))
+    eigengap = eigengap * (1 - eigs[:-1]) / (1 - eigs[1:])
+    n = eigengap[n_clusters - 1].argsort()[::-1]
+
+    return n_clusters[n[:2]]

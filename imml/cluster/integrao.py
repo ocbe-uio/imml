@@ -6,12 +6,13 @@ import snf
 from sklearn.cluster import SpectralClustering
 from sklearn.manifold import spectral_embedding
 from sklearn.utils import check_symmetric
-from snf.compute import _find_dominate_set
+
 
 from ._integrao._aux_integrao import data_indexing, dist2, _stable_normalized_pd, _scaling_normalized_pd, p_preprocess, \
     _stable_normalized
 from ..preprocessing import remove_missing_samples_by_mod
 from .. import deepmodule_installed, deepmodule_error, LightningModule, Module
+from ..cluster._snf import _find_dominate_set, affinity_matrix
 
 if deepmodule_installed:
     import torch
@@ -207,7 +208,7 @@ class IntegrAO(LightningModule):
         embeddings = self(Xs=batch)
         embeddings = pd.DataFrame(data=embeddings, index=self.dict_sampleToIndexs.keys()).sort_index().values
         dist_final = dist2(embeddings, embeddings)
-        Wall_final = snf.compute.affinity_matrix(dist_final, K=self.neighbor_size, mu=self.mu)
+        Wall_final = affinity_matrix(dist_final, K=self.neighbor_size, mu=self.mu)
         Wall_final = _stable_normalized(Wall_final)
         if getattr(self, "cluster_model_", None) is None:
             self.cluster_model_ = SpectralClustering(n_clusters=self.n_clusters, random_state=self.random_state,
@@ -231,7 +232,7 @@ class IntegrAO(LightningModule):
         S_dfs = []
         for X_idx, X in enumerate(Xs):
             dist_mat = dist2(X.values, X.values)
-            S_mat = snf.compute.affinity_matrix(dist_mat, K=self.neighbor_size, mu=self.mu)
+            S_mat = affinity_matrix(dist_mat, K=self.neighbor_size, mu=self.mu)
             S_df = pd.DataFrame(data=S_mat, index=self.original_order[X_idx], columns=self.original_order[X_idx])
             S_dfs.append(S_df)
 
