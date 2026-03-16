@@ -264,12 +264,7 @@ class IntegrAO(LightningModule):
             # Make a copy of the aff matrix for this iteration
             # goal is to update aff[n], but it is the average of all the defused matrices
             # Make a copy of add[n], and set it to 0
-            aff_next = []
-            for k in range(len(aff)):
-                aff_temp = aff[k].copy()
-                for col in aff_temp.columns:
-                    aff_temp[col].values[:] = 0
-                aff_next.append(aff_temp)
+            aff_next = [pd.DataFrame(np.zeros_like(aff_), index=aff_.index, columns=aff_.columns) for aff_ in aff]
 
             for n, mat in enumerate(aff):
                 # temporarily convert nans to 0 to avoid propagation errors

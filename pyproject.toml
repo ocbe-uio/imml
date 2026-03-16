@@ -64,6 +64,10 @@ deep = [
     "transformers>=4.51.3",
     "torch_geometric>=2.6.1",
     "torchvision>=0.19.1",
+#    "imagebind @ git+https://github.com/facebookresearch/ImageBind.git",
+#    "soundfile",
+#    "cv2",
+#    "torchcodec",
 ]
 docs = [
 #    deep

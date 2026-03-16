@@ -133,7 +133,7 @@ def _stable_normalized_pd(W):
 
     W = W / (2 * rowSum)
 
-    W_np = W.values
+    W_np = np.copy(W.values)
     np.fill_diagonal(W_np, 0.5)
     W = pd.DataFrame(W_np, index=W.index, columns=W.columns)
 
@@ -163,7 +163,7 @@ def _scaling_normalized_pd(W, ratio):
 
     W = (W / rowSum) * 0.5 * ratio
 
-    W_np = W.values
+    W_np = np.copy(W.values)
     np.fill_diagonal(W_np, 1-0.5*ratio)
     W = pd.DataFrame(W_np, index=W.index, columns=W.columns)
 
@@ -174,6 +174,7 @@ def _scaling_normalized_pd(W, ratio):
 
 def p_preprocess(P):
     # Make sure P-values are set properly
+    P = np.copy(P)
     np.fill_diagonal(P, 0)  # set diagonal to zero
     P = P + np.transpose(P)  # symmetrize P-values
     P = P / np.sum(P)  # make sure P-values sum to one
@@ -202,6 +203,7 @@ def _stable_normalized(W):
     rowSum[rowSum == 0] = 1
 
     W = W / (2 * rowSum)
+    W = np.copy(W)
     np.fill_diagonal(W, 0.5)
     W = check_symmetric(W, raise_warning=False)
 

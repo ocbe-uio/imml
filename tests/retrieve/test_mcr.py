@@ -1,5 +1,4 @@
 import pytest
-torch = pytest.importorskip("torch")
 transformers = pytest.importorskip("transformers")
 import importlib
 import os

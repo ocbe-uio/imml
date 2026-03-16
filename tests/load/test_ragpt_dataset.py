@@ -1,7 +1,6 @@
 import pytest
 torch = pytest.importorskip("torch")
 transformers = pytest.importorskip("transformers")
-from transformers import BertTokenizer
 import importlib
 import os
 import sys
@@ -72,7 +71,7 @@ def test_default_params(mock_image_open, sample_database):
     mock_image_open.return_value = mock_img
     database, _ = sample_database
     dataset = RAGPTDataset(database=database)
-    assert dataset.max_text_len == 128
+    assert dataset.max_text_len == 40
     assert len(dataset) == len(database)
     sample = dataset[0]
     assert isinstance(sample, dict)
@@ -176,13 +175,9 @@ def test_getitem_with_both_modalities_missing(mock_image_open, sample_database):
         dataset[0]
 
 
-@patch('transformers.BertTokenizer.from_pretrained')
-@patch('imml.classify._ragpt.vilt.ViltImageProcessor.from_pretrained')
-def test_collator_default_params(mock_vilt_processor, mock_bert_tokenizer):
-    mock_bert_tokenizer.return_value = MagicMock()
-    mock_vilt_processor.return_value = MagicMock()
+def test_collator_default_params():
     collator = RAGPTCollator()
-    assert collator.max_text_len == 128
+    assert collator.max_text_len == 40
     assert hasattr(collator, 'tokenizer')
     assert hasattr(collator, 'image_processor')
 
@@ -196,24 +191,8 @@ def test_collator_invalid_params():
         RAGPTCollator(max_text_len=-1)
 
 
-@patch('transformers.BertTokenizer.from_pretrained')
-@patch('imml.classify._ragpt.vilt.ViltImageProcessor.from_pretrained')
 @patch('imml.classify._ragpt.resize_image')
-def test_collator_call(mock_resize_image, mock_vilt_processor, mock_bert_tokenizer):
-    mock_tokenizer = MagicMock()
-    mock_tokenizer.return_value = {
-        'input_ids': [[1, 2, 3], [4, 5, 6]],
-        'attention_mask': [[1, 1, 1], [1, 1, 1]],
-        'token_type_ids': [[0, 0, 0], [0, 0, 0]]
-    }
-    mock_bert_tokenizer.return_value = mock_tokenizer
-    mock_processor = MagicMock()
-    mock_processor.return_value = {
-        'pixel_values': torch.ones((2, 3, 224, 224)),
-        'pixel_mask': torch.ones((2, 224, 224))
-    }
-    mock_vilt_processor.return_value = mock_processor
-    mock_resize_image.side_effect = lambda x: x
+def test_collator_call(mock_resize_image):
     collator = RAGPTCollator()
     batch = [
         {

@@ -6,15 +6,11 @@ import pandas as pd
 from PIL import Image
 
 from ..classify._ragpt.core_tools import resize_image
-from ..classify._ragpt.vilt import ViltImageProcessor
 from .. import deepmodule_installed, deepmodule_error, Dataset
 
 if deepmodule_installed:
     import torch
-    from transformers import BertTokenizer
-else:
-    BertTokenizer = object
-    ViltImageProcessor = object
+    from transformers import BertTokenizer, ViltImageProcessor
 
 
 class RAGPTDataset(Dataset):
@@ -42,7 +38,7 @@ class RAGPTDataset(Dataset):
             - t2t_label_list: List of labels of the retrieved items for the text-to-text modality.
             - prompt_text_path: Path to the generated text prompt. Only if generate_cap is True.
 
-    max_text_len : int, default=128
+    max_text_len : int, default=40
         Maximum token length for text inputs (used during prompt generation).
 
     Returns
@@ -82,7 +78,7 @@ class RAGPTDataset(Dataset):
     """
 
 
-    def __init__(self, database: pd.DataFrame, max_text_len: int = 128):
+    def __init__(self, database: pd.DataFrame, max_text_len: int = 40):
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
 
@@ -172,7 +168,7 @@ class RAGPTDataset(Dataset):
 class RAGPTCollator():
 
 
-    def __init__(self, tokenizer = None, image_processor = None, max_text_len: int = 128):
+    def __init__(self, tokenizer = None, image_processor = None, max_text_len: int = 40):
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
 

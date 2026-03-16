@@ -73,7 +73,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt install libtirpc-dev #needed for rpy2
+        sudo apt install -y libtirpc-dev #needed for rpy2
         sudo apt install r-base -y
         sudo apt install octave -y
         sudo apt install octave-control octave-statistics -y
@@ -102,14 +102,14 @@ jobs:
         uv run pytest --cov=imml \
                --cov-report=html:reports/htmlcov-r \
                --cov-report=xml:reports/coverage-r.xml
-    - name: Test matlab
+    - name: Test octave
       if: runner.os != 'Windows'
       run: |
-        uv pip install ".[matlab]"
+        uv pip install ".[octave]"
         uv run pytest --cov=imml \
                --cov-report=term \
-               --cov-report=html:reports/htmlcov-matlab \
-               --cov-report=xml:reports/coverage-matlab.xml
+               --cov-report=html:reports/htmlcov-octave \
+               --cov-report=xml:reports/coverage-octave.xml
     - name: Test deep
       if: runner.os != 'Windows'
       run: |

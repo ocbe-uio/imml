@@ -1,10 +1,10 @@
 # License: BSD-3-Clause
 
 from ._ragpt import MMG, CAP
-from ._ragpt.vilt import ViltModel
 from .. import deepmodule_installed, deepmodule_error, LightningModule, Module
 
 if deepmodule_installed:
+    from transformers import ViltModel
     from torch import nn
     import torch
 else:
@@ -31,8 +31,9 @@ class RAGPT(LightningModule):
     vilt : transformers.ViltModel, optional
         Pretrained model used for joint vision-language encoding. If None, defaults to
         ViltModel.from_pretrained('dandelin/vilt-b32-mlm').
-    max_text_len : int, default=128
-        Maximum number of tokens for text inputs.
+    max_text_len : int, default=40
+        Maximum token length for text inputs (used during prompt generation). Must not exceed the
+        max_position_embeddings of the ViLT model (default: 40 for 'dandelin/vilt-b32-mlm').
     max_image_len : int, default=145
         Maximum number of image patches/tokens processed by the vision encoder.
     prompt_position : int, default=0
@@ -89,7 +90,7 @@ class RAGPT(LightningModule):
     """
 
 
-    def __init__(self, vilt: ViltModel = None, max_text_len: int = 128, max_image_len: int = 145,
+    def __init__(self, vilt: ViltModel = None, max_text_len: int = 40, max_image_len: int = 145,
                  prompt_position: int = 0, prompt_length: int = 1, dropout_rate: float = 0.2, hidden_dim: int = 768,
                  output_dim: int = 2, loss_fn: callable = None, learning_rate: float = 1e-3,
                  weight_decay: float = 2e-2):
@@ -201,7 +202,7 @@ class RAGPT(LightningModule):
 
 
 class RAGPTModule(Module):
-    def __init__(self, vilt: ViltModel = None, max_text_len: int = 128, max_image_len: int = 145,
+    def __init__(self, vilt: ViltModel = None, max_text_len: int = 40, max_image_len: int = 145,
                  prompt_position: int = 0, prompt_length: int = 1, dropout_rate: float = 0.2,
                  hidden_dim: int = 768, output_dim: int = 1):
 
@@ -214,6 +215,7 @@ class RAGPTModule(Module):
             vilt = ViltModel.from_pretrained('dandelin/vilt-b32-mlm')
 
         self.max_text_len = max_text_len
+        self.vilt = vilt  # Keep reference to vilt for get_extended_attention_mask
         self.embedding_layer = vilt.embeddings
         self.encoder_layer = vilt.encoder.layer
         self.layernorm = vilt.layernorm
@@ -256,7 +258,7 @@ class RAGPTModule(Module):
                 observed_image = None,
                 observed_text = None,
                 image_token_type_idx=1):
-        embedding, attention_mask = self.embedding_layer(input_ids=input_ids,
+        embedding, base_attention_mask = self.embedding_layer(input_ids=input_ids,
                                                          attention_mask=attention_mask,
                                                          token_type_ids=token_type_ids,
                                                          inputs_embeds=None,
@@ -286,17 +288,23 @@ class RAGPTModule(Module):
         label_emb = label_emb.view(-1, 1, self.hs)
 
         output = torch.cat([text_emb, image_emb], dim=1)
+        N = embedding.shape[0]
+        current_attention_mask = base_attention_mask
+        extended_attention_mask = self.vilt.get_extended_attention_mask(
+            current_attention_mask, output.shape[:2]
+        )
         for i, layer_module in enumerate(self.encoder_layer):
             if i == self.prompt_position:
                 output = torch.cat([label_emb,t_prompt.unsqueeze(1),i_prompt.unsqueeze(1),output], dim=1)
-                N = embedding.shape[0]
-                attention_mask = torch.cat([torch.ones(N,1+self.prompt_length*2).to(pixel_values.device), attention_mask],
-                                           dim=1)
-                layer_outputs = layer_module(output, attention_mask=attention_mask)
-                output = layer_outputs[0]
-            else:
-                layer_outputs = layer_module(output, attention_mask=attention_mask)
-                output = layer_outputs[0]
+                prompt_mask = torch.ones(N, 1+self.prompt_length*2,
+                                        dtype=current_attention_mask.dtype,
+                                        device=pixel_values.device)
+                current_attention_mask = torch.cat([prompt_mask, current_attention_mask], dim=1)
+                extended_attention_mask = self.vilt.get_extended_attention_mask(
+                    current_attention_mask, output.shape[:2]
+                )
+            layer_outputs = layer_module(output, attention_mask=extended_attention_mask)
+            output = layer_outputs[0]
         output = self.layernorm(output)
         output = self.pooler(output)
         output = torch.cat([output,label_emb.squeeze(1)],dim=1)

@@ -6,15 +6,16 @@ import pandas as pd
 from PIL import Image
 
 from ..utils import check_Xs_y
-from ..classify._ragpt.vilt import ViltModel, ViltImageProcessor
 from .. import deepmodule_installed, deepmodule_error, Module
 
 if deepmodule_installed:
     import torch
     import torch.nn.functional as F
-    from transformers import AutoModel, AutoProcessor, BertTokenizer
+    from transformers import AutoModel, AutoProcessor, BertTokenizer, ViltModel, ViltImageProcessor
 else:
     BertTokenizer = object
+    ViltModel = object
+    ViltImageProcessor = object
 
 
 class MCR(Module):
@@ -54,8 +55,9 @@ class MCR(Module):
     image_processor : transformers.ViltImageProcessor, default=None
         Image processor used with the ViLT model for image preprocessing. If None, defaults to
         ViltImageProcessor.from_pretrained('dandelin/vilt-b32-mlm').
-    max_text_len : int, default=128
-        Maximum token length for text inputs (used during prompt generation).
+    max_text_len : int, default=40
+        Maximum token length for text inputs (used during prompt generation). Must not exceed the
+        max_position_embeddings of the ViLT model (default: 40 for 'dandelin/vilt-b32-mlm').
     max_image_len : int, default=145
         Maximum token length for image inputs (used during prompt generation).
     save_memory_bank : bool, default=True
@@ -111,7 +113,7 @@ class MCR(Module):
                  modalities: list = None, pretrained_model = None, processor = None,
                  generate_cap: bool = False, prompt_path: str = None, pretrained_vilt = None,
                  tokenizer = None, image_processor = None,
-                 max_text_len: int = 128, max_image_len: int = 145, save_memory_bank: bool = True):
+                 max_text_len: int = 40, max_image_len: int = 145, save_memory_bank: bool = True):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
@@ -189,7 +191,7 @@ class MCR(Module):
 
         Returns
         -------
-        self :  Fitted estimator. Or memory_bank if save_memory_bank is False.
+        self : Fitted retriever (or memory_bank if save_memory_bank=False)
         """
         Xs = check_Xs_y(Xs=Xs, y=y, supervised=True, modalities=self.modalities, mod_types=["image", "text"])
 
@@ -473,7 +475,7 @@ class MCR(Module):
 
     def _cap(self, prompt_path: str, memory_bank: pd.DataFrame = None, pretrained_vilt: ViltModel = None,
             tokenizer: BertTokenizer = None, image_processor: ViltImageProcessor = None,
-            max_text_len: int = 128, max_image_len: int = 145):
+            max_text_len: int = 40, max_image_len: int = 145):
 
         if pretrained_vilt is None:
             pretrained_vilt = ViltModel.from_pretrained('dandelin/vilt-b32-mlm')
@@ -491,8 +493,8 @@ class MCR(Module):
         self.max_text_len = max_text_len
         self.max_image_len = max_image_len
 
-        n_chunks = -(-len(memory_bank) // self.batch_size)
-        for chunk in np.array_split(memory_bank, n_chunks):
+        for start in range(0, memory_bank.shape[0], self.batch_size):
+            chunk = memory_bank.iloc[start:start + self.batch_size]
             texts = chunk['text']
             ids = chunk['img_path']
 
