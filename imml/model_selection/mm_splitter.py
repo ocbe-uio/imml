@@ -32,8 +32,8 @@ class MMSplitter():
     >>> from imml.model_selection import MMSplitter
     >>> Xs = [np.random.rand(100, 10), np.random.rand(100, 20)]
     >>> y = np.random.randint(0, 2, 100)
-    >>> cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-    >>> for Xs_train, Xs_test, y_train, y_test in MultimodalSplitter(cv, Xs, y):
+    >>> splitter = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    >>> for Xs_train, Xs_test, y_train, y_test in MMSplitter(splitter=splitter).split(Xs, y):
     ...     pass
     """
 

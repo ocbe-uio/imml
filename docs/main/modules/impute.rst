@@ -52,14 +52,3 @@ Observed Modality Indicator
 
 .. autoclass:: get_observed_mod_indicator
    :members:
-
-Simple Modality Imputer
-----------------------------------------
-
-.. autoclass:: SimpleModImputer
-   :members:
-   :show-inheritance:
-
-.. minigallery:: imml.impute.SimpleModImputer
-   :add-heading: Tutorials
-

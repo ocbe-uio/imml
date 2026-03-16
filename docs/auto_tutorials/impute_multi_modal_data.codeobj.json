@@ -155,6 +155,162 @@
    "name": "Amputer"
   }
  ],
+ "MMTransformer": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "imml.preprocessing.mm_transformer",
+   "module_short": "imml.preprocessing",
+   "name": "MMTransformer"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "imml.preprocessing",
+   "module_short": "imml.preprocessing",
+   "name": "MMTransformer"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "imml",
+   "module_short": "imml",
+   "name": "MMTransformer"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.base",
+   "module_short": "sklearn.base",
+   "name": "BaseEstimator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "BaseEstimator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.base",
+   "module_short": "sklearn.base",
+   "name": "TransformerMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "TransformerMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._repr_html.base",
+   "module_short": "sklearn.utils._repr_html.base",
+   "name": "ReprHTMLMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._repr_html",
+   "module_short": "sklearn.utils._repr_html",
+   "name": "ReprHTMLMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils",
+   "module_short": "sklearn.utils",
+   "name": "ReprHTMLMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "ReprHTMLMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._repr_html.base",
+   "module_short": "sklearn.utils._repr_html.base",
+   "name": "_HTMLDocumentationLinkMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._repr_html",
+   "module_short": "sklearn.utils._repr_html",
+   "name": "_HTMLDocumentationLinkMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils",
+   "module_short": "sklearn.utils",
+   "name": "_HTMLDocumentationLinkMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_HTMLDocumentationLinkMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._metadata_requests",
+   "module_short": "sklearn.utils._metadata_requests",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils",
+   "module_short": "sklearn.utils",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._set_output",
+   "module_short": "sklearn.utils._set_output",
+   "name": "_SetOutputMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils",
+   "module_short": "sklearn.utils",
+   "name": "_SetOutputMixin"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_SetOutputMixin"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml.preprocessing",
+   "module_short": "imml.preprocessing",
+   "name": "MMTransformer"
+  }
+ ],
  "MOFAImputer": [
   {
    "is_class": true,
@@ -330,162 +486,6 @@
    "module": "imml.impute",
    "module_short": "imml.impute",
    "name": "MOFAImputer"
-  }
- ],
- "MultiModTransformer": [
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "imml.preprocessing.multi_mod_transformer",
-   "module_short": "imml.preprocessing",
-   "name": "MultiModTransformer"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "imml.preprocessing",
-   "module_short": "imml.preprocessing",
-   "name": "MultiModTransformer"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "imml",
-   "module_short": "imml",
-   "name": "MultiModTransformer"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.base",
-   "module_short": "sklearn.base",
-   "name": "BaseEstimator"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "BaseEstimator"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.base",
-   "module_short": "sklearn.base",
-   "name": "TransformerMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "TransformerMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils._repr_html.base",
-   "module_short": "sklearn.utils._repr_html.base",
-   "name": "ReprHTMLMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils._repr_html",
-   "module_short": "sklearn.utils._repr_html",
-   "name": "ReprHTMLMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils",
-   "module_short": "sklearn.utils",
-   "name": "ReprHTMLMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "ReprHTMLMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils._repr_html.base",
-   "module_short": "sklearn.utils._repr_html.base",
-   "name": "_HTMLDocumentationLinkMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils._repr_html",
-   "module_short": "sklearn.utils._repr_html",
-   "name": "_HTMLDocumentationLinkMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils",
-   "module_short": "sklearn.utils",
-   "name": "_HTMLDocumentationLinkMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "_HTMLDocumentationLinkMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils._metadata_requests",
-   "module_short": "sklearn.utils._metadata_requests",
-   "name": "_MetadataRequester"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils",
-   "module_short": "sklearn.utils",
-   "name": "_MetadataRequester"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "_MetadataRequester"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils._set_output",
-   "module_short": "sklearn.utils._set_output",
-   "name": "_SetOutputMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn.utils",
-   "module_short": "sklearn.utils",
-   "name": "_SetOutputMixin"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "_SetOutputMixin"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.preprocessing",
-   "module_short": "imml.preprocessing",
-   "name": "MultiModTransformer"
   }
  ],
  "SimpleImputer": [

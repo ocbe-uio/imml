@@ -75,7 +75,7 @@ Step 1: Import required libraries
     import pandas as pd
 
     from imml.impute import MOFAImputer
-    from imml.preprocessing import MultiModTransformer
+    from imml.preprocessing import MMTransformer
     from imml.ampute import Amputer
     from imml.visualize import plot_missing_modality
 
@@ -167,7 +167,7 @@ Observe how missing modalities look:
 
     n_components = 4
     pipeline = make_pipeline(
-        MultiModTransformer(StandardScaler().set_output(transform="pandas")),
+        MMTransformer(StandardScaler().set_output(transform="pandas")),
         MOFAImputer(n_components=n_components, random_state=random_state)
     )
 
@@ -244,12 +244,12 @@ Design:
                         ampute = False
                 if algorithm == "MeanImputer":
                     pipeline = make_pipeline(
-                        MultiModTransformer(SimpleImputer().set_output(transform="pandas"))
+                        MMTransformer(SimpleImputer().set_output(transform="pandas"))
                     )
                 else:
                     normalizer = StandardScaler()
                     pipeline = make_pipeline(
-                        MultiModTransformer(StandardScaler().set_output(transform="pandas")),
+                        MMTransformer(StandardScaler().set_output(transform="pandas")),
                         MOFAImputer(n_components = n_components, random_state=i))
                 masks = [np.isnan(amputed_X) for amputed_X in amputed_Xs]
                 imputed_Xs = pipeline.fit_transform(amputed_Xs)
@@ -392,7 +392,7 @@ real-world applications.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.320 seconds)
+   **Total running time of the script:** (0 minutes 2.859 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_impute_multi_modal_data.py:

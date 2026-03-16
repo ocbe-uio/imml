@@ -77,13 +77,6 @@ Step 1: Import required libraries
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: '/home/alberto/anaconda3/envs/imc/lib/python3.10/site-packages/torchvision/image.so: undefined symbol: _ZN3c1017RegisterOperatorsD1Ev'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-      warn(
-
 
 
 
@@ -154,7 +147,7 @@ and "Synergy".
  .. code-block:: none
 
 
-    {'Redundancy': np.float64(0.7899071869935008), 'Uniqueness1': np.float64(0.0013471577030467743), 'Uniqueness2': np.float64(0.200120459217636), 'Synergy': np.float64(0.008625196085816373)}
+    {'Information': np.float64(1.6094379124341005), 'Redundancy': np.float64(0.7899071869935008), 'Uniqueness1': np.float64(0.0013471577030467743), 'Uniqueness2': np.float64(0.200120459217636), 'Synergy': np.float64(0.008625196085816373)}
 
 
 
@@ -220,7 +213,7 @@ dictionaries (one per pair). For example, adding a third modality yields three p
  .. code-block:: none
 
 
-    [{'Redundancy': np.float64(0.7899071869935008), 'Uniqueness1': np.float64(0.0013471577030467743), 'Uniqueness2': np.float64(0.200120459217636), 'Synergy': np.float64(0.008625196085816373)}, {'Redundancy': np.float64(0.988661991948867), 'Uniqueness1': np.float64(0.0006425105341304864), 'Uniqueness2': np.float64(0.0006425105341452292), 'Synergy': np.float64(0.010052986982857438)}, {'Redundancy': np.float64(0.7899071869162719), 'Uniqueness1': np.float64(0.2001204591932649), 'Uniqueness2': np.float64(0.0013471577176615082), 'Synergy': np.float64(0.008625196172801755)}]
+    [{'Information': np.float64(1.6094379124341005), 'Redundancy': np.float64(0.7899071869935008), 'Uniqueness1': np.float64(0.0013471577030467743), 'Uniqueness2': np.float64(0.200120459217636), 'Synergy': np.float64(0.008625196085816373)}, {'Information': np.float64(1.2844404775880116), 'Redundancy': np.float64(0.988661991948867), 'Uniqueness1': np.float64(0.0006425105341304864), 'Uniqueness2': np.float64(0.0006425105341452292), 'Synergy': np.float64(0.010052986982857438)}, {'Information': np.float64(1.6094379124341), 'Redundancy': np.float64(0.7899071869162719), 'Uniqueness1': np.float64(0.2001204591932649), 'Uniqueness2': np.float64(0.0013471577176615082), 'Synergy': np.float64(0.008625196172801755)}]
 
 
 
@@ -401,7 +394,7 @@ For quick inspection, we can also plot the per‑modality counts. Here we create
 
 
 .. image-sg:: /auto_tutorials/images/sphx_glr_multi_modal_data_statistics_002.png
-   :alt: Summary of the multi-modal dataset
+   :alt: multi modal data statistics
    :srcset: /auto_tutorials/images/sphx_glr_multi_modal_data_statistics_002.png
    :class: sphx-glr-single-img
 
@@ -447,7 +440,7 @@ feature engineering for downstream multi‑modal learning.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 24.082 seconds)
+   **Total running time of the script:** (0 minutes 24.773 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_multi_modal_data_statistics.py:

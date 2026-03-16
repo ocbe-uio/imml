@@ -70,7 +70,7 @@ Step 1: Import required libraries
     import numpy as np
     import pandas as pd
 
-    from imml.preprocessing import MultiModTransformer, NormalizerNaN
+    from imml.preprocessing import MMTransformer, NormalizerNaN
     from imml.ampute import Amputer
     from imml.cluster import EEIMVC
     from imml.visualize import plot_missing_modality
@@ -140,7 +140,7 @@ example, we build a pipeline where we first normalize the data and then the samp
 
 
     pipeline = make_pipeline(
-        MultiModTransformer(NormalizerNaN()),
+        MMTransformer(NormalizerNaN()),
         EEIMVC(n_clusters = n_clusters, random_state=random_state)
     )
     labels = pipeline.fit_predict(Xs)
@@ -252,7 +252,7 @@ Now, we repeat the clustering analysis, but this time with the amputed (incomple
 
 
     pipeline = make_pipeline(
-        MultiModTransformer(NormalizerNaN()),
+        MMTransformer(NormalizerNaN()),
         EEIMVC(n_clusters = n_clusters, random_state=random_state)
     )
     labels = pipeline.fit_predict(amputed_Xs)
@@ -320,11 +320,11 @@ across increasing missingness to obtain more robust estimates.
         for p in ps:
             for i in range(n_times):
                 pipeline = make_pipeline(
-                    MultiModTransformer(NormalizerNaN().set_output(transform="pandas")),
+                    MMTransformer(NormalizerNaN().set_output(transform="pandas")),
                     EEIMVC(n_clusters=n_clusters, random_state=i))
                 if method == "Baseline imputation":
                     pipeline = make_pipeline(
-                        MultiModTransformer(SimpleImputer().set_output(transform="pandas")),
+                        MMTransformer(SimpleImputer().set_output(transform="pandas")),
                         *pipeline)
                 pipeline = make_pipeline(Amputer(p=p, mechanism="mcar", random_state=i), *pipeline)
                 clusters = pipeline.fit_predict(Xs)
@@ -468,7 +468,7 @@ missingness make it straightforward to prototype, evaluate, and benchmark real-w
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.946 seconds)
+   **Total running time of the script:** (0 minutes 2.324 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_cluster_incomplete_mmd.py:

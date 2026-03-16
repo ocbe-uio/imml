@@ -83,7 +83,6 @@ Dependencies
 -  pandas>=2.2.2
 -  networkx>=2.5
 -  h5py>=3.9.0
--  snfpy>=0
 -  control>=0.10.1
 -  cvxpy>=1.7.1
 

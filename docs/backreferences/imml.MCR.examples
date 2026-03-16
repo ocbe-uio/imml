@@ -15,6 +15,27 @@ Examples using ``imml.MCR``
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to retrieve samples from an incomplete vision–language dataset using iMML. We will use the MCR retriever to find similar items across modalities (image/text) even when one modality is missing. The example uses the public nlphuji/flickr30k dataset from Hugging Face Datasets, so you don&#x27;t need to prepare files manually.">
+
+.. only:: html
+
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_retrieve_incomplete_vision_language_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_tutorials_retrieve_incomplete_vision_language.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Retrieval on a vision–language dataset (flickr30k)</div>
+    </div>
+
+
+.. only:: not html
+
+ * :ref:`sphx_glr_auto_tutorials_retrieve_incomplete_vision_language.py`
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to classify samples from an incomplete vision–language dataset using the iMML library. iMML supports robust classification even when some modalities (e.g., text or image) are missing, making it suitable for real‑world multi‑modal data where missingness is common.">
 
 .. only:: html

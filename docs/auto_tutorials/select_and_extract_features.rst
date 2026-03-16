@@ -88,7 +88,7 @@ Step 1: Import required libraries
     import matplotlib.patches as mpatches
 
     from imml.decomposition import JNMF
-    from imml.preprocessing import MultiModTransformer, ConcatenateMods
+    from imml.preprocessing import MMTransformer, ConcatenateMods
     from imml.ampute import Amputer
     from imml.feature_selection import JNMFFeatureSelector
 
@@ -210,12 +210,12 @@ Step 4: Apply feature selection and feature extraction
 
     n_components = 4
     # Feature extraction
-    pipeline = make_pipeline(MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+    pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                              JNMF(n_components=n_components, random_state=random_state))
     pipeline.fit(Xs)
 
     # Feature selection
-    pipeline = make_pipeline(MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+    pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                              JNMFFeatureSelector(n_components=n_components, random_state=random_state))
     pipeline.fit(Xs)
 
@@ -704,8 +704,7 @@ Step 4: Apply feature selection and feature extraction
         height: 14px;
         cursor: pointer;
     }
-    </style><body><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;multimodtransformer&#x27;,
-                     MultiModTransformer(transformer=MinMaxScaler())),
+    </style><body><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>Pipeline(steps=[(&#x27;mmtransformer&#x27;, MMTransformer(transformer=MinMaxScaler())),
                     (&#x27;jnmffeatureselector&#x27;, JNMFFeatureSelector())])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" ><label for="sk-estimator-id-1" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>Pipeline</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.7/modules/generated/sklearn.pipeline.Pipeline.html">?<span>Documentation for Pipeline</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></div></label><div class="sk-toggleable__content fitted" data-param-prefix="">
             <div class="estimator-table">
                 <details>
@@ -719,7 +718,7 @@ Step 4: Apply feature selection and feature extraction
                               this.parentElement.nextElementSibling)"
                 ></i></td>
                 <td class="param">steps&nbsp;</td>
-                <td class="value">[(&#x27;multimodtransformer&#x27;, ...), (&#x27;jnmffeatureselector&#x27;, ...)]</td>
+                <td class="value">[(&#x27;mmtransformer&#x27;, ...), (&#x27;jnmffeatureselector&#x27;, ...)]</td>
             </tr>
     
 
@@ -756,7 +755,7 @@ Step 4: Apply feature selection and feature extraction
                     </table>
                 </details>
             </div>
-        </div></div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" ><label for="sk-estimator-id-2" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>multimodtransformer: MultiModTransformer</div></div></label><div class="sk-toggleable__content fitted" data-param-prefix="multimodtransformer__">
+        </div></div></div><div class="sk-serial"><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" ><label for="sk-estimator-id-2" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>mmtransformer: MMTransformer</div></div></label><div class="sk-toggleable__content fitted" data-param-prefix="mmtransformer__">
             <div class="estimator-table">
                 <details>
                     <summary>Parameters</summary>
@@ -776,7 +775,7 @@ Step 4: Apply feature selection and feature extraction
                     </table>
                 </details>
             </div>
-        </div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox" ><label for="sk-estimator-id-3" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>transformer: MinMaxScaler</div></div></label><div class="sk-toggleable__content fitted" data-param-prefix="multimodtransformer__transformer__"><pre>MinMaxScaler()</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-4" type="checkbox" ><label for="sk-estimator-id-4" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>MinMaxScaler</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.7/modules/generated/sklearn.preprocessing.MinMaxScaler.html">?<span>Documentation for MinMaxScaler</span></a></div></label><div class="sk-toggleable__content fitted" data-param-prefix="multimodtransformer__transformer__">
+        </div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox" ><label for="sk-estimator-id-3" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>transformer: MinMaxScaler</div></div></label><div class="sk-toggleable__content fitted" data-param-prefix="mmtransformer__transformer__"><pre>MinMaxScaler()</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-4" type="checkbox" ><label for="sk-estimator-id-4" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>MinMaxScaler</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.7/modules/generated/sklearn.preprocessing.MinMaxScaler.html">?<span>Documentation for MinMaxScaler</span></a></div></label><div class="sk-toggleable__content fitted" data-param-prefix="mmtransformer__transformer__">
             <div class="estimator-table">
                 <details>
                     <summary>Parameters</summary>
@@ -1044,7 +1043,7 @@ We can also extract features and visualize the original features with the larges
 .. code-block:: Python
 
 
-    pipeline = make_pipeline(MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+    pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                              JNMFFeatureSelector(n_components = n_components, select_by="component",
                                                  random_state=42, f_per_component=2))
     pipeline.fit(Xs)
@@ -1219,19 +1218,19 @@ seeds to have robust results.
                         ampute = False
                 if algorithm == "Feature extraction":
                     pipeline = make_pipeline(
-                        MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+                        MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                         JNMF(n_components = n_components, random_state=i),
                     )
                 elif algorithm == "Feature selection":
                     pipeline = make_pipeline(
-                        MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+                        MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                         JNMFFeatureSelector(n_components = n_components, random_state=i),
                         ConcatenateMods(),
                         SimpleImputer(),
                     )
                 elif algorithm == "Randomly selected features":
                     pipeline = make_pipeline(
-                        MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+                        MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                         ConcatenateMods(),
                         SimpleImputer().set_output(transform="pandas"),
                         FunctionTransformer(lambda x:
@@ -1240,7 +1239,7 @@ seeds to have robust results.
                      )
                 elif algorithm == "All features":
                     pipeline = make_pipeline(
-                        MultiModTransformer(MinMaxScaler().set_output(transform="pandas")),
+                        MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                         ConcatenateMods(),
                         SimpleImputer().set_output(transform="pandas"),
                      )
@@ -1403,7 +1402,7 @@ for your application.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 10.166 seconds)
+   **Total running time of the script:** (0 minutes 10.176 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_select_and_extract_features.py:
