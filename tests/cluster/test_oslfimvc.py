@@ -12,7 +12,7 @@ from imml.cluster import OSLFIMVC as estimator
 
 @pytest.fixture
 def sample_data():
-    X = np.random.default_rng(42).random((25, 10))
+    X = np.random.default_rng(42).random((30, 10))
     X = pd.DataFrame(X)
     X1, X2, X3 = X.iloc[:, :3], X.iloc[:, 3:5], X.iloc[:, 5:]
     Xs_pandas, Xs_numpy = [X1, X2, X3], [X1.values, X2.values, X3.values]
