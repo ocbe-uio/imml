@@ -41,8 +41,6 @@ Updates in this release:
 - |Enhancement| We have added a "See also" section to related classes.
 - |Enhancement| We have added a section to link tutorials with classes.
 - |Enhancement| `iMML` supports now Python 3.14.
-- |Enhancement| Added a tutorial for dealing with incomplete tabular-text data.
-  By `RafRomB <https://github.com/RafRomB>`__. `#14 <https://github.com/ocbe-uio/imml/pull/14>`__
 - |API| Matlab module and arguments were replaced by Octave to better reflect their usage.
 - |Efficiency| Imports of optional modules have been centralized.
 - |Enhancement| :class:`~imml.statistics.pid` now returns also the total information.
