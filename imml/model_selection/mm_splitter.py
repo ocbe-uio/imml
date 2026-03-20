@@ -21,8 +21,8 @@ class MMSplitter():
     splitter : object
         Any object implementing scikit-learn's splitter interface, for example
         ``KFold``, ``StratifiedKFold``, ``GroupKFold`` or ``ShuffleSplit``.
-    return_type : str, default="split"
-        Controls what each yielded item contains: "split" returns the actual partition sets, while "indices" return
+    return_type : str, default="sets"
+        Controls what each yielded item contains: "sets" returns the actual partition sets, while "indices" return
         the indices of the partition sets.
 
     Example
@@ -37,9 +37,9 @@ class MMSplitter():
     ...     pass
     """
 
-    def __init__(self, splitter, return_type: str = "all"):
-        if return_type not in ["split", "indices"]:
-            raise ValueError(f"return_type must be one of ['split', 'indices'], got {return_type}")
+    def __init__(self, splitter, return_type: str = "sets"):
+        if return_type not in ["sets", "indices"]:
+            raise ValueError(f"return_type must be one of ['sets', 'indices'], got {return_type}")
 
         self.splitter = splitter
         self.return_type = return_type
@@ -90,7 +90,7 @@ class MMSplitter():
         Xs = _MultiModalDataset(Xs)
         idxs = np.arange(len(Xs))
         for tr, te in self.splitter.split(idxs, y=y, groups=groups):
-            if self.return_type == "split":
+            if self.return_type == "sets":
                 Xtr = Xs[tr].to_list()
                 Xte = Xs[te].to_list()
                 output = (Xtr, Xte)

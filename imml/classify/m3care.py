@@ -318,7 +318,8 @@ class M3CareModule(Module):
                 X = [self.preprocess_img(Image.open(img_path).convert('RGB')
                      if bool(img_path) else Image.new("RGB", (256, 256), (0, 0, 0)))
                      for img_path in X]
-                X = torch.stack(X)
+                device = next(extractor[0].parameters()).device
+                X = torch.stack(X).to(device)
                 feat = extractor(X)
                 feat = F.relu(feat)
                 if len(X) == 1:

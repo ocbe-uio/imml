@@ -31,9 +31,29 @@ Change tags (adopted from `Scikit-learn
 - |API| : you will need to change your code to have the same effect in the future; or a feature will be removed in the future.
 
 
+Version 0.3.1
+-------------
+March 17, 2025
+
+Updates in this release:
+
+:mod:`imml.classify`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Fix| Fixed device when processing images in :class:`~imml.classify.M3Care`.
+
+:mod:`imml.model_selection`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Fix| Fixed default return_type parameter in :class:`~imml.model_selection.MMSplitter`.
+
+:mod:`imml.preprocessing`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Fix| Fixed :class:`~imml.preprocessing.select_complete_samples` and
+  :class:`~imml.preprocessing.select_incomplete_samples` when working with string and object dtypes.
+
+
 Version 0.3.0
 -------------
-November 3, 2025
+March 17, 2025
 
 Updates in this release:
 
@@ -43,20 +63,31 @@ Updates in this release:
 - |Enhancement| `iMML` supports now Python 3.14.
 - |API| Matlab module and arguments were replaced by Octave to better reflect their usage.
 - |Efficiency| Imports of optional modules have been centralized.
-- |Enhancement| :class:`~imml.statistics.pid` now returns also the total information.
-- |API| Multi_Mod_Transformer was renamed to :class:`~imml.preprocessing.MMTransformer`.
 - |API| SimpleModImputer and simple_mod_imputer was removed. You can use  MMTransformer(transformer = SimpleImputer())
   instead.
 - |Efficiency| snfpy package was removed from the requirements.
+
+:mod:`imml.impute`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |API| :class:`~imml.impute.SimpleModImputer` and :class:`~imml.impute.simple_mod_imputer` was removed. You can
+  use MMTransformer(transformer = SimpleImputer()) instead.
 
 :mod:`imml.model_selection`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Feature| :class:`~imml.model_selection.MMSplitter` was added.
 - |Feature| :class:`~imml.model_selection.train_test_mm_split` was added.
 
+:mod:`imml.preprocessing`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |API| :class:`~imml.preprocessing.Multi_Mod_Transformer` was renamed to :class:`~imml.preprocessing.MMTransformer`.
+
+:mod:`imml.statistics`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |API| :class:`~imml.statistics.pid` now returns also the total information.
+
 :mod:`imml.utils`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |API| :class:`~imml.utils.check_Xs` was converted to :class:`~imml.utils.check_Xs_y`
+- |API| :class:`~imml.utils.check_Xs` was converted to :class:`~imml.utils.check_Xs_y`.
 
 :mod:`imml.visualize`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -91,7 +122,6 @@ Updates in this release:
 :mod:`imml.classify`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Fix| :class:`~imml.classify.MUSE` Fixed text extractor load when using text modality.
-- |Fix| :class:`~imml.classify.MUSE` Fixed error when working with multiple data modalities.
 - |Fix| :class:`~imml.classify.M3Care` Fixed error when working with multiple data modalities.
 
 

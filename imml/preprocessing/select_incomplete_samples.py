@@ -1,9 +1,14 @@
 # License: BSD-3-Clause
 
 import numpy as np
+import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
 
 from ..utils import check_Xs_y
+from .. import deepmodule_installed, Tensor
+
+if deepmodule_installed:
+    import torch
 
 
 class SelectIncompleteSamples(FunctionTransformer):
@@ -68,6 +73,10 @@ def select_incomplete_samples(Xs: list):
     """
 
     Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
+    if isinstance(Xs[0], Tensor):
+        mask = torch.stack([torch.isnan(X).any(axis=1) for X in Xs], axis=1)
+    else:
+        mask = np.stack([pd.isna(X).any(axis=1) for X in Xs], axis=1)
     mask = np.stack([np.isnan(X).any(axis=1) for X in Xs], axis=1)
     mask = mask.any(axis=1)
     transformed_Xs = [X[mask] for X in Xs]

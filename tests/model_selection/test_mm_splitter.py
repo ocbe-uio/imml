@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from sklearn.model_selection import StratifiedShuffleSplit, ShuffleSplit
+from sklearn.model_selection import StratifiedShuffleSplit, ShuffleSplit, StratifiedKFold
 
 from imml import deepmodule_installed
 from imml.model_selection import MMSplitter
@@ -26,12 +26,17 @@ def sample_data():
     return output
 
 
+def test_mmsplitter_default(sample_data):
+    splitter = StratifiedShuffleSplit(n_splits=5, random_state=42)
+    MMSplitter(splitter=splitter)
+
+
 def test_mmsplitter_with_y(sample_data):
     for i in range(0, len(sample_data) - 1, 2):
         Xs = sample_data[i]
         y = sample_data[i+1]
         splitter = StratifiedShuffleSplit(n_splits=5, random_state=42)
-        gen = MMSplitter(splitter=splitter, return_type="split")
+        gen = MMSplitter(splitter=splitter, return_type="sets")
         assert gen.get_n_splits() == 5
         Xs_tr, Xs_te, ytr, yte = next(gen.split(Xs=Xs, y=y))
         assert isinstance(Xs_tr, list) and isinstance(Xs_te, list)
@@ -55,17 +60,24 @@ def test_mmsplitter_indices_and_y_none(sample_data):
         assert len(tr) + len(te) == len(Xs[0])
         # y=None path
         splitter = ShuffleSplit(n_splits=5, random_state=42)
-        gen = MMSplitter(splitter=splitter, return_type="split")
+        gen = MMSplitter(splitter=splitter, return_type="sets")
         Xs_tr, Xs_te = next(gen.split(Xs=Xs, y=None))
         assert isinstance(Xs_tr, list) and isinstance(Xs_te, list)
         assert len(Xs_tr) == len(Xs_te) == len(Xs)
 
 
 def test_mmsplitter_bad_return_type_raises(sample_data):
-    Xs, y = sample_data[:2]
     with pytest.raises(ValueError):
         splitter = StratifiedShuffleSplit(n_splits=5, random_state=42)
-        gen = MMSplitter(splitter=splitter, return_type="bad")
+        MMSplitter(splitter=splitter, return_type="bad")
+
+
+def test_example():
+    Xs = [np.random.rand(100, 10), np.random.rand(100, 20)]
+    y = np.random.randint(0, 2, 100)
+    splitter = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    for Xs_train, Xs_test, y_train, y_test in MMSplitter(splitter=splitter).split(Xs, y):
+        pass
 
 
 if __name__ == "__main__":
