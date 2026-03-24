@@ -79,7 +79,7 @@ def get_missing_mod_indicator(Xs : list, y = None):
     transformed_Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
     if isinstance(transformed_Xs[0], Tensor):
         transformed_Xs = [X.numpy() for X in transformed_Xs]
-    transformed_X = np.vstack([pd.isna(X).all(1) for X in transformed_Xs]).T
+    transformed_X = np.vstack([pd.isna(X).all(axis=1) for X in transformed_Xs]).T
     if isinstance(Xs[0], pd.DataFrame):
         transformed_X = pd.DataFrame(transformed_X, index=Xs[0].index)
     elif isinstance(Xs[0], Tensor):

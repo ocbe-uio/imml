@@ -154,11 +154,11 @@ class SIMCADC(BaseEstimator, ClusterMixin):
 
             n_incomplete_samples_mod = list(len(incomplete_sample) for incomplete_sample in incomplete_samples)
 
-            # if self.random_state is not None:
-            #     self._oc.rand('seed', self.random_state)
+            if self.random_state is not None:
+                self._oc.rand('seed', self.random_state)
             u,v,a,w,z,iter,obj = self._oc.SIMC(transformed_Xs, len(Xs[0]), self.lambda_parameter,
                                                 self.n_clusters, self.n_anchors, w, n_incomplete_samples_mod,
-                                                mean_mod_profile, self.beta, self.gamma, nout=7)
+                                                mean_mod_profile, self.beta, self.gamma, self.eps, nout=7)
             obj = obj[0]
 
             if self.clean_space:
@@ -182,8 +182,6 @@ class SIMCADC(BaseEstimator, ClusterMixin):
 
             n_incomplete_samples_mod = list(len(incomplete_sample) for incomplete_sample in incomplete_samples)
 
-            if self.random_state is not None:
-                np.random.seed(self.random_state)
             u, v, a, w, z, iter, obj = self._SIMC(transformed_Xs, len(Xs[0]), self.lambda_parameter,
                                                      self.n_clusters, self.n_anchors, w, n_incomplete_samples_mod,
                                                      mean_mod_profile, self.beta, self.gamma)
@@ -345,7 +343,7 @@ class SIMCADC(BaseEstimator, ClusterMixin):
 
         # Preprocessing Y and initializing
         for i in range(num_view):
-            Y[i] = np.nan_to_num(zscore(Y[i], ddof=1, axis=0).T, nan=0)
+            Y[i] = np.nan_to_num(zscore(Y[i], ddof=0, axis=0).T, nan=0)
             di = Y[i].shape[0]
             W[i] = np.zeros(shape=(di, n_clusters))
             NNT[i] = np.matmul(N[i], N[i].T)

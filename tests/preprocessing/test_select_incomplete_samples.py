@@ -48,7 +48,8 @@ def test_select_incomplete_samples_multiple_types(sample_data):
     X = np.random.default_rng(42).random((20, 10))
     X = pd.DataFrame(X)
     X1, X2, X3 = X.iloc[:, :3], X.iloc[:, 3:5], X.iloc[:, 5:]
-    X1.loc[:,0] = "loren ipsum"
+    X1[0] = X1[0].astype("object")
+    X1.loc[:, 0] = "loren ipsum"
     X1.loc[[2,4], :] = np.nan
     X2.loc[1, :] = np.nan
     X3.loc[5, 8:] = np.nan

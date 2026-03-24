@@ -20,7 +20,7 @@ def test_remove_mods_transformer(sample_data):
         transformer = RemoveMods(observed_mod_indicator=observed_mod_indicator)
         transformed_Xs = transformer.fit_transform(Xs)
         assert len(Xs) == len(transformed_Xs)
-        assert np.isnan(transformed_Xs[0]).all(1).sum() == 1
+        assert np.isnan(transformed_Xs[0]).all(axis=1).sum() == 1
 
 
 def test_remove_mods_function(sample_data):
@@ -28,7 +28,7 @@ def test_remove_mods_function(sample_data):
         observed_mod_indicator = np.ones((len(Xs[0]), len(Xs)))
         observed_mod_indicator[0, :3] = 0
         transformed_Xs = remove_mods(Xs, observed_mod_indicator=observed_mod_indicator)
-        assert np.isnan(transformed_Xs[0]).all(1).sum() == 1
+        assert np.isnan(transformed_Xs[0]).all(axis=1).sum() == 1
 
 if __name__ == "__main__":
     pytest.main()

@@ -158,5 +158,6 @@ def test_missing_values_handling(sample_data):
             assert len(model.num_neighbors_) == len(Xs)
             assert model.num_neighbors_[0] > 0
 
+
 if __name__ == "__main__":
     pytest.main()

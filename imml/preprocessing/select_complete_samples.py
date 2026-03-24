@@ -80,5 +80,3 @@ def select_complete_samples(Xs: list):
     mask = mask.all(axis=1)
     transformed_Xs = [X[mask] for X in Xs]
     return transformed_Xs
-
-

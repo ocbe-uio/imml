@@ -1,4 +1,4 @@
-function [label, center, bCon, sumD, D] = litekmeans(X, k, random_state, varargin)
+function [label, center, bCon, sumD, D] = litekmeans(X, k, varargin)
 %LITEKMEANS K-means clustering, accelerated by matlab matrix operations.
 %
 %   label = LITEKMEANS(X, K) partitions the points in the N-by-P data matrix
@@ -80,7 +80,7 @@ function [label, center, bCon, sumD, D] = litekmeans(X, k, random_state, varargi
 %
 %   Written by Deng Cai (dengcai AT gmail.com)
 
-rand('twister',random_state)
+
 if nargin < 2
     error('litekmeans:TooFewInputs','At least two input arguments required.');
 end

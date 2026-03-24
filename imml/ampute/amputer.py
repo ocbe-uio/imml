@@ -44,7 +44,7 @@ class Amputer(BaseEstimator, TransformerMixin):
 
         mechanisms_options = ["mem", "mcar", "mnar", "pm"]
         if mechanism not in mechanisms_options:
-            raise ValueError(f"Invalid mechanism. Expected one of: {mechanisms_options}")
+            raise ValueError(f"Invalid mechanism. Expected one of: {mechanisms_options}. Got {mechanism} instead.")
         if p < 0 or p > 1:
             raise ValueError(f"Invalid p. Expected between 0 and 1.")
 

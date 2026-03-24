@@ -33,7 +33,7 @@ class LFIMVC(BaseEstimator, ClusterMixin):
     lambda_reg : float, default=1.
         Regularization parameter. The algorithm demonstrated stable performance across a wide range of
         this hyperparameter.
-    max_iter : int, default=100
+    max_iter : int, default=200
         Maximum number of iterations.
     random_state : int, default=None
         Determines the randomness. Use an int to make the randomness deterministic.
@@ -129,26 +129,46 @@ class LFIMVC(BaseEstimator, ClusterMixin):
         """
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
-        if self.engine=="octave":
-            imputer = MMTransformer(transformer=SimpleImputer())
-            transformed_Xs = imputer.fit_transform(Xs)
-            transformed_Xs = [self.kernel(X) for X in transformed_Xs]
-            transformed_Xs = np.array(transformed_Xs).swapaxes(0, -1)
+        imputer = MMTransformer(transformer=SimpleImputer())
+        transformed_Xs = imputer.fit_transform(Xs)
+        transformed_Xs = [self.kernel(X) for X in transformed_Xs]
+        KH = np.array(transformed_Xs).swapaxes(0, -1)
 
+        if self.engine=="octave":
             if self.random_state is not None:
                 self._oc.rand('seed', self.random_state)
-            U, WP,HP, obj = self._oc.IncompleteMultikernelLatefusionclusteringV1Hv(transformed_Xs, self.n_clusters,
+
+            # Apply kcenter and knorm
+            KH = self._oc.kcenter(KH)
+            KH = self._oc.knorm(KH)
+
+            num = KH.shape[0]
+            numker = KH.shape[2]
+            H = np.zeros((num, self.n_clusters, numker))
+            for ker in range(numker):
+                H[:, :, ker] = self._oc.mykernelkmeans(KH[:, :, ker], self.n_clusters, nout=1)
+
+            U, WP, HP, obj = self._oc.IncompleteMultikernelLatefusionclusteringV1Hv(H, self.n_clusters,
                                                                              self.lambda_reg, self.max_iter, nout=4)
+            if obj.ndim == 2:
+                obj = obj.flatten()
 
             if self.clean_space:
                 self._clean_space()
 
         elif self.engine=="python":
-            imputer = MMTransformer(transformer=SimpleImputer())
-            transformed_Xs = imputer.fit_transform(Xs)
-            transformed_Xs = [self.kernel(X) for X in transformed_Xs]
-            transformed_Xs = np.array(transformed_Xs).swapaxes(0, -1)
-            U, WP, HP, obj = self._incomplete_multikernel_late_fusion_clustering(transformed_Xs, self.n_clusters,
+            # Apply kcenter and knorm
+            KH = self._k_center(KH)
+            KH = self._k_norm(KH)
+
+            # Compute base clustering matrices
+            num = KH.shape[0]
+            numker = KH.shape[2]
+            H = np.zeros((num, self.n_clusters, numker))
+            for ker in range(numker):
+                H[:, :, ker] = self._my_kernel_kmeans(KH[:, :, ker], self.n_clusters)
+
+            U, WP, HP, obj = self._incomplete_multikernel_late_fusion_clustering(H, self.n_clusters,
                                                                                 self.lambda_reg)
 
         model = KMeans(n_clusters= self.n_clusters, n_init="auto", random_state= self.random_state)
@@ -209,40 +229,60 @@ class LFIMVC(BaseEstimator, ClusterMixin):
         return None
 
 
+    def _k_center(self, K):
+        r"""
+        Center a kernel matrix.
 
-    # def k_center(self, KH):
-    #     r"""
-    #     Center a kernel matrix.
-    #     """
-    #     n = KH.shape[1]
-    #
-    #     if np.ndim(KH) == 2:
-    #         D = np.sum(KH) / n
-    #         E = np.sum(D) / n
-    #         J = np.matmul(np.ones(shape=(n, 1)), D)
-    #         KH -= J - J.T + np.matmul(E, np.ones(shape=(n, n)))
-    #         K = 0.5 * (KH + KH.T)
-    #
-    #     elif np.ndim(KH) == 3:
-    #         for i in range(KH.shape[2]):
-    #             D = np.sum(KH[:, :, i], 0) / n
-    #             E = np.sum(D) / n
-    #             J = np.ones(shape=(n,)) * D
-    #             KH[:, :, i] = KH[:, :, i] - J - J.T + E * np.ones(shape=(n, n))
-    #             KH[:, :, i] = 0.5 * (KH[:, :, i] + KH[:, :, i].T) + 1e-12 * np.eye(n)
-    #
-    #     return KH
-    #
-    # def k_norm(self, KH):
-    #     r"""
-    #     Normalize a kernel matrix.
-    #     """
-    #     if KH.shape[2] > 1:
-    #         for i in range(KH.shape[2]):
-    #             KH[:, :, i] = KH[:, :, i] / np.sqrt(np.outer(np.diag(KH[:, :, i]), np.diag(KH[:, :, i]).T))
-    #     else:
-    #         KH = KH / np.sqrt(np.matmul(np.diag(KH),np.diag(KH).T))
-    #     return KH
+        Parameters
+        ----------
+        K: 2-D or 3-D array
+            Kernel matrix or stack of kernel matrices
+
+        Returns
+        -------
+        K: Centered kernel matrix
+        """
+        n = K.shape[1]
+
+        if K.ndim == 2:
+            D = np.sum(K, axis=0) / n
+            E = np.sum(D) / n
+            J = np.outer(np.ones(n), D)
+            K = K - J - J.T + E * np.ones((n, n))
+            K = 0.5 * (K + K.T)
+        elif K.ndim == 3:
+            for i in range(K.shape[2]):
+                D = np.sum(K[:, :, i], axis=0) / n
+                E = np.sum(D) / n
+                J = np.outer(np.ones(n), D)
+                K[:, :, i] = K[:, :, i] - J - J.T + E * np.ones((n, n))
+                K[:, :, i] = 0.5 * (K[:, :, i] + K[:, :, i].T) + 1e-12 * np.eye(n)
+
+        return K
+
+
+    def _k_norm(self, K):
+        r"""
+        Normalize a kernel matrix.
+
+        Parameters
+        ----------
+        K: 2-D or 3-D array
+            Kernel matrix or stack of kernel matrices
+
+        Returns
+        -------
+        K: Normalized kernel matrix
+        """
+        if K.ndim == 3:
+            for i in range(K.shape[2]):
+                diag_k = np.diag(K[:, :, i])
+                K[:, :, i] = K[:, :, i] / np.sqrt(np.outer(diag_k, diag_k))
+        else:
+            diag_k = np.diag(K)
+            K = K / np.sqrt(np.outer(diag_k, diag_k))
+
+        return K
 
     def _my_kernel_kmeans(self, K, n_clusters):
         r"""
@@ -259,9 +299,20 @@ class LFIMVC(BaseEstimator, ClusterMixin):
         H_normalized: 2-D array of shape (n_samples, n_clusters)
         """
         K = (K + K.T) / 2
-        _, H = eigs(A=K, k=n_clusters, which='LR')  # Debuggé
+
+        # Use eigs with deterministic starting vector if random_state is set
+        if self.random_state is not None:
+            rng = np.random.RandomState(self.random_state)
+            v0 = rng.randn(K.shape[0])
+            _, H = eigs(A=K, k=n_clusters, which='LR', v0=v0)
+        else:
+            _, H = eigs(A=K, k=n_clusters, which='LR')
+
+        # Take real part (eigenvectors should be real for symmetric matrices)
+        H = np.real(H)
         H_normalized = H / np.tile(np.sqrt(np.sum(H ** 2, 1)), reps=(n_clusters, 1)).T
         return H_normalized
+
 
     def _update_wp_absent_clustering_v1(self, HP, Hstar):
         r"""
@@ -287,6 +338,7 @@ class LFIMVC(BaseEstimator, ClusterMixin):
 
         return WP
 
+
     def _update_hp_absent_clustering_v1(self, WP, Hstar, lambda_reg, HP00):
         r"""
         Update HP variable.
@@ -309,27 +361,27 @@ class LFIMVC(BaseEstimator, ClusterMixin):
         numker = HP00.shape[2]
         HP = np.zeros(shape=(num, k, numker))
         for p in range(numker):
-            Vp = np.matmul(Hstar, WP[:, :, p]) + lambda_reg * HP00[:, :, p]
+            Vp = np.matmul(Hstar, WP[:, :, p].T) + lambda_reg * HP00[:, :, p]
             Up, Sp, Vp = np.linalg.svd(Vp, full_matrices=False)
             V = Vp.T.conj()
             HP[:, :, p] = np.matmul(Up, V.T)
 
         return HP
 
-    def _incomplete_multikernel_late_fusion_clustering(self, KH, n_clusters, lambda_reg):
+
+    def _incomplete_multikernel_late_fusion_clustering(self, HP, n_clusters, lambda_reg):
         r"""
         Runs the LFIMVC clustering algorithm.
 
         Parameters
         ----------
-        KH: 3-D array of shape (n_samples, ?, n_mods)
+        HP: 3-D array of shape (n_samples, n_clusters, n_mods)
+            Base clustering matrices from each view
         n_clusters : int, default=8
             The number of clusters to generate.
         lambda_reg : float, default=1.
             Regularization parameter. The algorithm demonstrated stable performance across a wide range of
             this hyperparameter.
-        normalize: bool, default=True
-            True if you want to normalize the kernel matrix.
 
         Returns
         -------
@@ -338,18 +390,9 @@ class LFIMVC(BaseEstimator, ClusterMixin):
         HP: 3-D array of shape (n_samples, n_clusters, n_views)
         obj: list of float
         """
-        # if normalize:
-        #     KH = self.k_center(KH)  # K_center debuggé
-        #     KH = self.k_norm(KH)  # K_norm debuggé
+        num = HP.shape[0]  # Number of samples
+        numker = HP.shape[2]  # Number of kernels
 
-        num = KH.shape[0]  # Number of samples
-        numker = KH.shape[2]  # Number of kernels
-
-        HP = np.zeros(shape=(num, n_clusters, numker))
-        for ker in range(numker):
-            HP[:, :, ker] = self._my_kernel_kmeans(KH[:, :, ker], n_clusters)
-
-        max_iter = 200
         WP = np.zeros(shape=(n_clusters, n_clusters, numker))
         for p in range(numker):
             WP[:, :, p] = np.eye(n_clusters)
@@ -359,7 +402,6 @@ class LFIMVC(BaseEstimator, ClusterMixin):
         flag = 1
         iter = 0
         obj = []
-        obj.append(0)
         while flag:
             iter += 1
             RpHpwp = np.zeros(shape=(num, n_clusters))
@@ -380,7 +422,7 @@ class LFIMVC(BaseEstimator, ClusterMixin):
                 obj2 += np.trace(np.matmul(HP[:, :, p].T, HP00[:, :, p]))
 
             obj.append(np.trace(np.matmul(Hstar.T, RpHpwp)) + lambda_reg * obj2)
-            if (iter > 2) and ((np.abs((obj[iter] - obj[iter - 1]) / obj[iter]) < 1e-4) or (iter > max_iter)):
+            if (iter > 2) and ((np.abs((obj[iter-1] - obj[iter-2]) / obj[iter-1]) < 1e-4) or (iter > self.max_iter)):
                 flag = 0
 
         H_normalized = Hstar / np.tile(A=np.sqrt(np.sum(Hstar ** 2, 1)), reps=(n_clusters, 1)).T

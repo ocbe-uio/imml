@@ -81,7 +81,7 @@ def check_Xs_y(Xs: list, y = None, modalities : list = None, mod_types : list = 
     dtype = type(Xs[0])
     if not all(isinstance(X, dtype) for X in Xs):
         raise ValueError(f"Invalid Xs. All modalities should be the same data type. Got {[type(X) for X in Xs]}.")
-    if pd.concat([pd.DataFrame(X) for X in Xs], axis=1).isna().all(1).any():
+    if pd.concat([pd.DataFrame(X) for X in Xs], axis=1).isna().all(axis=1).any():
         raise ValueError(f"Invalid Xs. There are samples with no available data.")
 
     if supervised:

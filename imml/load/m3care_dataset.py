@@ -68,7 +68,7 @@ class M3CareDataset(Dataset):
             if isinstance(Xs[0], pd.DataFrame):
                 X = X.values
             if isinstance(X, np.ndarray):
-                if X[:,0].dtype == object:
+                if (X[:,0].dtype == "object") or (X[:,0].dtype == "str"):
                     X = X.tolist()
                     X = [sent if isinstance(sent[0], str) else [""] for sent in X]
                 else:

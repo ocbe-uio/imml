@@ -64,7 +64,7 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
 
     if not isinstance(Xs[0], pd.DataFrame):
         Xs = [pd.DataFrame(X) for X in Xs]
-    Xs = [X.loc[~X.isna().all(1)] for X in Xs]
+    Xs = [X.loc[~X.isna().all(axis=1)] for X in Xs]
 
     common_indices = {}
     for size in range(2, len(Xs) + 1):

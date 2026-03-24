@@ -152,19 +152,47 @@ class NEMO(BaseEstimator, ClusterMixin):
             else:
                 self.num_neighbors_ = self.num_neighbors
 
-            affinity_matrix = pd.DataFrame(np.zeros((len(samples), len(samples))), columns = samples, index = samples)
+            # Work with numpy arrays for speed
+            affinity_matrix_np = np.zeros((len(samples), len(samples)))
+
             for X, neigh, mod_idx in zip(Xs, self.num_neighbors_, range(len(Xs))):
-                X = X.loc[observed_mod_indicator[mod_idx]]
-                sim_data = pd.DataFrame(make_affinity(X, metric = self.metric, K=neigh, normalize=False),
-                                        index= X.index, columns= X.index)
-                sim_data = sim_data.mask(sim_data.rank(axis=1, method='min', ascending=False) > neigh, 0)
-                row_sum = sim_data.sum(1)
+                # Get mask for samples with this modality
+                mod_mask = observed_mod_indicator.iloc[:, mod_idx].values
+                X_filtered = X.values[mod_mask]
 
-                sim_data /= row_sum
-                sim_data += sim_data.T
-                affinity_matrix.loc[sim_data.index, sim_data.columns] += sim_data
+                # Compute affinity matrix
+                sim_data = make_affinity(X_filtered, metric=self.metric, K=neigh, normalize=False)
 
-            affinity_matrix /= observed_mod_indicator.sum(1)
+                # Apply KNN threshold - vectorized
+                non_sym_knn = self._apply_knn_threshold_vectorized(sim_data, neigh).T
+
+                # Symmetrize
+                sym_knn = non_sym_knn + non_sym_knn.T
+
+                # Add to full affinity matrix at correct positions
+                indices = np.where(mod_mask)[0]
+                affinity_matrix_np[np.ix_(indices, indices)] += sym_knn
+
+            # Compute shared modality count for normalization - vectorized
+            # Convert to numpy int array for matrix multiplication (bool @ bool gives bool!)
+            obs_mod_np = observed_mod_indicator.values.astype(int)
+            # Use matrix multiplication: each element (i,j) is the dot product of row i and row j
+            shared_omic_count = obs_mod_np @ obs_mod_np.T
+
+            # Divide by shared count (this will create NaN where shared_omic_count is 0)
+            with np.errstate(divide='ignore', invalid='ignore'):
+                affinity_matrix_np = affinity_matrix_np / shared_omic_count
+
+            # Fill entries where samples share no modalities with mean of lower triangular
+            lower_tri_mask = np.tril(np.ones_like(affinity_matrix_np), k=-1).astype(bool)
+            lower_tri_values = affinity_matrix_np[lower_tri_mask]
+            # Exclude NaN/Inf values (these are where shared count was 0)
+            lower_tri_values = lower_tri_values[np.isfinite(lower_tri_values)]
+            if len(lower_tri_values) > 0:
+                fill_value = np.mean(lower_tri_values)
+                affinity_matrix_np[shared_omic_count == 0] = fill_value
+
+            affinity_matrix = pd.DataFrame(affinity_matrix_np, index=samples, columns=samples)
 
             self.n_clusters_ = self.n_clusters if isinstance(self.n_clusters, int) else \
                 get_n_clusters(arr= affinity_matrix.values, n_clusters= self.n_clusters)[0]
@@ -179,22 +207,42 @@ class NEMO(BaseEstimator, ClusterMixin):
 
 
         elif self.engine == "r":
+            # Store original sample order
+            original_samples = Xs[0].index if isinstance(Xs[0], pd.DataFrame) else list(range(len(Xs[0])))
+
             transformed_Xs = remove_missing_samples_by_mod(Xs=Xs)
             transformed_Xs = [X.T for X in transformed_Xs]
             transformed_Xs = _convert_df_to_r_object(transformed_Xs)
             num_neighbors = np.nan if self.num_neighbors is None else self.num_neighbors
             output = robjects.globalenv['nemo.affinity.graph'](transformed_Xs, num_neighbors,
                                                                         self.num_neighbors_ratio)
-            affinity_matrix, self.num_neighbors_ = output[0], list(output[1])
+            affinity_matrix_r, self.num_neighbors_ = output[0], list(output[1])
+
+            # Get row/column names from R affinity matrix
+            r_sample_order = list(robjects.r['rownames'](affinity_matrix_r))
+
             if isinstance(self.n_clusters, list):
-                self.n_clusters_ = int(robjects.globalenv['nemo.num.clusters'](affinity_matrix)[0])
+                self.n_clusters_ = int(robjects.globalenv['nemo.num.clusters'](affinity_matrix_r)[0])
             else:
                 self.n_clusters_ = self.n_clusters
             if self.random_state is not None:
                 rbase.set_seed(self.random_state)
-            labels = snftool.spectralClustering(affinity_matrix, self.n_clusters_)
-            labels, affinity_matrix = np.array(labels), np.array(affinity_matrix)
-            labels -= 1
+            labels_r = snftool.spectralClustering(affinity_matrix_r, self.n_clusters_)
+            labels_r = np.array(labels_r) - 1
+            affinity_matrix_np = np.array(affinity_matrix_r)
+
+            # Create mapping from R sample order to original sample order
+            # R returns samples as strings, convert to same type as original
+            if isinstance(original_samples, pd.Index):
+                r_sample_order = pd.Index([type(original_samples[0])(x) for x in r_sample_order])
+            else:
+                r_sample_order = [type(original_samples[0])(x) for x in r_sample_order]
+
+            # Reorder affinity matrix to match original sample order
+            reorder_idx = [r_sample_order.tolist().index(s) if hasattr(r_sample_order, 'tolist')
+                           else r_sample_order.index(s) for s in original_samples]
+            affinity_matrix = affinity_matrix_np[np.ix_(reorder_idx, reorder_idx)]
+            labels = labels_r[reorder_idx]
 
         self.labels_ = labels
         self.affinity_matrix_ = affinity_matrix
@@ -243,3 +291,34 @@ class NEMO(BaseEstimator, ClusterMixin):
 
         labels = self.fit(Xs)._predict(Xs)
         return labels
+
+
+    def _apply_knn_threshold(self, row, neigh):
+        threshold = np.sort(row.values)[::-1][neigh - 1] if neigh <= len(row) else 0
+        row_filtered = row.copy()
+        row_filtered[row < threshold] = 0
+        row_sum = row_filtered.sum()
+        if row_sum > 0:
+            row_filtered[row >= threshold] = row_filtered[row >= threshold] / row_sum
+        return row_filtered
+
+    def _apply_knn_threshold_vectorized(self, matrix, neigh):
+        """Vectorized version of _apply_knn_threshold for numpy arrays."""
+        n = matrix.shape[0]
+        result = np.zeros_like(matrix)
+
+        # For each row, find the k-th largest value (threshold)
+        # Sort in descending order and get the neigh-th element (index neigh-1)
+        sorted_rows = np.sort(matrix, axis=1)[:, ::-1]
+        thresholds = sorted_rows[:, min(neigh - 1, n - 1)][:, np.newaxis]
+
+        # Keep only values >= threshold
+        mask = matrix >= thresholds
+        result[mask] = matrix[mask]
+
+        # Normalize each row by its sum
+        row_sums = result.sum(axis=1, keepdims=True)
+        row_sums[row_sums == 0] = 1  # Avoid division by zero
+        result = result / row_sums
+
+        return result

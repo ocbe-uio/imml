@@ -306,7 +306,7 @@ class M3CareModule(Module):
             extractor = getattr(self, f"extractor{X_idx}")
             if mod == 'tabular':
                 X = X.clone()
-                X[X.isnan().all(1)] = 0
+                X[X.isnan().all(axis=1)] = 0
                 feat = extractor(X)
                 feat = F.relu(feat)
                 if len(X) == 1:

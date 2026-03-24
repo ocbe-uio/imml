@@ -81,7 +81,7 @@ while flag
     end
 
     %% update E
-    for iv = i:num_view
+    for iv = 1:num_view
         B{iv} = Y{iv} - W{iv} * A * Z_final;
         E{iv} = -B{iv}*N{iv}'/(NNT{iv}+beta * ones(Ne(iv)));
     end

@@ -136,8 +136,7 @@ class DAIMC(BaseEstimator, ClusterMixin):
             w = tuple([self._oc.diag(missing_mod) for missing_mod in observed_mod_indicator.T])
             if self.random_state is not None:
                 self._oc.rand('seed', self.random_state)
-            u_0, v_0, b_0 = self._oc.newinit(transformed_Xs, w, self.n_clusters, len(transformed_Xs),
-                                             self.random_state, nout=3)
+            u_0, v_0, b_0 = self._oc.newinit(transformed_Xs, w, self.n_clusters, len(transformed_Xs), nout=3)
             u, v, b, f, p, n = self._oc.DAIMC(transformed_Xs, w, u_0, v_0, b_0, None, self.n_clusters,
                                         len(transformed_Xs), {"afa": self.alpha, "beta": self.beta}, nout=6)
             b = [np.array(arr[0]) for arr in b]
@@ -205,7 +204,8 @@ class DAIMC(BaseEstimator, ClusterMixin):
 
 
     def _clean_space(self):
-        [os.remove(os.path.join(self._octave_folder, x)) for x in ["reader.mat", "writer.mat"]]
+        [os.remove(os.path.join(self._octave_folder, x)) for x in ["reader.mat", "writer.mat"]
+         if os.path.exists(os.path.join(self._octave_folder, x))]
         self._oc.exit()
         del self._oc
         return None
@@ -248,6 +248,7 @@ class DAIMC(BaseEstimator, ClusterMixin):
         H = []
         XX = []
 
+        # Vectorized initialization of D
         for i in range(viewNum):
             item = np.diag(W[i])
             temp = np.where(item == 0)
@@ -264,8 +265,8 @@ class DAIMC(BaseEstimator, ClusterMixin):
             C = kmeans.cluster_centers_
             U.append(C.T + (0.1 * np.ones((d, n_clusters))))
             G = np.zeros((n, n_clusters))
-            for j in range(1, n_clusters + 1):
-                G[:, j - 1] = (ilabels == j * np.ones(shape=(n,)))
+            for j in range(n_clusters):
+                G[:, j] = (ilabels == j)
             H.append(G + 0.1 * np.ones((n, n_clusters)))
             sumH += H[i]
 
@@ -318,53 +319,76 @@ class DAIMC(BaseEstimator, ClusterMixin):
             - B length: n_clusters
             - B[i] shape: (n_features_i, n_clusters)
         F : float
-            calculated from “ff” which is a loop stop condition
+            calculated from "ff" which is a loop stop condition
         """
         eta = 1e-10
         F = 0
         P = 0
         N = 0
-        D = [np.zeros((B[i].shape[0], B[i].shape[0])) for i in range(viewNum)]
+        # Use diagonal arrays instead of full matrices for D
+        D = [np.zeros(B[i].shape[0]) for i in range(viewNum)]
 
+        # Vectorized initialization of D
         for i in range(viewNum):
-            for k in range(B[i].shape[0]):
-                D[i][k, k] = 1 / np.sqrt(np.linalg.norm(B[i][k, :], 2) ** 2 + eta)
+            D[i] = 1.0 / np.sqrt(np.sum(B[i] ** 2, axis=1) + eta)
+
+        eye_r = np.eye(n_clusters)
+        afa = options['afa']
+        beta = options['beta']
 
         time = 0
         f = 0
         while True:
             time = time + 1
+            # Update U
             for i in range(viewNum):
-                tmp1 = options['afa'] * np.matmul(B[i], B[i].T)
-                tmp2 = np.matmul(np.matmul(V.T, W[i]), V)
-                tmp3 = np.matmul(np.matmul(X[i], W[i]), V) + options['afa'] * B[i]
+                tmp1 = afa * (B[i] @ B[i].T)
+                tmp2 = V.T @ W[i] @ V
+                tmp3 = X[i] @ W[i] @ V + afa * B[i]
                 U[i] = lyap(tmp1, tmp2, -tmp3)
 
+            # Update V
             V = self._update_v_daimc(X, W, U, V, viewNum)
-            Q = np.diag(np.matmul(np.ones(V.shape[0], ), V))
-            V = np.matmul(V, np.linalg.inv(Q))
-            for i in range(viewNum):
-                U[i] = np.matmul(U[i], Q)
-                invD = np.diag(1. / np.diag(0.5 * options['beta'] * D[i]))
-                B[i] = np.matmul((invD - np.matmul(np.matmul(np.matmul(np.matmul(invD, U[i]), np.linalg.inv(np.matmul(
-                    np.matmul(U[i].T, invD), U[i]) + np.eye(n_clusters))), U[i].T), invD)), U[i])
-                for k in range(B[i].shape[0]):
-                    D[i][k, k] = 1 / np.sqrt(np.linalg.norm(B[i][k, :], 2) ** 2 + eta)
 
+            # Normalize V
+            Q_diag = np.sum(V, axis=0)
+            V = V / Q_diag
+
+            # Update U and B
+            for i in range(viewNum):
+                U[i] = U[i] * Q_diag
+
+                # Compute invD efficiently (diagonal matrix operations)
+                invD_diag = 1.0 / (0.5 * beta * D[i])
+
+                # B update formula: B = (invD - invD*U*inv(U'*invD*U + I)*U'*invD)*U
+                # Using diagonal structure for efficiency
+                invD_U = U[i] * invD_diag[:, np.newaxis]  # invD @ U
+                U_invD_U = invD_U.T @ U[i]  # U' @ invD @ U
+                inner_inv = np.linalg.inv(U_invD_U + eye_r)
+
+                # Full formula step by step
+                term = invD_U @ inner_inv @ invD_U.T  # invD*U*inv*U'*invD
+                B[i] = (invD_diag[:, np.newaxis] * U[i]) - (term @ U[i])
+
+                # Vectorized D update
+                D[i] = 1.0 / np.sqrt(np.sum(B[i] ** 2, axis=1) + eta)
+
+            # Compute objective function
             ff = 0
             for i in range(viewNum):
-                tmp1 = np.matmul((X[i] - np.matmul(U[i], V.T)), W[i])
-                tmp2 = np.matmul(B[i].T, U[i]) - np.eye(n_clusters)
-                tmp3 = np.sum(1. / np.diag(D[i]))
-                ff = ff + np.sum(np.sum(tmp1 ** 2)) + options['afa'] * np.sum(np.sum(tmp2 ** 2)) + options[
-                    'beta'] * tmp3
+                tmp1 = (X[i] - U[i] @ V.T) @ W[i]
+                tmp2 = B[i].T @ U[i] - eye_r
+                tmp3 = np.sum(1.0 / D[i])
+                ff += np.sum(tmp1 ** 2) + afa * (np.sum(tmp2 ** 2) + beta * tmp3)
 
             F += ff
-            if (np.abs(ff - f) / f < 1e-4) or (np.abs(ff - f) > 1e100) | (time == 30):
+            if (f != 0 and np.abs(ff - f) / f < 1e-4) or (np.abs(ff - f) > 1e100) | (time == 30):
                 break
             f = ff
 
         return U, V, B, F
+
 
     @staticmethod
     def _update_v_daimc(X, W, U, V, viewNum):
@@ -400,34 +424,36 @@ class DAIMC(BaseEstimator, ClusterMixin):
             sumXUplus = 0
 
             for i in range(viewNum):
-                XU = np.matmul(X[i].T, U[i])
+                XU = X[i].T @ U[i]
                 absXU = np.abs(XU)
-                XUplus = (absXU + XU) / 2
-                XUminus = (absXU - XU) / 2
+                XUplus = (absXU + XU) * 0.5
+                XUminus = (absXU - XU) * 0.5
 
-                UU = np.matmul(U[i].T, U[i])
+                UU = U[i].T @ U[i]
                 absUU = np.abs(UU)
-                UUplus = (absUU + UU) / 2
-                UUminus = (absUU - UU) / 2
+                UUplus = (absUU + UU) * 0.5
+                UUminus = (absUU - UU) * 0.5
 
-                sumXUminus = sumXUminus + np.matmul(W[i], XUminus)
-                sumXUplus = sumXUplus + np.matmul(W[i], XUplus)
+                sumXUminus += W[i] @ XUminus
+                sumXUplus += W[i] @ XUplus
 
-                sumVUUplus = sumVUUplus + np.matmul(np.matmul(W[i], V), UUplus)
-                sumVUUminus = sumVUUminus + np.matmul(np.matmul(W[i], V), UUminus)
+                WV = W[i] @ V
+                sumVUUplus += WV @ UUplus
+                sumVUUminus += WV @ UUminus
 
-            V = V * np.sqrt((sumXUplus + sumVUUminus) / (np.maximum(sumXUminus + sumVUUplus, 1e-10)))
+            V *= np.sqrt((sumXUplus + sumVUUminus) / np.maximum(sumXUminus + sumVUUplus, 1e-10))
             ff = 0
 
             for i in range(viewNum):
-                tmp = np.matmul((X[i] - np.matmul(U[i], V.T)), W[i])
-                ff = ff + np.sum(np.sum(tmp ** 2))
+                tmp = (X[i] - U[i] @ V.T) @ W[i]
+                ff += np.sum(tmp ** 2)
 
-            if (np.abs((ff - f) / f) < 1e-4) | (np.abs(ff - f) > 1e100) | (time == 30):
+            if (f != 0 and np.abs((ff - f) / f) < 1e-4) | (np.abs(ff - f) > 1e100) | (time == 30):
                 break
 
             f = ff
         return V
+
 
     @staticmethod
     def _processing_xs(Xs):

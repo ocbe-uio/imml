@@ -12,7 +12,7 @@ from imml import octavemodule_installed
 
 @pytest.fixture
 def sample_data():
-    X = np.random.default_rng(42).random((8, 5))
+    X = np.random.default_rng(42).random((15, 5))
     X = pd.DataFrame(X)
     X1, X2, X3 = X.iloc[:, :2], X.iloc[:, 2:4], X.iloc[:, 4:]
     Xs_pandas, Xs_numpy = [X1, X2, X3], [X1.values, X2.values, X3.values]

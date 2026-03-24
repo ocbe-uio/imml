@@ -103,7 +103,7 @@ def get_com_samples(Xs: list) -> pd.Index:
     samples = get_observed_mod_indicator(Xs)
     if not isinstance(samples, pd.DataFrame):
         samples = pd.DataFrame(samples)
-    samples = samples[samples.all(1)].index
+    samples = samples[samples.all(axis=1)].index
     return samples
 
 
@@ -138,7 +138,7 @@ def get_incom_samples(Xs: list) -> pd.Index:
     samples = get_observed_mod_indicator(Xs)
     if not isinstance(samples, pd.DataFrame):
         samples = pd.DataFrame(samples)
-    samples = samples[~samples.all(1)].index
+    samples = samples[~samples.all(axis=1)].index
     return samples
 
 

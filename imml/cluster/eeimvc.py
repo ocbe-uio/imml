@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 from sklearn.gaussian_process import kernels
-from scipy.sparse.linalg import eigs
+from scipy.sparse.linalg import eigsh
 from numpy.linalg import svd
 
 from ..impute import get_observed_mod_indicator
@@ -244,6 +244,57 @@ class EEIMVC(BaseEstimator, ClusterMixin):
         return None
 
 
+    def _kcenter(self, K):
+        r"""
+        Center a kernel matrix.
+
+        Parameters
+        ----------
+        K: array of shape (n_samples, n_samples) or (n_samples, n_samples, n_kernels)
+
+        Returns
+        -------
+        K: centered kernel matrix
+        """
+        if K.ndim == 2:
+            n = K.shape[1]
+            D = np.sum(K, axis=0) / n
+            E = np.sum(D) / n
+            J = np.outer(np.ones(n), D)
+            K = K - J - J.T + E * np.ones((n, n))
+            K = 0.5 * (K + K.T)
+        elif K.ndim == 3:
+            n = K.shape[1]
+            for i in range(K.shape[2]):
+                D = np.sum(K[:, :, i], axis=0) / n
+                E = np.sum(D) / n
+                J = np.outer(np.ones(n), D)
+                K[:, :, i] = K[:, :, i] - J - J.T + E * np.ones((n, n))
+                K[:, :, i] = 0.5 * (K[:, :, i] + K[:, :, i].T) + 1e-12 * np.eye(n)
+        return K
+
+
+    def _knorm(self, K):
+        r"""
+        Normalize a kernel matrix.
+
+        Parameters
+        ----------
+        K: array of shape (n_samples, n_samples) or (n_samples, n_samples, n_kernels)
+
+        Returns
+        -------
+        K: normalized kernel matrix
+        """
+        if K.ndim == 3:
+            for i in range(K.shape[2]):
+                diag_k = np.diag(K[:, :, i])
+                K[:, :, i] = K[:, :, i] / np.sqrt(np.outer(diag_k, diag_k))
+        else:
+            diag_k = np.diag(K)
+            K = K / np.sqrt(np.outer(diag_k, diag_k))
+        return K
+
 
     def _my_initialization_Hp(self, KH, S, n_clusters):
         r"""
@@ -274,12 +325,15 @@ class EEIMVC(BaseEstimator, ClusterMixin):
             obs_index = np.setdiff1d(ar1=[i for i in range(num)], ar2=[i-1 for i in S[p]['indx'].T])
             KAp = KH_tmp[np.ix_(obs_index, obs_index)]
             KAp = (KAp + KAp.T) / 2 + 1e-8 * np.eye(len(obs_index))
+            # Use eigsh for symmetric matrices (kernel matrices are symmetric)
             if self.random_state is not None:
                 v0 = np.random.default_rng(self.random_state).uniform(size=min(KAp.shape))
                 with fixed_seed(self.random_state):
-                    _, Hp = eigs(KAp, n_clusters, which='LR', v0=v0)
+                    _, Hp = eigsh(KAp, n_clusters, which='LA', v0=v0)
             else:
-                _, Hp = eigs(KAp, n_clusters, which='LR')
+                _, Hp = eigsh(KAp, n_clusters, which='LA')
+
+            # eigsh returns real values for symmetric matrices
 
             HP_tmp[np.ix_(obs_index), :] = Hp
             HP[:, :, p] = HP_tmp
@@ -287,9 +341,10 @@ class EEIMVC(BaseEstimator, ClusterMixin):
 
         return HP, WP
 
+
     def _algorithm2(self, KH, S):
         r"""
-        Process KH with the missing index.
+        Process KH with the missing index and apply kcenter and knorm per view.
 
         Parameters
         ----------
@@ -311,6 +366,20 @@ class EEIMVC(BaseEstimator, ClusterMixin):
 
             obs_index = np.setdiff1d(ar1=[i for i in range(num)], ar2=[i-1 for i in S[p]['indx'].T])
             KAp = KH_tmp[np.ix_(obs_index, obs_index)]
+
+            # Apply kcenter on observed kernel
+            n_obs = len(obs_index)
+            D = np.sum(KAp, axis=0) / n_obs
+            E = np.sum(D) / n_obs
+            J = np.outer(np.ones(n_obs), D)
+            KAp = KAp - J - J.T + E * np.ones((n_obs, n_obs))
+            KAp = 0.5 * (KAp + KAp.T)
+
+            # Apply knorm on observed kernel
+            diag_k = np.diag(KAp)
+            KAp = KAp / np.sqrt(np.outer(diag_k, diag_k))
+
+            # Symmetrize
             KH2_tmp[np.ix_(obs_index, obs_index)] = (KAp + KAp.T)/2
             KH2[:, :, p] = KH2_tmp
 
@@ -355,15 +424,14 @@ class EEIMVC(BaseEstimator, ClusterMixin):
         H_normalized: 2-D array of shape (n_samples, n_clusters)
         """
         K = (K + K.T) / 2
+        # Use eigsh for symmetric matrices (kernel matrices are symmetric)
         if self.random_state is not None:
             v0 = np.random.default_rng(self.random_state).uniform(size=min(K.shape))
             with fixed_seed(self.random_state):
-                _, H = eigs(K, n_clusters, which='LR', v0=v0)
+                _, H = eigsh(K, n_clusters, which='LA', v0=v0)
         else:
-            _, H = eigs(K, n_clusters, which='LR')
-        obj = np.trace(np.matmul(H.T, np.matmul(K, H))) - np.trace(K)
-        H_normalized = H
-        return H_normalized
+            _, H = eigsh(K, n_clusters, which='LA')
+        return H
 
 
     def _update_WP_absent_clustering_V1(self, HP, Hstar):
@@ -386,7 +454,7 @@ class EEIMVC(BaseEstimator, ClusterMixin):
             Tp = np.matmul(HP[:, :, p].T, Hstar)
             Up, Sp, Vp = np.linalg.svd(Tp, full_matrices=False)
             V = Vp.T.conj()
-            WP[:, :, p] = np.matmul(Up, V.T)
+            WP[:, :, p] = np.real(np.matmul(Up, V.T))
 
         return WP
 
@@ -420,7 +488,7 @@ class EEIMVC(BaseEstimator, ClusterMixin):
                 Vp = np.matmul(Hstar[np.ix_(mis_indx), :], WP[:, :, p].T)
                 Up, Sp, Vp = svd(Vp, full_matrices=False)
                 V = Vp.T.conj()
-                HP[mis_indx, :, p] = np.matmul(Up, V.T)
+                HP[mis_indx, :, p] = np.real(np.matmul(Up, V.T))
 
             HP_tmp = HP[:, :, p]
             HP00_tmp = HP00[:, :, p]
@@ -450,9 +518,9 @@ class EEIMVC(BaseEstimator, ClusterMixin):
         HHPWP = np.zeros(shape=(numker, 1))
 
         for p in range(numker):
-            HHPWP[p] = np.trace(np.matmul(Hstar.T, np.matmul(HP[:, :, p], WP[:, :, p])))
+            HHPWP[p] = np.real(np.trace(np.matmul(Hstar.T, np.matmul(HP[:, :, p], WP[:, :, p]))))
 
-        beta = HHPWP**(1/qnorm-1) / np.sum(HHPWP**(qnorm/(qnorm-1)))**(1/qnorm)
+        beta = HHPWP**(1/(qnorm-1)) / np.sum(HHPWP**(qnorm/(qnorm-1)))**(1/qnorm)
         return beta
 
 
@@ -496,7 +564,6 @@ class EEIMVC(BaseEstimator, ClusterMixin):
 
         RpHpwp_lambda = RpHpwp + (lambda_reg * H0)
         obj = []
-        obj.append(0)
         while flag:
             iter += 1
             Uh, Sh, Vh = svd(RpHpwp_lambda, full_matrices=False)
@@ -512,9 +579,9 @@ class EEIMVC(BaseEstimator, ClusterMixin):
                 RpHpwp += beta[p] * np.matmul(HP[:, :, p], WP[:, :, p])
 
             RpHpwp_lambda = RpHpwp + (lambda_reg * H0)
-            obj.append(np.trace(np.matmul(Hstar.T, RpHpwp_lambda)))
+            obj.append(np.real(np.trace(np.matmul(Hstar.T, RpHpwp_lambda))))
 
-            if (iter > 2) and (np.abs((obj[iter] - obj[iter-1]) / obj[iter])) < 1e-4 or (iter > maxIter):
+            if (iter > 2) and (np.abs((obj[iter-1] - obj[iter-2]) / obj[iter-1])) < 1e-4 or (iter > maxIter):
                 flag = 0
 
 

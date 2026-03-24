@@ -41,6 +41,14 @@ Updates in this release:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Fix| Fixed device when processing images in :class:`~imml.classify.M3Care`.
 
+:mod:`imml.cluster`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Fix| Fixed eigensolver to use :code:`eigsh` instead of :code:`eigs` for symmetric kernel matrices
+  in :class:`~imml.cluster.EEIMVC`, ensuring equivalence with the original MATLAB implementation.
+- |Fix| Fixed error in original Matlab implementation :class:`~imml.cluster.SIMCADC`.
+- |Fix| Revised Python translation in :class:`~imml.cluster.LFIMVC`.
+- |Fix| Revised Python translation in :class:`~imml.cluster.DAIMC`.
+
 :mod:`imml.model_selection`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Fix| Fixed default return_type parameter in :class:`~imml.model_selection.MMSplitter`.
