@@ -84,6 +84,7 @@ jobs:
         octave --eval 'pkg install statistics.tar.gz'
         octave --eval 'pkg load control; pkg load statistics; ver'
         Rscript -e "install.packages(c('nnTensor', 'SNFtool'), repos='http://cran.r-project.org')"
+        brew install xquartz
     - name: Test r
       run: |
         uv pip install ".[r]"
