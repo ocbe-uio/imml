@@ -12,9 +12,6 @@ permissions:
   contents: read
   id-token: write
 
-env:
-#  UV_SYSTEM_PYTHON: 1
-
 jobs:
   build:
     if: ${{ github.actor != 'nektos/act' }}
