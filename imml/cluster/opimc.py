@@ -33,7 +33,7 @@ class OPIMC(BaseEstimator, ClusterMixin):
         Maximum number of iterations.
     tol : float, default=1e-6
         Tolerance of the stopping condition.
-    block_size : int, default=50
+    batch_size : int, default=250
         Size of the chunk.
     random_state : int, default=None
         Determines the randomness. Use an int to make the randomness deterministic.
@@ -72,7 +72,7 @@ class OPIMC(BaseEstimator, ClusterMixin):
     """
 
     def __init__(self, n_clusters: int = 8, alpha: float = 10, num_passes: int = 1, max_iter: int = 30,
-                 tol: float = 1e-6, block_size: int = 250, random_state:int = None, engine: str ="octave",
+                 tol: float = 1e-6, batch_size: int = 250, random_state:int = None, engine: str ="octave",
                  verbose = False, clean_space: bool = True):
         if not isinstance(n_clusters, int):
             raise ValueError(f"Invalid n_clusters. It must be an int. A {type(n_clusters)} was passed.")
@@ -83,13 +83,17 @@ class OPIMC(BaseEstimator, ClusterMixin):
             raise ValueError(f"Invalid engine. Expected one of {engines_options}. {engine} was passed.")
         if (engine == "octave") and (not octavemodule_installed):
             raise ImportError(oct2py_module_error)
+        if not isinstance(max_iter, int):
+            raise ValueError(f"Invalid max_iter. It must be an int. A {type(max_iter)} was passed.")
+        if max_iter < 1:
+            raise ValueError(f"Invalid max_iter. It must be an greater than 0. {max_iter} was passed.")
 
         self.n_clusters = n_clusters
         self.alpha = alpha
         self.num_passes = num_passes
         self.max_iter = max_iter
         self.tol = tol
-        self.block_size = block_size
+        self.batch_size = batch_size
         self.random_state = random_state
         self.engine = engine
         self.verbose = verbose
@@ -138,7 +142,7 @@ class OPIMC(BaseEstimator, ClusterMixin):
             transformed_Xs = tuple(transformed_Xs)
 
             w = tuple([self._oc.diag(missing_mod) for missing_mod in observed_mod_indicator])
-            options = {"block_size": self.block_size, "k": self.n_clusters, "maxiter": self.max_iter,
+            options = {"batch_size": self.batch_size, "k": self.n_clusters, "maxiter": self.max_iter,
                        "tol": self.tol, "pass": self.num_passes, "loss": 0, "alpha": self.alpha}
             if self.random_state is not None:
                 self._oc.rand('seed', self.random_state)

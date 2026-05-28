@@ -33,21 +33,24 @@ Change tags (adopted from `Scikit-learn
 
 Version 0.3.1
 -------------
-March 17, 2025
+May 28, 2025
 
 Updates in this release:
 
 :mod:`imml.classify`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Fix| Fixed device when processing images in :class:`~imml.classify.M3Care`.
+- |Fix| Better alignment with the original implementation of :class:`~imml.classify.RAGPT`.
 
 :mod:`imml.cluster`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Fix| Fixed eigensolver to use :code:`eigsh` instead of :code:`eigs` for symmetric kernel matrices
   in :class:`~imml.cluster.EEIMVC`, ensuring equivalence with the original MATLAB implementation.
-- |Fix| Fixed error in original Matlab implementation :class:`~imml.cluster.SIMCADC`.
+- |Fix| Fixed error in original Octave implementation :class:`~imml.cluster.SIMCADC`.
 - |Fix| Revised Python translation in :class:`~imml.cluster.LFIMVC`.
 - |Fix| Revised Python translation in :class:`~imml.cluster.DAIMC`.
+- |Fix| Revised Python translation in :class:`~imml.cluster.NEMO`.
+- |API| Block_size parameter changed to batch_size in :class:`~imml.cluster.OPIMC`.
 
 :mod:`imml.model_selection`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -57,6 +60,7 @@ Updates in this release:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Fix| Fixed :class:`~imml.preprocessing.select_complete_samples` and
   :class:`~imml.preprocessing.select_incomplete_samples` when working with string and object dtypes.
+- |Fix| Removed redundant mask calculation in :class:`~imml.preprocessing.select_incomplete_samples`.
 
 
 Version 0.3.0

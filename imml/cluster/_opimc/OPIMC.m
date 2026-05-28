@@ -8,7 +8,7 @@ function [Clu_result, V] = OPIMC(X, W, option, ind)
     num_passes = option.pass;
     num_views = numel(X);
     total = size(X{1}, 2);                  
-    block_size = option.block_size;
+    block_size = option.batch_size;
     alpha = option.alpha;
 
     skip_loss = option.loss;

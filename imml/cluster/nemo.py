@@ -6,8 +6,6 @@ from typing import Union
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClusterMixin
-from sklearn.cluster import SpectralClustering
-from sklearn.manifold import spectral_embedding
 
 from ._snf import get_n_clusters, make_affinity
 from ..impute import get_observed_mod_indicator
@@ -146,7 +144,9 @@ class NEMO(BaseEstimator, ClusterMixin):
             samples = observed_mod_indicator.index
 
             if self.num_neighbors is None:
-                self.num_neighbors_ = [round(len(X)/self.num_neighbors_ratio) for X in Xs]
+                # Calculate K based on number of samples in each modality (matching R)
+                self.num_neighbors_ = [round(np.sum(observed_mod_indicator.iloc[:, mod_idx])/self.num_neighbors_ratio)
+                                       for mod_idx in range(len(Xs))]
             elif not isinstance(self.num_neighbors, list):
                 self.num_neighbors_ = [self.num_neighbors]*len(Xs)
             else:
@@ -197,13 +197,13 @@ class NEMO(BaseEstimator, ClusterMixin):
             self.n_clusters_ = self.n_clusters if isinstance(self.n_clusters, int) else \
                 get_n_clusters(arr= affinity_matrix.values, n_clusters= self.n_clusters)[0]
 
-            model = SpectralClustering(n_clusters= self.n_clusters_, random_state= self.random_state,
-                                       affinity="precomputed")
-            labels = model.fit_predict(X= affinity_matrix)
-            transformed_Xs = spectral_embedding(model.affinity_matrix_, n_components=self.n_clusters_,
-                                                eigen_solver=model.eigen_solver, random_state=self.random_state,
-                                                eigen_tol=model.eigen_tol, drop_first=False)
-            self.embedding_ = transformed_Xs
+            # Use custom spectral clustering that matches SNFtool's implementation
+            labels, embedding = self._spectral_clustering_snftool(
+                affinity_matrix.values,
+                self.n_clusters_,
+                random_state=self.random_state
+            )
+            self.embedding_ = embedding
 
 
         elif self.engine == "r":
@@ -219,7 +219,12 @@ class NEMO(BaseEstimator, ClusterMixin):
             affinity_matrix_r, self.num_neighbors_ = output[0], list(output[1])
 
             # Get row/column names from R affinity matrix
-            r_sample_order = list(robjects.r['rownames'](affinity_matrix_r))
+            rownames_r = robjects.r['rownames'](affinity_matrix_r)
+            if rownames_r == robjects.NULL:
+                # If rownames are NULL, use original sample order
+                r_sample_order = original_samples
+            else:
+                r_sample_order = list(rownames_r)
 
             if isinstance(self.n_clusters, list):
                 self.n_clusters_ = int(robjects.globalenv['nemo.num.clusters'](affinity_matrix_r)[0])
@@ -322,3 +327,117 @@ class NEMO(BaseEstimator, ClusterMixin):
         result = result / row_sums
 
         return result
+
+    def _discretisation_eigen_vector_data(self, eigen_vector):
+        """
+        Implements SNFtool's .discretisationEigenVectorData function.
+
+        Converts continuous eigenvector matrix to discrete cluster assignment.
+        """
+        n, k = eigen_vector.shape
+        Y = np.zeros((n, k))
+
+        # For each row, find the column with maximum value
+        max_indices = np.argmax(eigen_vector, axis=1)
+        Y[np.arange(n), max_indices] = 1
+
+        return Y
+
+    def _discretisation(self, eigen_vectors):
+        """
+        Implements SNFtool's .discretisation function.
+
+        This is the discretization algorithm used by SNFtool for spectral clustering.
+        It's different from the Yu & Shi (2003) method used by sklearn.
+        """
+        # Normalize rows
+        row_norms = np.linalg.norm(eigen_vectors, axis=1, keepdims=True)
+        row_norms[row_norms == 0] = 1
+        eigen_vectors = eigen_vectors / row_norms
+
+        n, k = eigen_vectors.shape
+        R = np.zeros((k, k))
+
+        # Initialize R with middle row
+        # Note: R uses 1-based indexing, so eigenVectors[round(n/2), ] in R
+        # corresponds to eigen_vectors[round(n/2)-1, :] in Python (0-based)
+        mid_idx = max(0, round(n/2) - 1)
+        R[:, 0] = eigen_vectors[mid_idx, :]
+
+        c = np.zeros((n, 1))
+
+        # Build rotation matrix R
+        for j in range(1, k):
+            c = c + np.abs(eigen_vectors @ R[:, j-1].reshape(k, 1))
+            i = np.argmin(c)
+            R[:, j] = eigen_vectors[i, :]
+
+        # Iterative refinement (max 20 iterations)
+        last_objective_value = 0
+
+        for iteration in range(20):
+            # Discretize
+            eigen_discrete = self._discretisation_eigen_vector_data(eigen_vectors @ R)
+
+            # SVD
+            U, S, Vt = np.linalg.svd(eigen_discrete.T @ eigen_vectors, full_matrices=False)
+
+            # Compute NCut value
+            ncut_value = 2 * (n - np.sum(S))
+
+            # Check convergence
+            if np.abs(ncut_value - last_objective_value) < np.finfo(float).eps:
+                break
+
+            last_objective_value = ncut_value
+            R = Vt.T @ U.T
+
+        return eigen_discrete
+
+    def _spectral_clustering_snftool(self, affinity, n_clusters, random_state=None):
+        """
+        Implements SNFtool's spectralClustering function (type=3).
+
+        This matches the R implementation from:
+        https://github.com/maxconway/SNFtool/blob/master/R/SNF.R
+        """
+        # Step 1: Compute degree
+        d = np.array(affinity.sum(axis=1)).flatten()
+        d[d == 0] = np.finfo(float).eps
+
+        # Step 2: Create Laplacian L = D - W
+        D = np.diag(d)
+        L = D - affinity
+
+        # Step 3: Normalized Laplacian (type=3): NL = D^{-1/2} L D^{-1/2}
+        Di = np.diag(1.0 / np.sqrt(d))
+        NL = Di @ L @ Di
+
+        # Ensure NL is symmetric (numerical errors can make it slightly asymmetric)
+        NL = (NL + NL.T) / 2
+
+        # Step 4: Eigen decomposition using eigh for symmetric matrices
+        # This is more stable and returns real eigenvalues/eigenvectors
+        eigenvalues, eigenvectors = np.linalg.eigh(NL)
+
+        # Step 5: Sort by absolute eigenvalue (ascending) and take first K eigenvectors
+        # Note: eigh already returns sorted eigenvalues in ascending order
+        idx = np.argsort(np.abs(eigenvalues))
+        U = eigenvectors[:, idx[:n_clusters]]
+
+        # Step 5b: Standardize signs of eigenvectors to match R's behavior
+        # R's eigen() may return eigenvectors with different signs than Python's eigh()
+        # We need to match the sign convention to ensure the discretisation produces same results
+        # R appears to use a convention where the sum of each eigenvector is positive
+        for col in range(U.shape[1]):
+            if np.sum(U[:, col]) < 0:
+                U[:, col] = -U[:, col]
+
+        # Step 6: Discretization - use SNFtool's discretisation method
+        # Note: _discretisation will normalize rows internally (type=3 behavior)
+        eigen_discrete = self._discretisation(U)
+
+        # Extract labels from discrete matrix
+        labels = np.argmax(eigen_discrete, axis=1)
+
+        return labels, U

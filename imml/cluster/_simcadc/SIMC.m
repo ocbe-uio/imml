@@ -1,12 +1,10 @@
-function [UU,V,A,W,Z_final,iter,obj] = SIMC(Y,num_sample,lambda,d,num_anchor,N,Ne,E,beta,gamma,eps)
+function [UU,V,A,W,Z_final,iter,obj] = SIMC(Y,num_sample,lambda,d,num_anchor,N,Ne,E,beta,gamma,eps,maxIter)
 % m      : the number of anchor. the size of Z is m*n.
 % lambda : the hyper-parameter of regularization term.
 % X      : n*di
 % N      : ni*n
 
 %% initialize
-maxIter = 50 ; % the number of iterations
-
 num_view = length(Y);
 
 W = cell(num_view,1);            % di * d

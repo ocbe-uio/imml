@@ -271,16 +271,14 @@ class RAGPTModule(Module):
 
         recovered_t = self.MMG_t(r_t_list)
         recovered_i = self.MMG_i(r_i_list)
-        t_observed_mask = torch.tensor(observed_text).to(pixel_values.device)
-        i_observed_mask = torch.tensor(observed_image).to(pixel_values.device)
-        observed_mask_t = t_observed_mask.view(-1, 1, 1).expand(-1,self.max_text_len, self.hs)
+        t_observed_mask = torch.as_tensor(observed_text, dtype=torch.float32).to(pixel_values.device)
+        i_observed_mask = torch.as_tensor(observed_image, dtype=torch.float32).to(pixel_values.device)
+        observed_mask_t = t_observed_mask.view(-1, 1, 1).expand(-1, self.max_text_len, self.hs)
         observed_mask_i = i_observed_mask.view(-1, 1, 1).expand(-1, 145, self.hs)
-        text_emb = text_emb * observed_mask_t + recovered_t * (~observed_mask_t)
-        image_emb = image_emb * observed_mask_i + recovered_i * (~observed_mask_i)
+        text_emb = text_emb * observed_mask_t + recovered_t * (1 - observed_mask_t)
+        image_emb = image_emb * observed_mask_i + recovered_i * (1 - observed_mask_i)
 
-        t_prompt,i_prompt = self.dynamic_prompt(r_i=r_i_list, r_t=r_t_list, T=text_emb, V=image_emb)
-        t_prompt = torch.mean(t_prompt, dim=1)
-        i_prompt = torch.mean(i_prompt, dim=1)
+        t_prompt, i_prompt = self.dynamic_prompt(r_i=r_i_list, r_t=r_t_list, T=text_emb, V=image_emb)
 
         label_emb = self.label_enhanced[r_l_list]
         label_cls = self.label_enhanced
@@ -295,7 +293,7 @@ class RAGPTModule(Module):
         )
         for i, layer_module in enumerate(self.encoder_layer):
             if i == self.prompt_position:
-                output = torch.cat([label_emb,t_prompt.unsqueeze(1),i_prompt.unsqueeze(1),output], dim=1)
+                output = torch.cat([label_emb, t_prompt, i_prompt, output], dim=1)
                 prompt_mask = torch.ones(N, 1+self.prompt_length*2,
                                         dtype=current_attention_mask.dtype,
                                         device=pixel_values.device)

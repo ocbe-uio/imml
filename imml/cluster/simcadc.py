@@ -39,6 +39,8 @@ class SIMCADC(BaseEstimator, ClusterMixin):
         Balance the influence between anchor graph generation and alignment term.
     gamma : float, default=1
         Balance the influence between anchor graph generation and alignment term.
+    max_iter : int, default=50
+        Maximum number of iterations.
     random_state : int, default=None
         Determines the randomness. Use an int to make the randomness deterministic.
     engine : str, default=python
@@ -82,7 +84,7 @@ class SIMCADC(BaseEstimator, ClusterMixin):
     """
 
     def __init__(self, n_clusters: int = 8, lambda_parameter: float = 1, n_anchors: int = None,
-                 beta: float = 1, gamma: float = 1, eps: float = 1e-25, random_state:int = None,
+                 beta: float = 1, gamma: float = 1, eps: float = 1e-25, max_iter: int = 30, random_state:int = None,
                  engine: str ="python", verbose = False, clean_space: bool = True):
         if not isinstance(n_clusters, int):
             raise ValueError(f"Invalid n_clusters. It must be an int. A {type(n_clusters)} was passed.")
@@ -93,6 +95,10 @@ class SIMCADC(BaseEstimator, ClusterMixin):
             raise ValueError(f"Invalid engine. Expected one of {engines_options}. {engine} was passed.")
         if (engine == "octave") and (not octavemodule_installed):
             raise ImportError(oct2py_module_error)
+        if not isinstance(max_iter, int):
+            raise ValueError(f"Invalid max_iter. It must be an int. A {type(max_iter)} was passed.")
+        if max_iter < 1:
+            raise ValueError(f"Invalid max_iter. It must be an greater than 0. {max_iter} was passed.")
 
         self.n_clusters = n_clusters
         self.lambda_parameter = lambda_parameter
@@ -100,6 +106,7 @@ class SIMCADC(BaseEstimator, ClusterMixin):
         self.gamma = gamma
         self.eps = eps
         self.n_anchors = n_clusters if n_anchors is None else n_anchors
+        self.max_iter = max_iter
         self.random_state = random_state
         self.engine = engine
         self.verbose = verbose
@@ -157,8 +164,9 @@ class SIMCADC(BaseEstimator, ClusterMixin):
             if self.random_state is not None:
                 self._oc.rand('seed', self.random_state)
             u,v,a,w,z,iter,obj = self._oc.SIMC(transformed_Xs, len(Xs[0]), self.lambda_parameter,
-                                                self.n_clusters, self.n_anchors, w, n_incomplete_samples_mod,
-                                                mean_mod_profile, self.beta, self.gamma, self.eps, nout=7)
+                                               self.n_clusters, self.n_anchors, w, n_incomplete_samples_mod,
+                                               mean_mod_profile, self.beta, self.gamma, self.eps, self.max_iter,
+                                               nout=7)
             obj = obj[0]
 
             if self.clean_space:
@@ -330,7 +338,6 @@ class SIMCADC(BaseEstimator, ClusterMixin):
         obj: List of floats of length (iter)
         """
         # Initialize parameters
-        maxIter = 50
         num_view = len(Y)
 
         W = [None] * num_view
@@ -416,7 +423,7 @@ class SIMCADC(BaseEstimator, ClusterMixin):
             term2 = lambda_parameter * np.linalg.norm(Z_final, 'fro') ** 2
             obj.append(term1 + term2)
 
-            if iter > 9 and (abs((obj[iter - 2] - obj[iter - 1]) / obj[iter - 2]) < 1e-3 or iter > maxIter or obj[
+            if iter > 9 and (abs((obj[iter - 2] - obj[iter - 1]) / obj[iter - 2]) < 1e-3 or iter > self.max_iter or obj[
                 iter - 1] < 1e-10):
                 UU, _, V = svd(Z_final.T, full_matrices=False)
                 V = V.T.conj()

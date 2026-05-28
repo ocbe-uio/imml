@@ -182,8 +182,8 @@ class M3Care(LightningModule):
         Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
         Xs, y, observed_mod_indicator = batch
-        y_pred, _ = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
-        loss = self.loss_fn(y_pred, y)
+        y_pred, sum_of_diff = self.model(Xs=Xs, observed_mod_indicator=observed_mod_indicator)
+        loss = self.loss_fn(y_pred, y) + sum_of_diff.sum() * 1e-7
         return loss
 
 
@@ -359,8 +359,10 @@ class M3CareModule(Module):
         sum_of_diff = torch.stack(diffs, dim=1).sum(dim=1)
 
         sim_sum = torch.stack(sim_mats, dim=0).sum(dim=0)
-        mask_sum = torch.stack(mask2_mats, dim=0).sum(dim=0)
-        similar_score = sim_sum / mask_sum
+        mask_sum = torch.stack(mask2_mats, dim=0).sum(dim=0).float()
+        # Avoid division by zero: when no modality is shared between a pair (i,j),
+        # mask_sum[i,j]=0 which would produce Inf, then Inf*0=NaN in GCN adjacency.
+        similar_score = torch.where(mask_sum > 0, sim_sum / mask_sum.clamp(min=1), torch.zeros_like(sim_sum))
 
         th = torch.sigmoid(self.threshold)[0]
         similar_score = F.relu(similar_score - th)
@@ -389,9 +391,11 @@ class M3CareModule(Module):
                 h_[torch.logical_not(mask_[:, 0]), 0] = g[torch.logical_not(mask_[:, 0])]
                 emb = self.PositionalEncoding(h_)
             else:
-                h_[mask_[:, 0]] = final[mask_[:, 0]]
+                # Observed samples: use original features (matching original paper design).
+                # Missing samples: use GCN output for imputation, consistent with how
+                # the original handles missing text modalities.
                 h_[torch.logical_not(mask_[:, 0])] = g[torch.logical_not(mask_[:, 0])]
-                emb = h.unsqueeze(1)
+                emb = h_.unsqueeze(1)
             mask = torch.ones_like(mask.permute(0,2,1).squeeze(-1)).to(h_.device).long()
             emb = emb + self.token_type_embeddings(X_idx * mask)
             embs.append(emb)
@@ -401,7 +405,15 @@ class M3CareModule(Module):
         z1 = F.relu(self.MM_model1(z0, z0_mask))
         z2 = F.relu(self.MM_model2(z1, z0_mask))
 
-        combined_hidden = [z2[:, X_idx] for X_idx in range(len(self.modalities))]
+        # Track the starting position of each modality's first token in z0/z2.
+        # Non-text modalities contribute 1 token; text contributes seq_len tokens.
+        # Using X_idx directly as position is wrong when a text modality precedes others.
+        positions = []
+        pos = 0
+        for emb in embs:
+            positions.append(pos)
+            pos += emb.shape[1]
+        combined_hidden = [z2[:, positions[X_idx]] for X_idx in range(len(self.modalities))]
         combined_hidden = torch.cat(combined_hidden, dim=-1)
         last_hs_proj = self.dropout(F.relu(self.proj1(combined_hidden)))
         output = self.out_layer(last_hs_proj)
