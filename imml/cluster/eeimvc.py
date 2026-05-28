@@ -244,58 +244,6 @@ class EEIMVC(BaseEstimator, ClusterMixin):
         return None
 
 
-    def _kcenter(self, K):
-        r"""
-        Center a kernel matrix.
-
-        Parameters
-        ----------
-        K: array of shape (n_samples, n_samples) or (n_samples, n_samples, n_kernels)
-
-        Returns
-        -------
-        K: centered kernel matrix
-        """
-        if K.ndim == 2:
-            n = K.shape[1]
-            D = np.sum(K, axis=0) / n
-            E = np.sum(D) / n
-            J = np.outer(np.ones(n), D)
-            K = K - J - J.T + E * np.ones((n, n))
-            K = 0.5 * (K + K.T)
-        elif K.ndim == 3:
-            n = K.shape[1]
-            for i in range(K.shape[2]):
-                D = np.sum(K[:, :, i], axis=0) / n
-                E = np.sum(D) / n
-                J = np.outer(np.ones(n), D)
-                K[:, :, i] = K[:, :, i] - J - J.T + E * np.ones((n, n))
-                K[:, :, i] = 0.5 * (K[:, :, i] + K[:, :, i].T) + 1e-12 * np.eye(n)
-        return K
-
-
-    def _knorm(self, K):
-        r"""
-        Normalize a kernel matrix.
-
-        Parameters
-        ----------
-        K: array of shape (n_samples, n_samples) or (n_samples, n_samples, n_kernels)
-
-        Returns
-        -------
-        K: normalized kernel matrix
-        """
-        if K.ndim == 3:
-            for i in range(K.shape[2]):
-                diag_k = np.diag(K[:, :, i])
-                K[:, :, i] = K[:, :, i] / np.sqrt(np.outer(diag_k, diag_k))
-        else:
-            diag_k = np.diag(K)
-            K = K / np.sqrt(np.outer(diag_k, diag_k))
-        return K
-
-
     def _my_initialization_Hp(self, KH, S, n_clusters):
         r"""
         Initialize HP and WP variable.

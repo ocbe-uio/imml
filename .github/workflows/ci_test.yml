@@ -76,7 +76,6 @@ jobs:
         brew install texinfo || true
         brew link --overwrite texinfo
         brew postinstall texinfo || true
-        brew tap homebrew/cask-versions
         brew install --cask r || brew install r
         brew install octave
         curl -L https://github.com/gnu-octave/pkg-control/releases/download/control-4.1.3/control-4.1.3.tar.gz -o control.tar.gz
