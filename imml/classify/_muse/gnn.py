@@ -160,16 +160,17 @@ class MML(Module):
         hidden_dim = Xs[0].size(1)
         x = torch.stack(Xs, dim=1)
 
+        x_flag = ~missing_mod_indicator  # True where modality is PRESENT
         g_patient_nodes = torch.ones(batch_size, hidden_dim)
         g_patient_nodes = g_patient_nodes.to(x.device)
         g_nodes = torch.cat([g_patient_nodes, self.modality_nodes], dim=0)
-        g_edge_index = missing_mod_indicator.nonzero().t()
+        g_edge_index = x_flag.nonzero().t()
         g_edge_index[1] += batch_size
         g_edge_index = torch.cat([g_edge_index, g_edge_index.flip([0])], dim=1)
-        g_edge_attr = x[missing_mod_indicator].repeat(2, 1)
+        g_edge_attr = x[x_flag].repeat(2, 1)
         z = self.gnn(g_nodes, g_edge_attr, g_edge_index)
 
-        ag_x_flag = missing_mod_indicator.clone()
+        ag_x_flag = x_flag.clone()
         ag_x_flag = self.edgedrop(ag_x_flag)
         ag_patient_nodes = torch.ones(batch_size, hidden_dim)
         ag_patient_nodes = ag_patient_nodes.to(x.device)
@@ -210,13 +211,14 @@ class MML(Module):
         hidden_dim = Xs[0].size(1)
         x = torch.stack(Xs, dim=1)
 
+        x_flag = ~missing_mod_indicator  # True where modality is PRESENT
         g_patient_nodes = torch.ones(batch_size, hidden_dim)
         g_patient_nodes = g_patient_nodes.to(x.device)
         g_nodes = torch.cat([g_patient_nodes, self.modality_nodes], dim=0)
-        g_edge_index = missing_mod_indicator.nonzero().t()
+        g_edge_index = x_flag.nonzero().t()
         g_edge_index[1] += batch_size
         g_edge_index = torch.cat([g_edge_index, g_edge_index.flip([0])], dim=1)
-        g_edge_attr = x[missing_mod_indicator].repeat(2, 1)
+        g_edge_attr = x[x_flag].repeat(2, 1)
 
         z = self.gnn(g_nodes, g_edge_attr, g_edge_index)
         z = z[:batch_size]

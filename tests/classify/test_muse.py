@@ -21,9 +21,9 @@ def sample_data():
     n_modalities = 3
     Xs = [torch.rand((batch_size, 10)) for _ in range(n_modalities)]
     y = torch.tensor([0, 1], dtype=torch.float)
-    observed_mod_indicator = torch.ones((batch_size, n_modalities), dtype=torch.bool)
+    missing_mod_indicator = torch.zeros((batch_size, n_modalities), dtype=torch.bool)
     y_indicator = torch.ones((batch_size), dtype=torch.bool)
-    return Xs, y, observed_mod_indicator, y_indicator
+    return Xs, y, missing_mod_indicator, y_indicator
 
 
 def test_deepmodule_not_installed():
@@ -111,8 +111,8 @@ def test_lightning_methods(sample_data):
 
 def test_missing_values_handling(sample_data):
     model = estimator(modalities=["tabular", "tabular", "tabular"], input_dim=[10, 10, 10])
-    sample_data[2][0, 0] = False
-    sample_data[2][1, 1] = False
+    sample_data[2][0, 0] = True  # sample 0, modality 0 is missing
+    sample_data[2][1, 1] = True  # sample 1, modality 1 is missing
     with torch.no_grad():
         loss = model.training_step(sample_data)
     assert isinstance(loss, torch.Tensor)
