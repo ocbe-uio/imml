@@ -15,7 +15,7 @@
 import os
 import re
 import sys
-from distutils.version import LooseVersion
+from packaging.version import Version
 import matplotlib
 import sphinx_rtd_theme
 import sphinx_gallery
@@ -50,7 +50,7 @@ extensions = [
     'sphinx_gallery.gen_gallery',
 ]
 
-if LooseVersion(sphinx_gallery.__version__) < LooseVersion('0.2'):
+if Version(sphinx_gallery.__version__) < Version('0.2'):
     raise ImportError('Must have at least version 0.2 of sphinx-gallery, got '
                       '%s' % (sphinx_gallery.__version__,))
 
@@ -68,7 +68,7 @@ autosummary_generate = True
 
 # -- sphinx.ext.autodoc
 autoclass_content = "both"
-autodoc_default_flags = ["members", "inherited-members"]
+autodoc_default_options = {"members": True}
 autodoc_member_order = "bysource"  # default is alphabetical
 
 # -- sphinx.ext.intersphinx
