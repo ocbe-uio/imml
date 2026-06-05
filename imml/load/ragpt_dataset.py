@@ -56,10 +56,6 @@ class RAGPTDataset(Dataset):
     Attributes
     ----------
     - mcr_: Multi-Channel Retriever (MCR) model for image-text retrieval.
-        self.i2i_r_l_list_ = database['i2i_label_list'].tolist()
-        self.t2t_r_l_list_ = database['t2t_label_list'].tolist()
-        self.observed_image_ = database['observed_image'].tolist()
-        self.observed_text_ = database['observed_text'].tolist()
     - input_ids_list_: Unique identifier for each sample.
     - img_path_list_: Path to the image files.
     - attention_mask_list_: Attention masks for texts.
