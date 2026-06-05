@@ -23,8 +23,7 @@ Remove Modalities
 .. minigallery:: imml.ampute.RemoveMods
    :add-heading: Tutorials
 
-.. autoclass:: remove_mods
-   :members:
+.. autofunction:: remove_mods
 
 .. minigallery:: imml.ampute.remove_mods
    :add-heading: Tutorials

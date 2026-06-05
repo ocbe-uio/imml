@@ -6,9 +6,7 @@ Visualize
 Plot combinations
 --------------------------------
 
-.. autoclass:: plot_combinations
-   :members:
-   :show-inheritance:
+.. autofunction:: plot_combinations
 
 .. minigallery:: imml.visualize.plot_combinations
    :add-heading: Tutorials
@@ -16,9 +14,7 @@ Plot combinations
 Plot missing modality
 --------------------------------
 
-.. autoclass:: plot_missing_modality
-   :members:
-   :show-inheritance:
+.. autofunction:: plot_missing_modality
 
 .. minigallery:: imml.visualize.plot_missing_modality
    :add-heading: Tutorials
@@ -26,9 +22,7 @@ Plot missing modality
 Plot PID
 --------------------------------
 
-.. autoclass:: plot_pid
-   :members:
-   :show-inheritance:
+.. autofunction:: plot_pid
 
 .. minigallery:: imml.visualize.plot_pid
    :add-heading: Tutorials
@@ -36,9 +30,7 @@ Plot PID
 Plot summary
 --------------------------------
 
-.. autoclass:: plot_summary
-   :members:
-   :show-inheritance:
+.. autofunction:: plot_summary
 
 .. minigallery:: imml.visualize.plot_summary
    :add-heading: Tutorials

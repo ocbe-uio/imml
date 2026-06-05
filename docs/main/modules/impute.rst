@@ -40,8 +40,7 @@ Missing Modality Indicator
    :members:
    :show-inheritance:
 
-.. autoclass:: get_missing_mod_indicator
-   :members:
+.. autofunction:: get_missing_mod_indicator
 
 Observed Modality Indicator
 -----------------------------
@@ -50,5 +49,4 @@ Observed Modality Indicator
    :members:
    :show-inheritance:
 
-.. autoclass:: get_observed_mod_indicator
-   :members:
+.. autofunction:: get_observed_mod_indicator

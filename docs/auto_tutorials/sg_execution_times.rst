@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**07:03.044** total execution time for 7 files **from auto_tutorials**:
+**19:50.111** total execution time for 7 files **from auto_tutorials**:
 
 .. container::
 
@@ -32,24 +32,24 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_tutorials_retrieve_incomplete_vision_language.py` (``retrieve_incomplete_vision_language.py``)
-     - 03:58.062
-     - 0.0
    * - :ref:`sphx_glr_auto_tutorials_classify_incomplete_vision_language.py` (``classify_incomplete_vision_language.py``)
-     - 02:21.146
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py` (``multi_modal_data_statistics.py``)
-     - 00:24.773
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_select_and_extract_features.py` (``select_and_extract_features.py``)
-     - 00:10.176
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py` (``generate_missing_modalities.py``)
-     - 00:03.705
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_impute_multi_modal_data.py` (``impute_multi_modal_data.py``)
-     - 00:02.859
+     - 19:50.111
      - 0.0
    * - :ref:`sphx_glr_auto_tutorials_cluster_incomplete_mmd.py` (``cluster_incomplete_mmd.py``)
-     - 00:02.324
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py` (``generate_missing_modalities.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_impute_multi_modal_data.py` (``impute_multi_modal_data.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py` (``multi_modal_data_statistics.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_retrieve_incomplete_vision_language.py` (``retrieve_incomplete_vision_language.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_select_and_extract_features.py` (``select_and_extract_features.py``)
+     - 00:00.000
      - 0.0

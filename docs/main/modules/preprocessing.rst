@@ -13,8 +13,7 @@ Drop Modality
 .. minigallery:: imml.preprocessing.DropMod
    :add-heading: Tutorials
 
-.. autoclass:: drop_mod
-   :members:
+.. autofunction:: drop_mod
 
 .. minigallery:: imml.preprocessing.drop_mod
    :add-heading: Tutorials
@@ -29,8 +28,7 @@ Concatenate Modalities
 .. minigallery:: imml.preprocessing.ConcatenateMods
    :add-heading: Tutorials
 
-.. autoclass:: concatenate_mods
-   :members:
+.. autofunction:: concatenate_mods
 
 .. minigallery:: imml.preprocessing.concatenate_mods
    :add-heading: Tutorials
@@ -45,8 +43,7 @@ Single Modality
 .. minigallery:: imml.preprocessing.SingleMod
    :add-heading: Tutorials
 
-.. autoclass:: single_mod
-   :members:
+.. autofunction:: single_mod
 
 .. minigallery:: imml.preprocessing.single_mod
    :add-heading: Tutorials
@@ -61,8 +58,7 @@ Add Missing Modalities
 .. minigallery:: imml.preprocessing.AddMissingMods
    :add-heading: Tutorials
 
-.. autoclass:: add_missing_mods
-   :members:
+.. autofunction:: add_missing_mods
 
 .. minigallery:: imml.preprocessing.add_missing_mods
    :add-heading: Tutorials
@@ -77,8 +73,7 @@ Sort Data
 .. minigallery:: imml.preprocessing.SortData
    :add-heading: Tutorials
 
-.. autoclass:: sort_data
-   :members:
+.. autofunction:: sort_data
 
 .. minigallery:: imml.preprocessing.sort_data
    :add-heading: Tutorials
@@ -113,8 +108,7 @@ Select Complete Samples
 .. minigallery:: imml.preprocessing.SelectCompleteSamples
    :add-heading: Tutorials
 
-.. autoclass:: select_complete_samples
-   :members:
+.. autofunction:: select_complete_samples
 
 .. minigallery:: imml.preprocessing.select_complete_samples
    :add-heading: Tutorials
@@ -129,8 +123,7 @@ Select Incomplete Samples
 .. minigallery:: imml.preprocessing.SelectIncompleteSamples
    :add-heading: Tutorials
 
-.. autoclass:: select_incomplete_samples
-   :members:
+.. autofunction:: select_incomplete_samples
 
 .. minigallery:: imml.preprocessing.select_incomplete_samples
    :add-heading: Tutorials

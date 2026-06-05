@@ -447,62 +447,34 @@
    "name": "LabelEncoder"
   }
  ],
- "MCR": [
+ "MMSplitter": [
   {
    "is_class": true,
    "is_explicit": false,
-   "module": "imml.retrieve.mcr",
-   "module_short": "imml.retrieve",
-   "name": "MCR"
+   "module": "imml.model_selection.mm_splitter",
+   "module_short": "imml.model_selection",
+   "name": "MMSplitter"
   },
   {
    "is_class": true,
    "is_explicit": false,
-   "module": "imml.retrieve",
-   "module_short": "imml.retrieve",
-   "name": "MCR"
+   "module": "imml.model_selection",
+   "module_short": "imml.model_selection",
+   "name": "MMSplitter"
   },
   {
    "is_class": true,
    "is_explicit": false,
    "module": "imml",
    "module_short": "imml",
-   "name": "MCR"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "torch.nn.modules.module",
-   "module_short": "torch.nn",
-   "name": "Module"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "torch.nn.modules",
-   "module_short": "torch.nn",
-   "name": "Module"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "torch.nn",
-   "module_short": "torch.nn",
-   "name": "Module"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "torch",
-   "module_short": "torch",
-   "name": "Module"
+   "name": "MMSplitter"
   },
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "imml.retrieve",
-   "module_short": "imml.retrieve",
-   "name": "MCR"
+   "module": "imml.model_selection",
+   "module_short": "imml.model_selection",
+   "name": "MMSplitter"
   }
  ],
  "RAGPT": [
@@ -738,36 +710,6 @@
    "name": "RAGPT"
   }
  ],
- "RAGPTCollator": [
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "imml.load.ragpt_dataset",
-   "module_short": "imml.load",
-   "name": "RAGPTCollator"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "imml.load",
-   "module_short": "imml.load",
-   "name": "RAGPTCollator"
-  },
-  {
-   "is_class": true,
-   "is_explicit": false,
-   "module": "imml",
-   "module_short": "imml",
-   "name": "RAGPTCollator"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.load",
-   "module_short": "imml.load",
-   "name": "RAGPTCollator"
-  }
- ],
  "RAGPTDataset": [
   {
    "is_class": true,
@@ -831,6 +773,99 @@
    "module": "imml.load",
    "module_short": "imml.load",
    "name": "RAGPTDataset"
+  }
+ ],
+ "StratifiedKFold": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection._split",
+   "module_short": "sklearn.model_selection",
+   "name": "StratifiedKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "StratifiedKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "StratifiedKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection._split",
+   "module_short": "sklearn.model_selection._split",
+   "name": "_BaseKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "_BaseKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_BaseKFold"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection._split",
+   "module_short": "sklearn.model_selection",
+   "name": "BaseCrossValidator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "BaseCrossValidator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "BaseCrossValidator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils._metadata_requests",
+   "module_short": "sklearn.utils._metadata_requests",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn.utils",
+   "module_short": "sklearn.utils",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "_MetadataRequester"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "StratifiedKFold"
   }
  ],
  "Trainer": [
@@ -906,13 +941,43 @@
    "name": "list"
   }
  ],
- "agg_metric": [
+ "Xs_train_in": [
   {
    "is_class": false,
    "is_explicit": false,
    "module": "builtins",
    "module_short": "builtins",
-   "name": "function"
+   "name": "list"
+  }
+ ],
+ "_": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.metrics._plot.confusion_matrix",
+   "module_short": "sklearn.metrics._plot.confusion_matrix",
+   "name": "ConfusionMatrixDisplay"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.metrics._plot",
+   "module_short": "sklearn.metrics._plot",
+   "name": "ConfusionMatrixDisplay"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.metrics",
+   "module_short": "sklearn.metrics",
+   "name": "ConfusionMatrixDisplay"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "ConfusionMatrixDisplay"
   }
  ],
  "amputer": [
@@ -1085,155 +1150,6 @@
    "module": "sklearn",
    "module_short": "sklearn",
    "name": "_SetOutputMixin.fit_transform"
-  }
- ],
- "amputer.transform": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.ampute.amputer",
-   "module_short": "imml.ampute",
-   "name": "Amputer.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.ampute",
-   "module_short": "imml.ampute",
-   "name": "Amputer.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml",
-   "module_short": "imml",
-   "name": "Amputer.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.base",
-   "module_short": "sklearn.base",
-   "name": "BaseEstimator.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "BaseEstimator.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.base",
-   "module_short": "sklearn.base",
-   "name": "TransformerMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "TransformerMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils._repr_html.base",
-   "module_short": "sklearn.utils._repr_html.base",
-   "name": "ReprHTMLMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils._repr_html",
-   "module_short": "sklearn.utils._repr_html",
-   "name": "ReprHTMLMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils",
-   "module_short": "sklearn.utils",
-   "name": "ReprHTMLMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "ReprHTMLMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils._repr_html.base",
-   "module_short": "sklearn.utils._repr_html.base",
-   "name": "_HTMLDocumentationLinkMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils._repr_html",
-   "module_short": "sklearn.utils._repr_html",
-   "name": "_HTMLDocumentationLinkMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils",
-   "module_short": "sklearn.utils",
-   "name": "_HTMLDocumentationLinkMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "_HTMLDocumentationLinkMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils._metadata_requests",
-   "module_short": "sklearn.utils._metadata_requests",
-   "name": "_MetadataRequester.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils",
-   "module_short": "sklearn.utils",
-   "name": "_MetadataRequester.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "_MetadataRequester.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils._set_output",
-   "module_short": "sklearn.utils._set_output",
-   "name": "_SetOutputMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn.utils",
-   "module_short": "sklearn.utils",
-   "name": "_SetOutputMixin.transform"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "sklearn",
-   "module_short": "sklearn",
-   "name": "_SetOutputMixin.transform"
   }
  ],
  "ax": [
@@ -1594,15 +1510,6 @@
    "name": "builtin_function_or_method"
   }
  ],
- "compute_metric": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "function"
-  }
- ],
  "data_folder": [
   {
    "is_class": false,
@@ -1674,129 +1581,6 @@
    "name": "RAGPT"
   }
  ],
- "estimator.agg_loss_list": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "list"
-  }
- ],
- "estimator.agg_loss_list.append": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "builtin_function_or_method"
-  }
- ],
- "estimator.fit": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.classify.ragpt",
-   "module_short": "imml.classify",
-   "name": "RAGPT"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.classify",
-   "module_short": "imml.classify",
-   "name": "RAGPT"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml",
-   "module_short": "imml",
-   "name": "RAGPT"
-  }
- ],
- "estimator.loss_list": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "list"
-  }
- ],
- "estimator.loss_list.append": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "builtin_function_or_method"
-  }
- ],
- "estimator.memory_bank_": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.classify.ragpt",
-   "module_short": "imml.classify",
-   "name": "RAGPT"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.classify",
-   "module_short": "imml.classify",
-   "name": "RAGPT"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml",
-   "module_short": "imml",
-   "name": "RAGPT"
-  }
- ],
- "estimator.on_validation_epoch_end": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "function"
-  }
- ],
- "estimator.transform": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.classify.ragpt",
-   "module_short": "imml.classify",
-   "name": "RAGPT"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml.classify",
-   "module_short": "imml.classify",
-   "name": "RAGPT"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "imml",
-   "module_short": "imml",
-   "name": "RAGPT"
-  }
- ],
- "estimator.validation_step": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "function"
-  }
- ],
  "ex": [
   {
    "is_class": false,
@@ -1831,6 +1615,15 @@
    "name": "Figure"
   }
  ],
+ "fold": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "int"
+  }
+ ],
  "folder_images": [
   {
    "is_class": false,
@@ -1840,16 +1633,32 @@
    "name": "str"
   }
  ],
- "i": [
+ "g": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch._C",
+   "module_short": "torch",
+   "name": "Generator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "Generator"
+  }
+ ],
+ "g.manual_seed": [
   {
    "is_class": false,
    "is_explicit": false,
    "module": "builtins",
    "module_short": "builtins",
-   "name": "int"
+   "name": "builtin_function_or_method"
   }
  ],
- "i.item": [
+ "i": [
   {
    "is_class": false,
    "is_explicit": false,
@@ -2195,15 +2004,6 @@
    "name": "load_dataset"
   }
  ],
- "losses": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "list"
-  }
- ],
  "matthews_corrcoef": [
   {
    "is_class": false,
@@ -2220,283 +2020,59 @@
    "name": "matthews_corrcoef"
   }
  ],
- "memory_bank": [
+ "mean_performance": [
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "pandas.core.frame",
-   "module_short": "pandas.core.frame",
-   "name": "DataFrame"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DataFrame"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DataFrame"
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "float"
   }
  ],
- "memory_bank.info": [
+ "mm_splitter": [
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "pandas.core.frame",
-   "module_short": "pandas.core.frame",
-   "name": "DataFrame.info"
+   "module": "imml.model_selection.mm_splitter",
+   "module_short": "imml.model_selection",
+   "name": "MMSplitter"
   },
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DataFrame.info"
+   "module": "imml.model_selection",
+   "module_short": "imml.model_selection",
+   "name": "MMSplitter"
   },
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DataFrame.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.generic",
-   "module_short": "pandas.core.generic",
-   "name": "NDFrame.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "NDFrame.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "NDFrame.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.arraylike",
-   "module_short": "pandas.core.arraylike",
-   "name": "OpsMixin.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "OpsMixin.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "OpsMixin.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.base",
-   "module_short": "pandas.core.base",
-   "name": "PandasObject.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "PandasObject.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "PandasObject.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.indexing",
-   "module_short": "pandas.core.indexing",
-   "name": "IndexingMixin.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "IndexingMixin.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "IndexingMixin.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.accessor",
-   "module_short": "pandas.core.accessor",
-   "name": "DirNamesMixin.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DirNamesMixin.info"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DirNamesMixin.info"
+   "module": "imml",
+   "module_short": "imml",
+   "name": "MMSplitter"
   }
  ],
- "memory_bank.shape": [
+ "mm_splitter.split": [
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "pandas.core.frame",
-   "module_short": "pandas.core.frame",
-   "name": "DataFrame.shape"
+   "module": "imml.model_selection.mm_splitter",
+   "module_short": "imml.model_selection",
+   "name": "MMSplitter.split"
   },
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DataFrame.shape"
+   "module": "imml.model_selection",
+   "module_short": "imml.model_selection",
+   "name": "MMSplitter.split"
   },
   {
    "is_class": false,
    "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DataFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.generic",
-   "module_short": "pandas.core.generic",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.arraylike",
-   "module_short": "pandas.core.arraylike",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.base",
-   "module_short": "pandas.core.base",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.indexing",
-   "module_short": "pandas.core.indexing",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.accessor",
-   "module_short": "pandas.core.accessor",
-   "name": "DirNamesMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DirNamesMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DirNamesMixin.shape"
+   "module": "imml",
+   "module_short": "imml",
+   "name": "MMSplitter.split"
   }
  ],
  "modalities": [
@@ -2506,6 +2082,15 @@
    "module": "builtins",
    "module_short": "builtins",
    "name": "list"
+  }
+ ],
+ "n_neighbors": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "int"
   }
  ],
  "n_total": [
@@ -2718,6 +2303,33 @@
    "name": "concat"
   }
  ],
+ "performance": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "Tensor"
+  }
+ ],
+ "performance_list": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "Tensor"
+  }
+ ],
+ "performance_list.append": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "Tensor"
+  }
+ ],
  "plt.subplots": [
   {
    "is_class": false,
@@ -2820,6 +2432,38 @@
    "name": "builtin_function_or_method"
   }
  ],
+ "select_complete_samples": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml.preprocessing",
+   "module_short": "imml.preprocessing",
+   "name": "select_complete_samples"
+  }
+ ],
+ "select_incomplete_samples": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "function"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml.preprocessing",
+   "module_short": "imml.preprocessing",
+   "name": "select_incomplete_samples"
+  }
+ ],
  "shutil.rmtree": [
   {
    "is_class": false,
@@ -2834,6 +2478,38 @@
    "module": "shutil",
    "module_short": "shutil",
    "name": "rmtree"
+  }
+ ],
+ "splitter": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.model_selection._split",
+   "module_short": "sklearn.model_selection",
+   "name": "StratifiedKFold"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn.model_selection",
+   "module_short": "sklearn.model_selection",
+   "name": "StratifiedKFold"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "sklearn",
+   "module_short": "sklearn",
+   "name": "StratifiedKFold"
+  }
+ ],
+ "std_performance": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "float"
   }
  ],
  "test_data": [
@@ -2887,157 +2563,6 @@
    "module": "torch",
    "module_short": "torch",
    "name": "DataLoader"
-  }
- ],
- "test_db": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.frame",
-   "module_short": "pandas.core.frame",
-   "name": "DataFrame"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DataFrame"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DataFrame"
-  }
- ],
- "test_db.shape": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.frame",
-   "module_short": "pandas.core.frame",
-   "name": "DataFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DataFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DataFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.generic",
-   "module_short": "pandas.core.generic",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.arraylike",
-   "module_short": "pandas.core.arraylike",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.base",
-   "module_short": "pandas.core.base",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.indexing",
-   "module_short": "pandas.core.indexing",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.accessor",
-   "module_short": "pandas.core.accessor",
-   "name": "DirNamesMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DirNamesMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DirNamesMixin.shape"
   }
  ],
  "test_df": [
@@ -3349,6 +2874,45 @@
    "name": "DirNamesMixin.sample"
   }
  ],
+ "torch.Generator": [
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "torch._C",
+   "module_short": "torch",
+   "name": "Generator"
+  },
+  {
+   "is_class": true,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "Generator"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "Generator"
+  }
+ ],
+ "torch.mean": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "mean"
+  }
+ ],
  "torch.stack": [
   {
    "is_class": false,
@@ -3363,6 +2927,38 @@
    "module": "torch",
    "module_short": "torch",
    "name": "stack"
+  }
+ ],
+ "torch.std": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "std"
+  }
+ ],
+ "torch.tensor": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "builtins",
+   "module_short": "builtins",
+   "name": "builtin_function_or_method"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "torch",
+   "module_short": "torch",
+   "name": "tensor"
   }
  ],
  "train_data": [
@@ -3386,6 +2982,29 @@
    "module": "imml",
    "module_short": "imml",
    "name": "RAGPTDataset"
+  }
+ ],
+ "train_data.mcr": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml.load.ragpt_dataset",
+   "module_short": "imml.load.ragpt_dataset",
+   "name": "_MCR"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml.load",
+   "module_short": "imml.load",
+   "name": "_MCR"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "imml",
+   "module_short": "imml",
+   "name": "_MCR"
   }
  ],
  "train_dataloader": [
@@ -3416,285 +3035,6 @@
    "module": "torch",
    "module_short": "torch",
    "name": "DataLoader"
-  }
- ],
- "train_db": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.frame",
-   "module_short": "pandas.core.frame",
-   "name": "DataFrame"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DataFrame"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DataFrame"
-  }
- ],
- "train_db.head": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.frame",
-   "module_short": "pandas.core.frame",
-   "name": "DataFrame.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DataFrame.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DataFrame.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.generic",
-   "module_short": "pandas.core.generic",
-   "name": "NDFrame.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "NDFrame.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "NDFrame.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.arraylike",
-   "module_short": "pandas.core.arraylike",
-   "name": "OpsMixin.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "OpsMixin.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "OpsMixin.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.base",
-   "module_short": "pandas.core.base",
-   "name": "PandasObject.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "PandasObject.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "PandasObject.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.indexing",
-   "module_short": "pandas.core.indexing",
-   "name": "IndexingMixin.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "IndexingMixin.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "IndexingMixin.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.accessor",
-   "module_short": "pandas.core.accessor",
-   "name": "DirNamesMixin.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DirNamesMixin.head"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DirNamesMixin.head"
-  }
- ],
- "train_db.shape": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.frame",
-   "module_short": "pandas.core.frame",
-   "name": "DataFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DataFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DataFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.generic",
-   "module_short": "pandas.core.generic",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "NDFrame.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.arraylike",
-   "module_short": "pandas.core.arraylike",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "OpsMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.base",
-   "module_short": "pandas.core.base",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "PandasObject.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.indexing",
-   "module_short": "pandas.core.indexing",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "IndexingMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core.accessor",
-   "module_short": "pandas.core.accessor",
-   "name": "DirNamesMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas.core",
-   "module_short": "pandas.core",
-   "name": "DirNamesMixin.shape"
-  },
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "pandas",
-   "module_short": "pandas",
-   "name": "DirNamesMixin.shape"
   }
  ],
  "train_test_mm_split": [
@@ -3803,15 +3143,6 @@
    "name": "Trainer.predict"
   }
  ],
- "validation_step": [
-  {
-   "is_class": false,
-   "is_explicit": false,
-   "module": "builtins",
-   "module_short": "builtins",
-   "name": "method"
-  }
- ],
  "y": [
   {
    "is_class": false,
@@ -3856,6 +3187,155 @@
    "module": "pandas",
    "module_short": "pandas",
    "name": "Series"
+  }
+ ],
+ "y_bank.loc": [
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.series",
+   "module_short": "pandas.core.series",
+   "name": "Series.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "Series.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "Series.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.base",
+   "module_short": "pandas.core.base",
+   "name": "IndexOpsMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "IndexOpsMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "IndexOpsMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.generic",
+   "module_short": "pandas.core.generic",
+   "name": "NDFrame.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "NDFrame.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "NDFrame.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.arraylike",
+   "module_short": "pandas.core.arraylike",
+   "name": "OpsMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "OpsMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "OpsMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.base",
+   "module_short": "pandas.core.base",
+   "name": "PandasObject.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "PandasObject.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "PandasObject.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.indexing",
+   "module_short": "pandas.core.indexing",
+   "name": "IndexingMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "IndexingMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "IndexingMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core.accessor",
+   "module_short": "pandas.core.accessor",
+   "name": "DirNamesMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas.core",
+   "module_short": "pandas.core",
+   "name": "DirNamesMixin.loc"
+  },
+  {
+   "is_class": false,
+   "is_explicit": false,
+   "module": "pandas",
+   "module_short": "pandas",
+   "name": "DirNamesMixin.loc"
   }
  ],
  "y_test": [

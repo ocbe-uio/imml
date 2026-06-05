@@ -6,9 +6,7 @@ Explore
 Get summary
 -----------------------
 
-.. autoclass:: get_summary
-   :members:
-   :show-inheritance:
+.. autofunction:: get_summary
 
 .. minigallery:: imml.explore.get_summary
    :add-heading: Tutorials
@@ -16,9 +14,7 @@ Get summary
 Get number of modalities
 --------------------------------------------
 
-.. autoclass:: get_n_mods
-   :members:
-   :show-inheritance:
+.. autofunction:: get_n_mods
 
 .. minigallery:: imml.explore.get_n_mods
    :add-heading: Tutorials
@@ -26,9 +22,7 @@ Get number of modalities
 Get number of samples by modalities
 --------------------------------------------
 
-.. autoclass:: get_n_samples_by_mod
-   :members:
-   :show-inheritance:
+.. autofunction:: get_n_samples_by_mod
 
 .. minigallery:: imml.explore.get_n_samples_by_mod
    :add-heading: Tutorials
@@ -36,9 +30,7 @@ Get number of samples by modalities
 Get complete samples
 -----------------------
 
-.. autoclass:: get_com_samples
-   :members:
-   :show-inheritance:
+.. autofunction:: get_com_samples
 
 .. minigallery:: imml.explore.get_com_samples
    :add-heading: Tutorials
@@ -46,9 +38,7 @@ Get complete samples
 Get incomplete samples
 -----------------------
 
-.. autoclass:: get_incom_samples
-   :members:
-   :show-inheritance:
+.. autofunction:: get_incom_samples
 
 .. minigallery:: imml.explore.get_incom_samples
    :add-heading: Tutorials
@@ -56,9 +46,7 @@ Get incomplete samples
 Get samples
 -----------------------
 
-.. autoclass:: get_samples
-   :members:
-   :show-inheritance:
+.. autofunction:: get_samples
 
 .. minigallery:: imml.explore.get_samples
    :add-heading: Tutorials
@@ -66,9 +54,7 @@ Get samples
 Get samples by modality
 -----------------------
 
-.. autoclass:: get_samples_by_mod
-   :members:
-   :show-inheritance:
+.. autofunction:: get_samples_by_mod
 
 .. minigallery:: imml.explore.get_samples_by_mod
    :add-heading: Tutorials
@@ -76,9 +62,7 @@ Get samples by modality
 Get missing samples by modality
 --------------------------------------------
 
-.. autoclass:: get_missing_samples_by_mod
-   :members:
-   :show-inheritance:
+.. autofunction:: get_missing_samples_by_mod
 
 .. minigallery:: imml.explore.get_missing_samples_by_mod
    :add-heading: Tutorials
@@ -86,9 +70,7 @@ Get missing samples by modality
 Get number of complete samples
 --------------------------------------------
 
-.. autoclass:: get_n_com_samples
-   :members:
-   :show-inheritance:
+.. autofunction:: get_n_com_samples
 
 .. minigallery:: imml.explore.get_n_com_samples
    :add-heading: Tutorials
@@ -96,9 +78,7 @@ Get number of complete samples
 Get number of incomplete samples
 --------------------------------------------
 
-.. autoclass:: get_n_incom_samples
-   :members:
-   :show-inheritance:
+.. autofunction:: get_n_incom_samples
 
 .. minigallery:: imml.explore.get_n_incom_samples
    :add-heading: Tutorials
@@ -106,9 +86,7 @@ Get number of incomplete samples
 Get percentage of complete samples
 --------------------------------------------
 
-.. autoclass:: get_pct_com_samples
-   :members:
-   :show-inheritance:
+.. autofunction:: get_pct_com_samples
 
 .. minigallery:: imml.explore.get_pct_com_samples
    :add-heading: Tutorials
@@ -116,9 +94,7 @@ Get percentage of complete samples
 Get percentage of incomplete samples
 --------------------------------------------
 
-.. autoclass:: get_pct_incom_samples
-   :members:
-   :show-inheritance:
+.. autofunction:: get_pct_incom_samples
 
 .. minigallery:: imml.explore.get_pct_incom_samples
    :add-heading: Tutorials

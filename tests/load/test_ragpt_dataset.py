@@ -1,3 +1,7 @@
+import shutil
+import tempfile
+from copy import deepcopy
+
 import pytest
 torch = pytest.importorskip("torch")
 transformers = pytest.importorskip("transformers")
@@ -7,229 +11,178 @@ import sys
 import numpy as np
 import pandas as pd
 from unittest.mock import patch, MagicMock
-from PIL import Image
 
-from imml.load import RAGPTDataset, RAGPTCollator
+from imml.load import RAGPTDataset
+
+modalities=["image", "text"]
+n_neighbors=1
 
 
 @pytest.fixture
-def sample_database(tmp_path):
-    n_samples = 5
-    prompt_dir = os.path.join(tmp_path, "prompts")
-    image_dir = os.path.join(prompt_dir, "image")
-    text_dir = os.path.join(prompt_dir, "text")
-    os.makedirs(image_dir, exist_ok=True)
-    os.makedirs(text_dir, exist_ok=True)
-    prompt_image_paths = []
-    prompt_text_paths = []
-    for i in range(n_samples):
-        for j in range(3):
-            img_path = os.path.join(image_dir, f"sample_{i}_{j}.npy")
-            txt_path = os.path.join(text_dir, "sample_{i}_{j}.npy")
-            np.save(img_path, np.random.random((768,)))
-            np.save(txt_path, np.random.random((768,)))
-            prompt_image_paths.append([str(img_path)])
-            prompt_text_paths.append([str(txt_path)])
-    
-    database = pd.DataFrame({
-        'img_path': [os.path.join(tmp_path, "image", f"image_{i}.jpg") for i in range(n_samples)],
-        'text': [f"Sample text {i}" for i in range(n_samples)],
-        'label': np.random.randint(0, 2, n_samples),
-        'i2i_id_list': [[i] for i in range(n_samples)],
-        't2t_id_list': [[i] for i in range(n_samples)],
-        'prompt_image_path': prompt_image_paths[:n_samples],
-        'prompt_text_path': prompt_text_paths[:n_samples],
-        'i2i_label_list': [[0] for _ in range(n_samples)],
-        't2t_label_list': [[1] for _ in range(n_samples)],
-        'observed_image': [1 for _ in range(n_samples)],
-        'observed_text': [1 for _ in range(n_samples)]
-    })
-    
-    return database, prompt_dir
+def sample_data(tmp_path):
+    Xs = [
+        pd.DataFrame(["docs/figures/graph.png", "docs/figures/logo_imml.png"]),
+        pd.DataFrame(["This is the graphical abstract of iMML.", "This is the logo of iMML."]),
+    ]
+    y = pd.Series([0, 1])
+    return Xs, y
 
 
-def test_deepmodule_not_installed(sample_database):
-    database, _ = sample_database
-    RAGPTDataset(database=database)
+def test_deepmodule_not_installed(sample_data, tmp_path):
+    Xs, y = sample_data
+    RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=modalities,
+                 prompt_path=str(tmp_path), n_neighbors=n_neighbors)
     with patch.dict(sys.modules, {"torch": None}):
         import imml as imml_mock
         import imml.load.ragpt_dataset as module_mock
         importlib.reload(imml_mock)
         importlib.reload(module_mock)
         with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
-            RAGPTDataset(database=database)
-        with pytest.raises(ImportError, match="Module 'deep' needs to be installed."):
-            RAGPTCollator()
+            RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=modalities,
+                         prompt_path=str(tmp_path), n_neighbors=n_neighbors)
     importlib.reload(imml_mock)
     importlib.reload(module_mock)
+    shutil.rmtree(tmp_path, ignore_errors=True)
+    assert not os.path.exists(tmp_path)
 
 
-@patch('imml.load.ragpt_dataset.Image.open')
-def test_default_params(mock_image_open, sample_database):
-    mock_img = MagicMock()
-    mock_img.convert.return_value = mock_img
-    mock_image_open.return_value = mock_img
-    database, _ = sample_database
-    dataset = RAGPTDataset(database=database)
-    assert dataset.max_text_len == 40
-    assert len(dataset) == len(database)
-    sample = dataset[0]
+def test_default_params(sample_data, tmp_path):
+    Xs, y = sample_data
+    data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=modalities,
+                        prompt_path=str(tmp_path), n_neighbors=n_neighbors)
+    assert hasattr(data, 'mcr_')
+    assert hasattr(data, 'img_path_list_')
+    assert hasattr(data, 'input_ids_list_')
+    assert hasattr(data, 'attention_mask_list_')
+    assert hasattr(data, 'token_type_ids_list_')
+    assert hasattr(data, 'label_list_')
+    assert hasattr(data, 'prompt_image_path_')
+    assert hasattr(data, 'prompt_text_path_')
+    assert hasattr(data, 'i2i_r_l_list_')
+    assert hasattr(data, 't2t_r_l_list_')
+    assert hasattr(data, 'observed_image_')
+    assert hasattr(data, 'observed_text_')
+    assert len(y) == len(data)
+    sample = data[0]
     assert isinstance(sample, dict)
     assert 'image' in sample
-    assert 'text' in sample
+    assert 'input_ids' in sample
+    assert 'attention_mask' in sample
+    assert 'token_type_ids' in sample
     assert 'label' in sample
     assert 'r_t_list' in sample
     assert 'r_i_list' in sample
     assert 'r_l_list' in sample
     assert 'observed_text' in sample
     assert 'observed_image' in sample
+    shutil.rmtree(tmp_path, ignore_errors=True)
+    assert not os.path.exists(tmp_path)
 
 
-def test_invalid_params():
-    with pytest.raises(ValueError, match="Invalid database."):
-        RAGPTDataset(database="not_a_dataframe")
-    with pytest.raises(ValueError, match="Invalid database. It is missing required columns"):
-        RAGPTDataset(database=pd.DataFrame())
+def test_invalid_params(sample_data, tmp_path):
+    Xs, y = sample_data
+    with pytest.raises(ValueError, match="Invalid modalities."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=None, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    with pytest.raises(ValueError, match="Invalid batch_size."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, batch_size=None, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    with pytest.raises(ValueError, match="Invalid batch_size."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, batch_size=-1,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    with pytest.raises(ValueError, match="Invalid n_neighbors."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, n_neighbors=None,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    with pytest.raises(ValueError, match="Invalid n_neighbors."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, n_neighbors=-1,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    with pytest.raises(ValueError, match="Invalid device."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, device=123, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    with pytest.raises(ValueError, match="Invalid prompt_path."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, prompt_path=1, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y)
+    with pytest.raises(ValueError, match="Invalid prompt_path."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, prompt_path="other", n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y)
+    with pytest.raises(TypeError, match="Invalid prompt_path."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y)
     with pytest.raises(ValueError, match="Invalid max_text_len."):
-        RAGPTDataset(database=pd.DataFrame({
-            'img_path': [], 'text': [], 'label': [], 'i2i_id_list': [], 't2t_id_list': [],
-            'prompt_image_path': [], 'prompt_text_path': [], 'i2i_label_list': [],
-            't2t_label_list': [], 'observed_image': [], 'observed_text': []
-        }), max_text_len=-1)
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, max_text_len=None, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
     with pytest.raises(ValueError, match="Invalid max_text_len."):
-        RAGPTDataset(database=pd.DataFrame({
-            'img_path': [], 'text': [], 'label': [], 'i2i_id_list': [], 't2t_id_list': [],
-            'prompt_image_path': [], 'prompt_text_path': [], 'i2i_label_list': [],
-            't2t_label_list': [], 'observed_image': [], 'observed_text': []
-        }), max_text_len=None)
-    with pytest.raises(ValueError, match="Invalid max_text_len."):
-        RAGPTCollator(max_text_len=None)
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, max_text_len=-1, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    with pytest.raises(ValueError, match="Invalid max_image_len."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, max_image_len=None, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    with pytest.raises(ValueError, match="Invalid max_image_len."):
+        RAGPTDataset(Xs=Xs, y=y, modalities=modalities, max_image_len=-1, n_neighbors=n_neighbors,
+                     Xs_bank=Xs, y_bank=y, prompt_path=str(tmp_path))
+    shutil.rmtree(tmp_path, ignore_errors=True)
+    assert not os.path.exists(tmp_path)
 
 
-@patch('imml.load.ragpt_dataset.Image.open')
-@patch('imml.load.ragpt_dataset.np.load')
-def test_getitem_with_both_modalities(mock_np_load, mock_image_open, sample_database):
-    mock_img = MagicMock()
-    mock_img.convert.return_value = mock_img
-    mock_image_open.return_value = mock_img
-    mock_np_load.return_value = np.random.random((768,))
-    database, _ = sample_database
-    dataset = RAGPTDataset(database=database)
-    sample = dataset[0]
+def test_getitem_with_both_modalities(sample_data, tmp_path):
+    Xs, y = sample_data
+    data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=modalities,
+                        prompt_path=str(tmp_path), n_neighbors=n_neighbors)
+    sample = data[0]
     assert sample['observed_text'] == 1
     assert sample['observed_image'] == 1
     assert len(sample['r_t_list']) > 0
     assert len(sample['r_i_list']) > 0
 
+    shutil.rmtree(tmp_path, ignore_errors=True)
+    assert not os.path.exists(tmp_path)
 
-@patch('imml.load.ragpt_dataset.Image.open')
-@patch('imml.load.ragpt_dataset.np.load')
-def test_getitem_with_missing_text(mock_np_load, mock_image_open, sample_database):
-    mock_img = MagicMock()
-    mock_img.convert.return_value = mock_img
-    mock_image_open.return_value = mock_img
-    mock_np_load.return_value = np.random.random((768,))
 
-    database, _ = sample_database
-    database.loc[0, 'observed_text'] = 0
-    dataset = RAGPTDataset(database=database)
-
-    sample = dataset[0]
+def test_getitem_with_missing_text(sample_data, tmp_path):
+    Xs, y = sample_data
+    Xs_bank = deepcopy(Xs)
+    Xs[1][0] = np.nan
+    data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs_bank, y_bank=y, modalities=modalities,
+                        prompt_path=str(tmp_path), n_neighbors=n_neighbors)
+    sample = data[0]
     assert sample['observed_text'] == 0
     assert sample['observed_image'] == 1
     assert len(sample['r_t_list']) > 0
     assert len(sample['r_i_list']) > 0
 
+    shutil.rmtree(tmp_path, ignore_errors=True)
+    assert not os.path.exists(tmp_path)
 
-@patch('imml.load.ragpt_dataset.Image.open')
-@patch('imml.load.ragpt_dataset.np.load')
-def test_getitem_with_missing_image(mock_np_load, mock_image_open, sample_database):
-    mock_img = MagicMock()
-    mock_img.convert.return_value = mock_img
-    mock_image_open.return_value = mock_img
-    mock_np_load.return_value = np.random.random((768,))
 
-    database, _ = sample_database
-    database.loc[0, 'observed_image'] = 0
-    dataset = RAGPTDataset(database=database)
-
-    sample = dataset[0]
+def test_getitem_with_missing_image(sample_data, tmp_path):
+    Xs, y = sample_data
+    Xs_bank = deepcopy(Xs)
+    Xs[0][0] = np.nan
+    data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs_bank, y_bank=y, modalities=modalities,
+                        prompt_path=str(tmp_path), n_neighbors=n_neighbors)
+    sample = data[0]
     assert sample['observed_text'] == 1
     assert sample['observed_image'] == 0
     assert len(sample['r_t_list']) > 0
     assert len(sample['r_i_list']) > 0
 
-
-@patch('imml.load.ragpt_dataset.Image.open')
-def test_getitem_with_both_modalities_missing(mock_image_open, sample_database):
-    mock_img = MagicMock()
-    mock_img.convert.return_value = mock_img
-    mock_image_open.return_value = mock_img
-
-    database, _ = sample_database
-    database.loc[0, 'observed_text'] = 0
-    database.loc[0, 'observed_image'] = 0
-    dataset = RAGPTDataset(database=database)
-
-    with pytest.raises(ValueError, match="No available modalities for item"):
-        dataset[0]
+    shutil.rmtree(tmp_path, ignore_errors=True)
+    assert not os.path.exists(tmp_path)
 
 
-def test_collator_default_params():
-    collator = RAGPTCollator()
-    assert collator.max_text_len == 40
-    assert hasattr(collator, 'tokenizer')
-    assert hasattr(collator, 'image_processor')
-
-
-def test_collator_invalid_params():
-    with pytest.raises(ValueError, match="Invalid tokenizer."):
-        RAGPTCollator(tokenizer="not_a_tokenizer")
-    with pytest.raises(ValueError, match="Invalid image_processor."):
-        RAGPTCollator(image_processor="not_an_image_processor")
-    with pytest.raises(ValueError, match="Invalid max_text_len."):
-        RAGPTCollator(max_text_len=-1)
-
-
-@patch('imml.classify._ragpt.resize_image')
-def test_collator_call(mock_resize_image):
-    collator = RAGPTCollator()
-    batch = [
-        {
-            'image': Image.new('RGB', (224, 224)),
-            'text': 'Sample text 1',
-            'label': 0,
-            'r_t_list': [[1.0] * 768],
-            'r_i_list': [[2.0] * 768],
-            'r_l_list': [0],
-            'observed_text': 1,
-            'observed_image': 1
-        },
-        {
-            'image': Image.new('RGB', (224, 224)),
-            'text': 'Sample text 2',
-            'label': 1,
-            'r_t_list': [[3.0] * 768],
-            'r_i_list': [[4.0] * 768],
-            'r_l_list': [1],
-            'observed_text': 1,
-            'observed_image': 1
-        }
+def test_example(sample_data, tmp_path):
+    from imml.load import RAGPTDataset
+    Xs = [
+        pd.DataFrame(["docs/figures/graph.png", "docs/figures/logo_imml.png"]),
+        pd.DataFrame(["This is the graphical abstract of iMML.", "This is the logo of iMML."]),
     ]
-
-    result = collator(batch)
-    assert isinstance(result, dict)
-    assert 'input_ids' in result
-    assert 'pixel_values' in result
-    assert 'pixel_mask' in result
-    assert 'token_type_ids' in result
-    assert 'attention_mask' in result
-    assert 'label' in result
-    assert 'r_t_list' in result
-    assert 'r_i_list' in result
-    assert 'r_l_list' in result
-    assert 'observed_image' in result
-    assert 'observed_text' in result
+    y = [0, 1]
+    modalities = ["image", "text"]
+    tmp_path = tempfile.mkdtemp()
+    train_data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=modalities,
+                              n_neighbors=1, prompt_path=str(tmp_path))
+    shutil.rmtree(tmp_path, ignore_errors=True)
+    assert not os.path.exists(tmp_path)
 
 
 if __name__ == "__main__":

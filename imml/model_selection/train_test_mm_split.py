@@ -17,10 +17,13 @@ def train_test_mm_split(Xs, y=None, **kwargs):
 
     Parameters
     ----------
-    *args : list of array-likes or array-like
-        Variable number of inputs to split. Can be:
-        - Lists of arrays (Xs): Multi-modal data where each element is a modality.
-        - Single arrays (y): Labels.
+    Xs : list of array-like
+        - Xs length: n_mods
+        - Xs[i] shape: (n_samples, n_features_i)
+
+        A list of different modalities.
+    y : array-like of shape (n_samples,), optional
+        Target vector relative to Xs.
 
     **kwargs : dict
         Additional keyword arguments to pass to sklearn's train_test_split.

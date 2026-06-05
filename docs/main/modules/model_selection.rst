@@ -6,7 +6,8 @@ Model selection
 Multi-Modal Splitter
 --------------------------------
 
-.. autofunction:: MMSplitter
+.. autoclass:: MMSplitter
+   :members:
 
 .. minigallery:: imml.model_selection.MMSplitter
    :add-heading: Tutorials

@@ -1,14 +1,11 @@
 # License: BSD-3-Clause
 
 from ._ragpt import MMG, CAP
-from .. import deepmodule_installed, deepmodule_error, LightningModule, Module
+from .. import deepmodule_installed, deepmodule_error, LightningModule, Module, ViltModel, ViltImageProcessor
 
 if deepmodule_installed:
-    from transformers import ViltModel
     from torch import nn
     import torch
-else:
-    ViltModel = object
 
 
 class RAGPT(LightningModule):
@@ -31,6 +28,9 @@ class RAGPT(LightningModule):
     vilt : transformers.ViltModel, optional
         Pretrained model used for joint vision-language encoding. If None, defaults to
         ViltModel.from_pretrained('dandelin/vilt-b32-mlm').
+    image_processor : transformers.ViltImageProcessor, default=None
+        Image processor used with the ViLT model for image preprocessing. If None, defaults to
+        ViltImageProcessor.from_pretrained('dandelin/vilt-b32-mlm').
     max_text_len : int, default=40
         Maximum token length for text inputs (used during prompt generation). Must not exceed the
         max_position_embeddings of the ViLT model (default: 40 for 'dandelin/vilt-b32-mlm').
@@ -63,12 +63,10 @@ class RAGPT(LightningModule):
     See Also
     --------
     :class:`~imml.load.RAGPTDataset`
-    :class:`~imml.retrieve.MCR`
 
     Example
     --------
-    >>> from imml.retrieve import MCR
-    >>> from imml.load import RAGPTDataset, RAGPTCollator
+    >>> from imml.load import RAGPTDataset
     >>> from imml.classify import RAGPT
     >>> from lightning import Trainer
     >>> from torch.utils.data import DataLoader
@@ -76,13 +74,16 @@ class RAGPT(LightningModule):
                   "docs/figures/graph.png", "docs/figures/logo_imml.png"]
     >>> texts = ["This is the graphical abstract of iMML.", "This is the logo of iMML.",
                  "This is the graphical abstract of iMML.", "This is the logo of iMML."]
-    >>> Xs = [images, texts]
+    >>> Xs = [
+            pd.DataFrame(images),
+            pd.DataFrame(texts),
+        ]
     >>> y = [0, 1, 0, 1]
     >>> modalities = ["image", "text"]
-    >>> estimator = MCR(modalities=modalities)
-    >>> database = estimator.fit_transform(Xs=Xs, y=y)
-    >>> train_data = RAGPTDataset(database=database)
-    >>> train_dataloader = DataLoader(train_data, collate_fn=RAGPTCollator)
+    >>> tmp_path = tempfile.mkdtemp()
+    >>> train_data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=modalities,
+                                  n_neighbors=1, prompt_path=str(tmp_path))
+    >>> train_dataloader = DataLoader(train_data, batch_size=len(train_data))
     >>> trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
     >>> estimator = RAGPT()
     >>> trainer.fit(estimator, train_dataloader)
@@ -90,14 +91,17 @@ class RAGPT(LightningModule):
     """
 
 
-    def __init__(self, vilt: ViltModel = None, max_text_len: int = 40, max_image_len: int = 145,
-                 prompt_position: int = 0, prompt_length: int = 1, dropout_rate: float = 0.2, hidden_dim: int = 768,
-                 output_dim: int = 2, loss_fn: callable = None, learning_rate: float = 1e-3,
-                 weight_decay: float = 2e-2):
+    def __init__(self, max_text_len: int = 40, max_image_len: int = 145,
+                 vilt: ViltModel = None, image_processor : ViltImageProcessor = None,
+                 prompt_position: int = 0, prompt_length: int = 1,
+                 dropout_rate: float = 0.2, hidden_dim: int = 768, output_dim: int = 2,
+                 loss_fn: callable = None, learning_rate: float = 1e-3, weight_decay: float = 2e-2):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
 
+        if (image_processor is not None) and (not isinstance(image_processor, ViltImageProcessor)):
+            raise ValueError(f"Invalid image_processor. It must be a ViltImageProcessor. A {type(image_processor)} was passed.")
         if not isinstance(max_text_len, int):
             raise ValueError(f"Invalid max_text_len. It must be an integer. A {type(max_text_len)} was passed.")
         if max_text_len <= 0:
@@ -139,9 +143,13 @@ class RAGPT(LightningModule):
 
         super().__init__()
 
+        if image_processor is None:
+            image_processor = ViltImageProcessor.from_pretrained('dandelin/vilt-b32-mlm')
+
         self.model = RAGPTModule(vilt=vilt, max_text_len=max_text_len, max_image_len=max_image_len,
-                                prompt_position=prompt_position, prompt_length=prompt_length,
-                                dropout_rate=dropout_rate, hidden_dim=hidden_dim, output_dim=output_dim)
+                                 prompt_position=prompt_position, prompt_length=prompt_length,
+                                 image_processor=image_processor,
+                                 dropout_rate=dropout_rate, hidden_dim=hidden_dim, output_dim=output_dim)
         if loss_fn is None:
             loss_fn = nn.BCEWithLogitsLoss() if output_dim == 1 else nn.CrossEntropyLoss()
         self.loss_fn = loss_fn
@@ -157,6 +165,7 @@ class RAGPT(LightningModule):
         r"""
         Method required for training using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
+        batch = self.model.collect(batch)
         labels = batch.pop('label')
         preds = self.model(**batch)
         loss = self.loss_fn(preds, labels)
@@ -167,6 +176,7 @@ class RAGPT(LightningModule):
         r"""
         Method required for validating using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
+        batch = self.model.collect(batch)
         labels = batch.pop('label')
         preds = self.model(**batch)
         loss = self.loss_fn(preds, labels)
@@ -177,6 +187,7 @@ class RAGPT(LightningModule):
         r"""
         Method required for testing using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
+        batch = self.model.collect(batch)
         labels = batch.pop('label')
         preds = self.model(**batch)
         loss = self.loss_fn(preds, labels)
@@ -187,6 +198,7 @@ class RAGPT(LightningModule):
         r"""
         Method required for predicting using `Lightning Trainer <https://lightning.ai/docs/pytorch/stable/common/trainer.html>`_.
         """
+        batch = self.model.collect(batch)
         _ = batch.pop('label')
         preds = self.model(**batch)
         preds = self.get_probs(preds)
@@ -204,7 +216,7 @@ class RAGPT(LightningModule):
 class RAGPTModule(Module):
     def __init__(self, vilt: ViltModel = None, max_text_len: int = 40, max_image_len: int = 145,
                  prompt_position: int = 0, prompt_length: int = 1, dropout_rate: float = 0.2,
-                 hidden_dim: int = 768, output_dim: int = 1):
+                 hidden_dim: int = 768, output_dim: int = 1, image_processor = None):
 
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
@@ -216,6 +228,7 @@ class RAGPTModule(Module):
 
         self.max_text_len = max_text_len
         self.vilt = vilt  # Keep reference to vilt for get_extended_attention_mask
+        self.image_processor = image_processor
         self.embedding_layer = vilt.embeddings
         self.encoder_layer = vilt.encoder.layer
         self.layernorm = vilt.layernorm
@@ -325,3 +338,11 @@ class RAGPTModule(Module):
 
         if isinstance(module, nn.Linear) and module.bias is not None:
             module.bias.data.zero_()
+
+
+    def collect(self, batch):
+        image_encoding = self.image_processor(batch["image"], return_tensors="pt")
+        batch["pixel_values"] = image_encoding["pixel_values"]
+        batch["pixel_mask"] = image_encoding["pixel_mask"]
+        batch = {key:value for key,value in batch.items() if key != "image"}
+        return batch

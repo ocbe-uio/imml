@@ -9,6 +9,7 @@ try:
     import lightning as L
     import torchvision.transforms as transforms
     from torch import Tensor
+    from transformers import BertTokenizer, ViltModel, ViltImageProcessor
     LightningModule = L.LightningModule
     Module = nn.Module
     Dataset = torch.utils.data.Dataset
@@ -19,6 +20,9 @@ except ImportError:
     Module = object
     Dataset = object
     Tensor = str
+    ViltModel = object
+    BertTokenizer = object
+    ViltImageProcessor = object
     deepmodule_installed = False
     deepmodule_error = "Module 'deep' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
 

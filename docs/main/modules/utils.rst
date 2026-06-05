@@ -7,9 +7,7 @@ Utils
 Convert dataset format
 -----------------------
 
-.. autoclass:: convert_dataset_format
-   :members:
-   :show-inheritance:
+.. autofunction:: convert_dataset_format
 
 .. minigallery:: imml.utils.convert_dataset_format
    :add-heading: Tutorials
@@ -17,9 +15,7 @@ Convert dataset format
 Check Xs and y
 -----------------------
 
-.. autoclass:: check_Xs_y
-   :members:
-   :show-inheritance:
+.. autofunction:: check_Xs_y
 
 .. minigallery:: imml.utils.check_Xs_y
    :add-heading: Tutorials

@@ -14,8 +14,7 @@ from unittest.mock import patch
 from torch.utils.data import DataLoader
 
 from imml.classify import RAGPT
-from imml.retrieve import MCR
-from imml.load import RAGPTCollator, RAGPTDataset
+from imml.load import RAGPTDataset
 
 seed_everything(42)
 estimator = RAGPT
@@ -23,16 +22,15 @@ estimator = RAGPT
 
 @pytest.fixture
 def sample_data():
+    tmp_path = tempfile.mkdtemp()
     Xs = [
         pd.DataFrame(["docs/figures/graph.png", "docs/figures/logo_imml.png"]),
         pd.DataFrame(["This is the graphical abstract of iMML.", "This is the logo of iMML."]),
     ]
     y = [0, 1]
-    tmp_path = tempfile.mkdtemp()
-    model = MCR(modalities=["image", "text"], n_neighbors=1, generate_cap=True, prompt_path=str(tmp_path))
-    database = model.fit_transform(Xs, y)
-    train_data = RAGPTDataset(database)
-    loader = DataLoader(train_data, collate_fn=RAGPTCollator(), batch_size=len(train_data))
+    dataset = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=["image", "text"],
+                           prompt_path=str(tmp_path), n_neighbors=1)
+    loader = DataLoader(dataset, batch_size=2)
     batch = next(iter(loader))
     return batch, tmp_path
 
@@ -51,12 +49,12 @@ def test_deepmodule_not_installed():
 
 
 def test_default_params(sample_data):
+    batch, tmp_path = sample_data
     model = estimator()
     assert hasattr(model, 'model')
     assert hasattr(model, 'loss_fn')
     assert hasattr(model, 'learning_rate')
     assert hasattr(model, 'weight_decay')
-    batch, tmp_path = sample_data
     with torch.no_grad():
         loss = model.training_step(batch)
     assert isinstance(loss, torch.Tensor)
@@ -175,10 +173,9 @@ def test_multiclass(sample_data):
     ]
     y = [0, 1, 2]
     tmp_path = tempfile.mkdtemp()
-    model = MCR(modalities=["image", "text"], n_neighbors=1, generate_cap=True, prompt_path=str(tmp_path))
-    database = model.fit_transform(Xs, y)
-    train_data = RAGPTDataset(database)
-    loader = DataLoader(train_data, collate_fn=RAGPTCollator(), batch_size=len(train_data))
+    train_data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=["image", "text"],
+                              n_neighbors=1, prompt_path=str(tmp_path))
+    loader = DataLoader(train_data, batch_size=len(train_data))
     batch = next(iter(loader))
     model = estimator(output_dim=3)
     with torch.no_grad():
@@ -213,8 +210,7 @@ def test_missing_values_handling(sample_data):
 
 @pytest.mark.skipif(sys.platform.startswith("darwin"), reason="Error with MPS")
 def test_example(sample_data):
-    from imml.retrieve import MCR
-    from imml.load import RAGPTDataset, RAGPTCollator
+    from imml.load import RAGPTDataset
     from imml.classify import RAGPT
     from lightning import Trainer
     from torch.utils.data import DataLoader
@@ -229,10 +225,9 @@ def test_example(sample_data):
     y = [0, 1, 0, 1]
     modalities = ["image", "text"]
     tmp_path = tempfile.mkdtemp()
-    estimator = MCR(modalities=modalities, n_neighbors=1, generate_cap=True, prompt_path=str(tmp_path))
-    database = estimator.fit_transform(Xs=Xs, y=y)
-    train_data = RAGPTDataset(database=database)
-    train_dataloader = DataLoader(train_data, collate_fn=RAGPTCollator())
+    train_data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs, y_bank=y, modalities=modalities,
+                              n_neighbors=1, prompt_path=str(tmp_path))
+    train_dataloader = DataLoader(train_data, batch_size=len(train_data))
     trainer = Trainer(max_epochs=1, logger=False, enable_checkpointing=False)
     estimator = RAGPT()
     trainer.fit(estimator, train_dataloader)

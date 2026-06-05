@@ -16,7 +16,6 @@ The package is split up into modules.
     load
     model_selection
     preprocessing
-    retrieve
     statistics
     utils
     visualize
