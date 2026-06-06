@@ -141,7 +141,7 @@ def test_getitem_with_both_modalities(sample_data, tmp_path):
 def test_getitem_with_missing_text(sample_data, tmp_path):
     Xs, y = sample_data
     Xs_bank = deepcopy(Xs)
-    Xs[1][0][0] = np.nan
+    Xs[1].loc[0, 0] = np.nan
     data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs_bank, y_bank=y, modalities=modalities,
                         prompt_path=str(tmp_path), n_neighbors=n_neighbors)
     sample = data[0]
@@ -157,10 +157,12 @@ def test_getitem_with_missing_text(sample_data, tmp_path):
 def test_getitem_with_missing_image(sample_data, tmp_path):
     Xs, y = sample_data
     Xs_bank = deepcopy(Xs)
-    Xs[0][0][0] = np.nan
+    Xs[0].loc[0, 0] = np.nan
+    print(Xs)
     data = RAGPTDataset(Xs=Xs, y=y, Xs_bank=Xs_bank, y_bank=y, modalities=modalities,
                         prompt_path=str(tmp_path), n_neighbors=n_neighbors)
     sample = data[0]
+    print(sample)
     assert sample['observed_text'] == 1
     assert sample['observed_image'] == 0
     assert len(sample['r_t_list']) > 0
