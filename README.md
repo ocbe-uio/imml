@@ -13,7 +13,7 @@
 [//]: # ([![Paper]&#40;&#41;]&#40;&#41;)
 
 <p align="center">
-  <img alt="iMML Logo" src="https://raw.githubusercontent.com/ocbe-uio/imml/refs/heads/main/docs/figures/logo_imml.png">
+  <img alt="iMML Logo" src="https://raw.githubusercontent.com/ocbe-uio/imml/refs/heads/main/docs/figures/logo_imml.png" width="40%">
 </p>
 
 [**Overview**](#Overview) | [**Key features**](#Key-features) | [**Installation**](#installation) | 
