@@ -70,6 +70,7 @@ autosummary_generate = True
 autoclass_content = "both"
 autodoc_default_options = {"members": True}
 autodoc_member_order = "bysource"  # default is alphabetical
+autodoc_use_legacy_class_based = True  # use pre-9.0 behavior; Sphinx 9.x rewrote autodoc with regressions
 
 # -- sphinx.ext.intersphinx
 intersphinx_mapping = {

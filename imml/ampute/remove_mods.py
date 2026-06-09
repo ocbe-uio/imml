@@ -52,7 +52,7 @@ def remove_mods(Xs: list, observed_mod_indicator):
         - Xs length: n_mods
         - Xs[i] shape: (n_samples, n_features_i)
 
-        A list of different mods.
+        A list of different data modalities.
 
     Returns
     -------

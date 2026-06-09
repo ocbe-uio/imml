@@ -30,11 +30,11 @@ A multi-modal dataset can be characterized beyond basic shape information. With 
 
 What you will learn:
 
-- How to describe per‑modality completeness and cross‑modality overlap with ``get_summary``, ``plot_summary`` and
-  ``plot_combinations``.
 - How to compute redundancy, uniqueness, and synergy (PID) with respect to a target using ``pid``.
 - How to visualize and interpret PID results.
 - How PID generalizes when you have more than two modalities.
+- How to describe per‑modality completeness and cross‑modality overlap with ``get_summary``, ``plot_summary``,
+  ``plot_combinations``, and ``plot_missing_modality``.
 
 This tutorial is fully reproducible and uses a small dataset. You can easily
 replace the data‑loading section with your own data following the same structure.
@@ -71,7 +71,7 @@ Step 1: Import required libraries
     from imml.ampute import Amputer
     from imml.statistics import pid
     from imml.explore import get_summary
-    from imml.visualize import plot_pid, plot_summary, plot_combinations
+    from imml.visualize import plot_pid, plot_summary, plot_combinations, plot_missing_modality
 
 
 
@@ -92,7 +92,7 @@ Using your own data:
 - Each Xs[i] should be a 2D array-like (pandas DataFrame or NumPy array) of shape (n_samples, n_features_i).
 - All modalities must refer to the same samples and be aligned by row.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-63
+.. GENERATED FROM PYTHON SOURCE LINES 51-64
 
 .. code-block:: Python
 
@@ -104,6 +104,7 @@ Using your own data:
     ]
     y = pd.read_csv("https://raw.githubusercontent.com/mvlearn/mvlearn/refs/heads/main/mvlearn/datasets/nutrimouse/diet.csv")
     y = y.squeeze()
+    mod_names = ["Genes", "Lipids"]
 
     print("Samples:", len(Xs[0]), "\t", "Modalities:", len(Xs), "\t", "Features:", [X.shape[1] for X in Xs])
 
@@ -121,7 +122,7 @@ Using your own data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-69
+.. GENERATED FROM PYTHON SOURCE LINES 65-70
 
 Step 3: Compute PID statistics (Redundancy, Uniqueness, Synergy)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -129,7 +130,7 @@ Using ``pid``, we quantify the degree of redundancy, uniqueness, and synergy rel
 With two input modalities, ``pid`` returns a dictionary with keys: "Redundancy", "Uniqueness1", "Uniqueness2",
 and "Synergy".
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-74
+.. GENERATED FROM PYTHON SOURCE LINES 70-75
 
 .. code-block:: Python
 
@@ -151,18 +152,18 @@ and "Synergy".
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-79
+.. GENERATED FROM PYTHON SOURCE LINES 76-80
 
 Step 4: Visualize the PID as a Venn-like diagram
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 You can directly pass the rus dict returned by ``pid`` to ``plot_pid``. Alternatively, ``plot_pid`` can also compute
 PID internally if you pass Xs and y, which is convenient when you want a one‑liner.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-81
+.. GENERATED FROM PYTHON SOURCE LINES 80-82
 
 .. code-block:: Python
 
-    fig, ax = plot_pid(rus=rus, mod_names=["Genes", "Lipids"])
+    fig, ax = plot_pid(rus=rus, mod_names=mod_names)
 
 
 
@@ -176,7 +177,7 @@ PID internally if you pass Xs and y, which is convenient when you want a one‑l
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-93
+.. GENERATED FROM PYTHON SOURCE LINES 83-94
 
 Interpreting PID results
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -190,14 +191,14 @@ appropriately analyzed using classical unimodal modeling.
 In this case, the redundancy is very high, and the unique information provided by the modality 1 is zero. Therefore,
 we could just use a classical unimodal learner and, probably, still get the same performance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-99
+.. GENERATED FROM PYTHON SOURCE LINES 96-100
 
 Working with more than two modalities
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If you have more than two modalities, PID statistics are computed pairwise; ``pid`` returns a list of
 dictionaries (one per pair). For example, adding a third modality yields three pairwise results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-102
+.. GENERATED FROM PYTHON SOURCE LINES 100-103
 
 .. code-block:: Python
 
@@ -217,14 +218,14 @@ dictionaries (one per pair). For example, adding a third modality yields three p
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-107
+.. GENERATED FROM PYTHON SOURCE LINES 104-108
 
 Step 5: Summarize the dataset
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Below we first make the dataset a bit more complex by introducing some incomplete samples with ``Amputer``, then
 show two views: 1) a dataframe aggregated across modalities (one_row=True) and 2) per‑modality counts (one_row=False).
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-110
+.. GENERATED FROM PYTHON SOURCE LINES 108-111
 
 .. code-block:: Python
 
@@ -238,11 +239,11 @@ show two views: 1) a dataframe aggregated across modalities (one_row=True) and 2
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-112
+.. GENERATED FROM PYTHON SOURCE LINES 112-113
 
 The ``get_summary`` function provides a compact overview of the multi‑modal dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-115
+.. GENERATED FROM PYTHON SOURCE LINES 113-116
 
 .. code-block:: Python
 
@@ -300,15 +301,15 @@ The ``get_summary`` function provides a compact overview of the multi‑modal da
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-117
+.. GENERATED FROM PYTHON SOURCE LINES 117-118
 
 Per‑modality view:
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-120
+.. GENERATED FROM PYTHON SOURCE LINES 118-121
 
 .. code-block:: Python
 
-    summary = get_summary(Xs=Xs, mod_names=["Genes", "Lipids"], one_row=False, compute_pct=True, return_df=True)
+    summary = get_summary(Xs=Xs, mod_names=mod_names, one_row=False, compute_pct=True, return_df=True)
     summary
 
 
@@ -380,11 +381,11 @@ Per‑modality view:
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-122
+.. GENERATED FROM PYTHON SOURCE LINES 122-123
 
 For quick inspection, we can also plot the per‑modality counts. Here we create a bar chart using ``plot_summary``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-124
+.. GENERATED FROM PYTHON SOURCE LINES 123-125
 
 .. code-block:: Python
 
@@ -402,15 +403,15 @@ For quick inspection, we can also plot the per‑modality counts. Here we create
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-126
+.. GENERATED FROM PYTHON SOURCE LINES 126-127
 
 We can also show how is the distribution of the combinations using ``plot_combinations``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-128
+.. GENERATED FROM PYTHON SOURCE LINES 127-129
 
 .. code-block:: Python
 
-    _ = plot_combinations(Xs=Xs)
+    _ = plot_combinations(Xs=Xs, mod_names=mod_names)
 
 
 
@@ -424,7 +425,29 @@ We can also show how is the distribution of the combinations using ``plot_combin
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-139
+.. GENERATED FROM PYTHON SOURCE LINES 130-131
+
+Additionally, we can visualize the missingness pattern using ``plot_missing_modality``.
+
+.. GENERATED FROM PYTHON SOURCE LINES 131-133
+
+.. code-block:: Python
+
+    _ = plot_missing_modality(Xs=Xs, mod_names=mod_names)
+
+
+
+
+.. image-sg:: /auto_tutorials/images/sphx_glr_multi_modal_data_statistics_004.png
+   :alt: multi modal data statistics
+   :srcset: /auto_tutorials/images/sphx_glr_multi_modal_data_statistics_004.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 134-145
 
 Conclusion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -433,6 +456,7 @@ In this tutorial, we:
 - Summarized key per‑modality statistics for a multi‑modal dataset.
 - Quantified redundancy, uniqueness, and synergy with respect to a target using PID.
 - Visualized and interpreted PID, including the multi‑modality (>2) case.
+- Explored an incomplete multi-modal dataset with multiple figures.
 
 These insights help you understand complementarity and interactions across modalities, informing model design and
 feature engineering for downstream multi‑modal learning.
@@ -440,7 +464,7 @@ feature engineering for downstream multi‑modal learning.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 24.773 seconds)
+   **Total running time of the script:** (0 minutes 23.159 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_multi_modal_data_statistics.py:

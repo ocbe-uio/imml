@@ -252,7 +252,7 @@ Create the loaders.
                               n_neighbors=n_neighbors)
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, generator=g)
 
-    test_data = RAGPTDataset(Xs=Xs_test, y=y_test, mcr=train_data.mcr, modalities=modalities,
+    test_data = RAGPTDataset(Xs=Xs_test, y=y_test, mcr=train_data.mcr_, modalities=modalities,
                              prompt_path=data_folder, n_neighbors=n_neighbors)
     test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 
@@ -306,7 +306,7 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
     472.956   Total estimated model params size (MB)
     21        Modules in train mode
     234       Modules in eval mode
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.06it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
     Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]
 
 
@@ -369,7 +369,7 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.38it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.38it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]
 
 
 
@@ -424,7 +424,7 @@ For robust evaluation, we can use cross-validation. We use a stratified 5-fold c
                                   prompt_path=data_folder, n_neighbors=n_neighbors)
         train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, generator=g)
 
-        test_data = RAGPTDataset(Xs=Xs_test, y=y_test, mcr=train_data.mcr, modalities=modalities,
+        test_data = RAGPTDataset(Xs=Xs_test, y=y_test, mcr=train_data.mcr_, modalities=modalities,
                                  prompt_path=data_folder, n_neighbors=n_neighbors)
         test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 
@@ -568,7 +568,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (19 minutes 50.111 seconds)
+   **Total running time of the script:** (20 minutes 8.802 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:

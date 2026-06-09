@@ -9,7 +9,8 @@ from ..impute import get_observed_mod_indicator
 from ..utils import check_Xs_y
 
 
-def plot_missing_modality(Xs, ax: matplotlib.axes.Axes = None, figsize: tuple = None, sort: bool = True):
+def plot_missing_modality(Xs, mod_names: list = None, ax: matplotlib.axes.Axes = None,
+                          figsize: tuple = None, sort: bool = True):
     r"""
     Plot modality missing. Missing modalities appear as white, while black indicates available modalities.
 
@@ -20,6 +21,8 @@ def plot_missing_modality(Xs, ax: matplotlib.axes.Axes = None, figsize: tuple = 
         - Xs[i] shape: (n_samples, n_features_i)
 
         A list of different modalities. If rus is provided, it will not be used.
+    mod_names : list, default=None
+        Name of each modality. By default, it will be set to the modality index.
     ax : matplotlib.axes.Axes, default=None
         Axes where to draw the figure.
     figsize : tuple, default=None
@@ -63,12 +66,14 @@ def plot_missing_modality(Xs, ax: matplotlib.axes.Axes = None, figsize: tuple = 
     else:
         fig = None
     xlabel, ylabel = "Modality", "Samples"
-    observed_view_indicator = get_observed_mod_indicator(Xs)
-    observed_view_indicator = pd.DataFrame(observed_view_indicator)
+    observed_mod_indicator = get_observed_mod_indicator(Xs)
+    observed_mod_indicator = pd.DataFrame(observed_mod_indicator)
     if sort:
-        observed_view_indicator = observed_view_indicator.sort_values(list(range(len(Xs))))
-    observed_view_indicator.columns = observed_view_indicator.columns + 1
-    ax.pcolor(observed_view_indicator, cmap="binary", edgecolors="black", vmin=0., vmax=2.)
-    ax.set_xticks(np.arange(0.5, len(observed_view_indicator.columns), 1), observed_view_indicator.columns)
+        observed_mod_indicator = observed_mod_indicator.sort_values(list(range(len(Xs))))
+    if mod_names is None:
+        mod_names = observed_mod_indicator.columns + 1
+    observed_mod_indicator.columns = mod_names
+    ax.pcolor(observed_mod_indicator, cmap="binary", edgecolors="black", vmin=0., vmax=2.)
+    ax.set_xticks(np.arange(0.5, len(observed_mod_indicator.columns), 1), observed_mod_indicator.columns)
     _ = ax.set_xlabel(xlabel), ax.set_ylabel(ylabel)
     return fig, ax

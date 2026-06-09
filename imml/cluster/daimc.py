@@ -222,7 +222,7 @@ class DAIMC(BaseEstimator, ClusterMixin):
         X : list of array-likes objects
             - X length: viewNum
             - X[i] shape: (n_samples, n_features_i)
-            A list of different mods.
+            A list of different data modalities.
         W : tuple of array
             - W length : viewNum
             - W[i] shape : (n_samples, n_samples)

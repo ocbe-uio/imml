@@ -38,7 +38,7 @@ class SelectIncompleteSamples(FunctionTransformer):
         super().__init__(select_incomplete_samples)
 
 
-def select_incomplete_samples(Xs: list):
+def select_incomplete_samples(Xs: list, y = None):
     r"""
     Remove complete samples from a multi-modal dataset.
 
@@ -48,12 +48,15 @@ def select_incomplete_samples(Xs: list):
         - Xs length: n_mods
         - Xs[i] shape: (n_samples, n_features)
 
-        A list of different mods.
+        A list of different data modalities.
+    y : array-like of shape (n_samples,)
+        Target vector relative to Xs.
 
     Returns
     -------
     transformed_Xs : list of array-likes objects, shape (n_samples, n_features_i)
         The transformed data.
+        If y is provided, returns a tuple (transformed_Xs, y).
 
     See Also
     --------
@@ -78,7 +81,10 @@ def select_incomplete_samples(Xs: list):
     else:
         mask = np.stack([pd.isna(X).any(axis=1) for X in Xs], axis=1)
     mask = mask.any(axis=1)
-    transformed_Xs = [X[mask] for X in Xs]
-    return transformed_Xs
+    output = [X[mask] for X in Xs]
+    if y is not None:
+        y = y[mask]
+        output = (output, y)
+    return output
 
 

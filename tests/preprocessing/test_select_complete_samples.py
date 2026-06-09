@@ -32,7 +32,8 @@ def test_select_complete_samples_class(sample_data):
         type(transformed_Xs[0]) is type(Xs[0])
         expected_values = [17, 17, 17]
         for transformed_X, expected_value in zip(transformed_Xs, expected_values):
-            np.equal(transformed_X, expected_value)
+            assert len(transformed_X) == expected_value
+
 
 def test_select_complete_samples_function(sample_data):
     for Xs in sample_data:
@@ -40,7 +41,23 @@ def test_select_complete_samples_function(sample_data):
         type(transformed_Xs[0]) is type(Xs[0])
         expected_values = [17, 17, 17]
         for transformed_X, expected_value in zip(transformed_Xs, expected_values):
-            np.equal(transformed_X, expected_value)
+            assert len(transformed_X) == expected_value
+
+
+def test_select_complete_samples_return_y(sample_data):
+    for Xs in sample_data:
+        y = np.random.default_rng(42).integers(0, 2, len(Xs[0]))
+        if isinstance(Xs[0], pd.DataFrame):
+            y = pd.Series(y, index=Xs[0].index)
+        elif deepmodule_installed:
+            if isinstance(Xs[0], torch.Tensor):
+                y = torch.from_numpy(y)
+        transformed_Xs, y = select_complete_samples(Xs, y)
+        type(transformed_Xs[0]) is type(Xs[0])
+        expected_values = [17, 17, 17]
+        for transformed_X, expected_value in zip(transformed_Xs, expected_values):
+            assert len(transformed_X) == expected_value
+            assert len(y) == expected_value
 
 
 def test_select_complete_samples_multiple_types(sample_data):
@@ -59,7 +76,7 @@ def test_select_complete_samples_multiple_types(sample_data):
         type(transformed_Xs[0]) is type(Xs[0])
         expected_values = [17, 17, 17]
         for transformed_X, expected_value in zip(transformed_Xs, expected_values):
-            np.equal(transformed_X, expected_value)
+            assert len(transformed_X) == expected_value
 
 
 if __name__ == "__main__":

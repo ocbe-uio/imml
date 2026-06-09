@@ -31,6 +31,24 @@ Change tags (adopted from `Scikit-learn
 - |API| : you will need to change your code to have the same effect in the future; or a feature will be removed in the future.
 
 
+Version 0.4.1
+-------------
+June 9, 2026
+
+Updates in this release:
+
+- |Fix| Sphinx versions have been restricted to <9 for creating the documentation, as new versions do not work well.
+
+:mod:`imml.preprocessing`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Fix| :class:`~imml.preprocessing.select_complete_samples` and
+  :class:`~imml.preprocessing.select_incomplete_samples` can now also return the y variable.
+
+:mod:`imml.visualize`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| mod_names argument was added to :class:`~imml.visualize.plot_combinations`.
+
+
 Version 0.4.0
 -------------
 June 5, 2026

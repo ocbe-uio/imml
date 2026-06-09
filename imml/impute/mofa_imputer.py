@@ -51,7 +51,7 @@ class MOFAImputer(MOFA):
             - Xs length: n_mods
             - Xs[i] shape: (n_samples_i, n_features_i)
 
-            A list of different mods.
+            A list of different data modalities.
         y : Ignored
             Not used, present here for API consistency by convention.
         fit_params : Ignored

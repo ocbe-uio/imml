@@ -147,7 +147,7 @@ train_data = RAGPTDataset(Xs=Xs_train, y=y_train, Xs_bank=Xs_bank, y_bank=y_bank
                           n_neighbors=n_neighbors)
 train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, generator=g)
 
-test_data = RAGPTDataset(Xs=Xs_test, y=y_test, mcr=train_data.mcr, modalities=modalities,
+test_data = RAGPTDataset(Xs=Xs_test, y=y_test, mcr=train_data.mcr_, modalities=modalities,
                          prompt_path=data_folder, n_neighbors=n_neighbors)
 test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 
@@ -225,7 +225,7 @@ for fold, (Xs_train, Xs_test, y_train, y_test) in enumerate(mm_splitter.split(Xs
                               prompt_path=data_folder, n_neighbors=n_neighbors)
     train_dataloader = DataLoader(train_data, batch_size=batch_size, shuffle=True, generator=g)
 
-    test_data = RAGPTDataset(Xs=Xs_test, y=y_test, mcr=train_data.mcr, modalities=modalities,
+    test_data = RAGPTDataset(Xs=Xs_test, y=y_test, mcr=train_data.mcr_, modalities=modalities,
                              prompt_path=data_folder, n_neighbors=n_neighbors)
     test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 

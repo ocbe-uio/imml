@@ -12,11 +12,11 @@ A multi-modal dataset can be characterized beyond basic shape information. With 
 
 What you will learn:
 
-- How to describe per‑modality completeness and cross‑modality overlap with ``get_summary``, ``plot_summary`` and
-  ``plot_combinations``.
 - How to compute redundancy, uniqueness, and synergy (PID) with respect to a target using ``pid``.
 - How to visualize and interpret PID results.
 - How PID generalizes when you have more than two modalities.
+- How to describe per‑modality completeness and cross‑modality overlap with ``get_summary``, ``plot_summary``,
+  ``plot_combinations``, and ``plot_missing_modality``.
 
 This tutorial is fully reproducible and uses a small dataset. You can easily
 replace the data‑loading section with your own data following the same structure.
@@ -36,7 +36,7 @@ import pandas as pd
 from imml.ampute import Amputer
 from imml.statistics import pid
 from imml.explore import get_summary
-from imml.visualize import plot_pid, plot_summary, plot_combinations
+from imml.visualize import plot_pid, plot_summary, plot_combinations, plot_missing_modality
 
 #####################################################
 # Step 2: Create or load a multi-modal dataset
@@ -56,6 +56,7 @@ Xs = [
 ]
 y = pd.read_csv("https://raw.githubusercontent.com/mvlearn/mvlearn/refs/heads/main/mvlearn/datasets/nutrimouse/diet.csv")
 y = y.squeeze()
+mod_names = ["Genes", "Lipids"]
 
 print("Samples:", len(Xs[0]), "\t", "Modalities:", len(Xs), "\t", "Features:", [X.shape[1] for X in Xs])
 
@@ -76,7 +77,7 @@ rus  # a dict with keys: Redundancy, Uniqueness1, Uniqueness2, Synergy
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # You can directly pass the rus dict returned by ``pid`` to ``plot_pid``. Alternatively, ``plot_pid`` can also compute
 # PID internally if you pass Xs and y, which is convenient when you want a one‑liner.
-fig, ax = plot_pid(rus=rus, mod_names=["Genes", "Lipids"])
+fig, ax = plot_pid(rus=rus, mod_names=mod_names)
 
 ###################################################
 # Interpreting PID results
@@ -114,7 +115,7 @@ summary
 
 ###################################################
 # Per‑modality view:
-summary = get_summary(Xs=Xs, mod_names=["Genes", "Lipids"], one_row=False, compute_pct=True, return_df=True)
+summary = get_summary(Xs=Xs, mod_names=mod_names, one_row=False, compute_pct=True, return_df=True)
 summary
 
 ###################################################
@@ -123,7 +124,11 @@ _ = plot_summary(summary=summary)
 
 ###################################################
 # We can also show how is the distribution of the combinations using ``plot_combinations``.
-_ = plot_combinations(Xs=Xs)
+_ = plot_combinations(Xs=Xs, mod_names=mod_names)
+
+###################################################
+# Additionally, we can visualize the missingness pattern using ``plot_missing_modality``.
+_ = plot_missing_modality(Xs=Xs, mod_names=mod_names)
 
 ###################################
 # Conclusion
@@ -133,6 +138,7 @@ _ = plot_combinations(Xs=Xs)
 # - Summarized key per‑modality statistics for a multi‑modal dataset.
 # - Quantified redundancy, uniqueness, and synergy with respect to a target using PID.
 # - Visualized and interpreted PID, including the multi‑modality (>2) case.
+# - Explored an incomplete multi-modal dataset with multiple figures.
 #
 # These insights help you understand complementarity and interactions across modalities, informing model design and
 # feature engineering for downstream multi‑modal learning.

@@ -83,7 +83,8 @@ def plot_combinations(Xs: list, mod_names: list = None, figsize: tuple = None, m
     combs = pd.DataFrame(common_indices.keys())
     combs["size"] = common_indices.values()
     combs = combs.sort_values(by="size", ascending=False)
-    combs = pd.concat([combs.iloc[:(max_combs-1)], combs.loc[~combs.isna().any(axis=1)]])
+    if len(combs) > max_combs:
+        combs = pd.concat([combs.iloc[:(max_combs-1)], combs.loc[~combs.isna().any(axis=1)]])
     ax = axes[0, 1]
     ax = combs.plot(kind="bar", y="size", ax=ax, ylabel="Intersection size", color="black", legend=False)
     ax.get_xaxis().set_visible(False)

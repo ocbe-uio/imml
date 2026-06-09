@@ -138,7 +138,7 @@ def concatenate_mods(Xs: list):
         - Xs length: n_mods
         - Xs[i] shape: (n_samples, n_features_i)
 
-        A list of different mods.
+        A list of different data modalities.
 
     Returns
     -------
@@ -171,7 +171,7 @@ def drop_mod(Xs, X_idx : int = 0):
         - Xs length: n_mods
         - Xs[i] shape: (n_samples, n_features_i)
 
-        A list of different mods.
+        A list of different data modalities.
     X_idx : int, default=0
         The index of the mod to drop from the input data.
 
@@ -205,7 +205,7 @@ def single_mod(Xs, X_idx : int = 0):
         - Xs length: n_mods
         - Xs[i] shape: (n_samples, n_features_i)
 
-        A list of different mods.
+        A list of different data modalities.
     X_idx : int, default=0
         The index of the mod to select from the input data.
 
@@ -239,7 +239,7 @@ def add_missing_mods(Xs, samples):
         - Xs length: n_mods
         - Xs[i] shape: (n_samples, n_features_i)
 
-        A list of different mods.
+        A list of different data modalities.
 
     Returns
     -------

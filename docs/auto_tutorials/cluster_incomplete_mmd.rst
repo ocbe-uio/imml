@@ -179,11 +179,11 @@ confusion matrix to visually assess the alignment between predicted clusters and
 
  .. code-block:: none
 
-    Adjusted Mutual Information Score: 0.44572714273549324
+    Adjusted Mutual Information Score: 0.2880592167134709
 
-    1    20
+    0    20
+    1    15
     2    15
-    0    15
     Name: count, dtype: int64
 
 
@@ -274,11 +274,11 @@ Now, we repeat the clustering analysis, but this time with the amputed (incomple
 
  .. code-block:: none
 
-    Adjusted Mutual Information Score: 0.32620476635369133
+    Adjusted Mutual Information Score: 0.35387296796329204
 
-    1    19
-    2    16
-    0    15
+    0    19
+    1    17
+    2    14
     Name: count, dtype: int64
 
 
@@ -379,35 +379,35 @@ across increasing missingness to obtain more robust estimates.
           <td>Baseline imputation</td>
           <td>0</td>
           <td>0</td>
-          <td>0.351418</td>
+          <td>0.591633</td>
         </tr>
         <tr>
           <th>26</th>
           <td>Baseline imputation</td>
           <td>0</td>
           <td>1</td>
-          <td>0.534101</td>
+          <td>0.318603</td>
         </tr>
         <tr>
           <th>27</th>
           <td>Baseline imputation</td>
           <td>0</td>
           <td>2</td>
-          <td>0.642276</td>
+          <td>0.354770</td>
         </tr>
         <tr>
           <th>28</th>
           <td>Baseline imputation</td>
           <td>0</td>
           <td>3</td>
-          <td>0.534101</td>
+          <td>0.471762</td>
         </tr>
         <tr>
           <th>29</th>
           <td>Baseline imputation</td>
           <td>0</td>
           <td>4</td>
-          <td>0.534101</td>
+          <td>0.348188</td>
         </tr>
       </tbody>
     </table>
@@ -468,7 +468,7 @@ missingness make it straightforward to prototype, evaluate, and benchmark real-w
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.324 seconds)
+   **Total running time of the script:** (0 minutes 2.094 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_cluster_incomplete_mmd.py:
