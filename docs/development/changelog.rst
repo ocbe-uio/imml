@@ -33,7 +33,7 @@ Change tags (adopted from `Scikit-learn
 
 Version 0.4.1
 -------------
-June 9, 2026
+June 10, 2026
 
 Updates in this release:
 
@@ -57,12 +57,12 @@ Updates in this release:
 
 :mod:`imml.classify`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |API| Updated RAGPT API for beter alignment with the framework :class:`~imml.classify.RAGPT`.
+- |API| Updated :class:`~imml.classify.RAGPT` API for beter alignment with the framework.
 - |Fix| Better alignment with the original implementation of :class:`~imml.classify.MUSE`.
 
 :mod:`imml.load`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |API| Updated RAGPTDataset API for beter alignment with the framework :class:`~imml.load.RAGPTDataset`.
+- |API| Updated :class:`~imml.load.RAGPTDataset` API for beter alignment with the framework.
 
 :mod:`imml.retrieve`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
