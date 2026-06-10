@@ -9,9 +9,12 @@ build:
   jobs:
     pre_build:
       - |
+        apt-get install -y wget ca-certificates
+        wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc > /dev/null
         mkdir -p R-packages
+        sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
         export R_LIBS="R-packages"
-        /usr/bin/Rscript -e "install.packages(\"nnTensor\", repos=\"https://cloud.r-project.org\", lib=Sys.getenv(\"R_LIBS\"))"
+        /usr/bin/Rscript -e "install.packages(\"nnTensor\", repos=\"https://cloud.r-project.org\", lib=Sys.getenv(\"R_LIBS\"))
 python:
   install:
     - method: pip
