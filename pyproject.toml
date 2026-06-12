@@ -76,8 +76,6 @@ docs = [
 #    tutorials
     "ipython>=8.20.0,<9.0.0",
     "datasets==3.6.0",
-#    r
-    "rpy2>=3.5.14",
 #    docs
     "sphinx>=7.0.0,<9.0.0",
     "sphinx-gallery>=0.17.1",
