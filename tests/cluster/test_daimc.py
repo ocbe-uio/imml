@@ -55,7 +55,7 @@ def test_default_params(sample_data):
 
 def test_param_randomstate(sample_data):
     random_state = 42
-    for engine in ["octave", "python"]:
+    for engine in ["python", "octave"]:
         if (engine == "octave") and not octavemodule_installed:
             continue
         else:
@@ -74,7 +74,7 @@ def test_invalid_params(sample_data):
 
 def test_fit_predict(sample_data):
     n_clusters = 3
-    for engine in ["octave", "python"]:
+    for engine in ["python", "octave"]:
         if (engine == "octave") and not octavemodule_installed:
             continue
         for Xs in sample_data:
@@ -97,7 +97,7 @@ def test_fit_predict(sample_data):
 
 def test_missing_values_handling(sample_data):
     n_clusters = 3
-    for engine in ["octave", "python"]:
+    for engine in ["python", "octave"]:
         if (engine == "octave") and not octavemodule_installed:
             continue
         for Xs in sample_data:

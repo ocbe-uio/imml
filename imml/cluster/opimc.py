@@ -10,7 +10,7 @@ from sklearn.impute import SimpleImputer
 from ..impute import get_observed_mod_indicator
 from ..preprocessing import MMTransformer
 from ..utils import check_Xs_y
-from .. import octavemodule_installed, oct2py_module_error
+from .. import octavemodule_installed, oct2py_module_error, Tensor
 
 if octavemodule_installed:
     import oct2py
@@ -37,8 +37,8 @@ class OPIMC(BaseEstimator, ClusterMixin):
         Size of the chunk.
     random_state : int, default=None
         Determines the randomness. Use an int to make the randomness deterministic.
-    engine : str, default='octave'
-        Engine to use for computing the model. Current options are 'octave'.
+    engine : str, default='python'
+        Engine to use for computing the model. Current options are 'python' or 'octave'.
     verbose : bool, default=False
         Verbosity mode.
     clean_space : bool, default=True
@@ -72,13 +72,13 @@ class OPIMC(BaseEstimator, ClusterMixin):
     """
 
     def __init__(self, n_clusters: int = 8, alpha: float = 10, num_passes: int = 1, max_iter: int = 30,
-                 tol: float = 1e-6, batch_size: int = 250, random_state:int = None, engine: str ="octave",
+                 tol: float = 1e-6, batch_size: int = 250, random_state:int = None, engine: str ="python",
                  verbose = False, clean_space: bool = True):
         if not isinstance(n_clusters, int):
             raise ValueError(f"Invalid n_clusters. It must be an int. A {type(n_clusters)} was passed.")
         if n_clusters < 2:
             raise ValueError(f"Invalid n_clusters. It must be an greater than 1. {n_clusters} was passed.")
-        engines_options = ["octave"]
+        engines_options = ["octave", "python"]
         if engine not in engines_options:
             raise ValueError(f"Invalid engine. Expected one of {engines_options}. {engine} was passed.")
         if (engine == "octave") and (not octavemodule_installed):
@@ -129,30 +129,27 @@ class OPIMC(BaseEstimator, ClusterMixin):
         self :  Fitted estimator.
         """
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
+        transformed_Xs, observed_mod_indicator = self._processing_xs(Xs)
 
-        if self.engine=="octave":
-            if isinstance(Xs[0], pd.DataFrame):
-                transformed_Xs = [X.values for X in Xs]
-            elif isinstance(Xs[0], np.ndarray):
-                transformed_Xs = Xs
-            observed_mod_indicator = get_observed_mod_indicator(transformed_Xs)
-            imputer = MMTransformer(transformer=SimpleImputer(strategy="constant", fill_value=0))
-            transformed_Xs = imputer.fit_transform(transformed_Xs)
-            transformed_Xs = [X.T for X in transformed_Xs]
-            transformed_Xs = tuple(transformed_Xs)
-
-            w = tuple([self._oc.diag(missing_mod) for missing_mod in observed_mod_indicator])
+        if self.engine == "octave":
             options = {"batch_size": self.batch_size, "k": self.n_clusters, "maxiter": self.max_iter,
-                       "tol": self.tol, "pass": self.num_passes, "loss": 0, "alpha": self.alpha}
+                       "tol": self.tol, "pass": self.num_passes, "alpha": self.alpha}
             if self.random_state is not None:
                 self._oc.rand('seed', self.random_state)
-            labels, V = self._oc.OPIMC(transformed_Xs, w, options, observed_mod_indicator, nout= 2)
+            labels, embeddings = self._oc.OPIMC(transformed_Xs, options, observed_mod_indicator, nout=2)
 
             if self.clean_space:
                 self._clean_space()
 
-        self.labels_ = pd.factorize(labels[:,0])[0]
-        self.embedding_ = V
+            labels = labels[:, 0]
+
+        elif self.engine == "python":
+            self.rng = np.random.default_rng(self.random_state)
+            labels, embeddings = self._opimc_python(list(transformed_Xs), np.array(observed_mod_indicator, dtype=float))
+
+        labels = pd.factorize(labels)[0]
+        self.labels_ = labels
+        self.embedding_ = embeddings
 
         return self
 
@@ -201,8 +198,132 @@ class OPIMC(BaseEstimator, ClusterMixin):
 
 
     def _clean_space(self):
-        [os.remove(os.path.join(self._octave_folder, x)) for x in ["reader.mat", "writer.mat"]]
+        [os.remove(os.path.join(self._octave_folder, x)) for x in ["reader.mat", "writer.mat"]
+         if os.path.exists(os.path.join(self._octave_folder, x))]
         self._oc.exit()
         del self._oc
-        return None
 
+
+    @staticmethod
+    def _processing_xs(Xs):
+        if isinstance(Xs[0], pd.DataFrame):
+            transformed_Xs = [X.values for X in Xs]
+        elif isinstance(Xs[0], np.ndarray):
+            transformed_Xs = Xs
+        elif isinstance(Xs[0], Tensor):
+            transformed_Xs = [X.numpy() for X in Xs]
+        else:
+            transformed_Xs = list(Xs)
+        observed_mod_indicator = get_observed_mod_indicator(transformed_Xs)
+        imputer = MMTransformer(transformer=SimpleImputer(strategy="constant", fill_value=0))
+        transformed_Xs = imputer.fit_transform(transformed_Xs)
+        transformed_Xs = tuple(X.T for X in transformed_Xs)
+        return transformed_Xs, observed_mod_indicator
+
+
+    @staticmethod
+    def _update_v(X_blk, w_blk, U):
+        block_len = X_blk[0].shape[1]
+        k = U[0].shape[1]
+        D = np.zeros((block_len, k))
+        for Xi, wi, Ui in zip(X_blk, w_blk, U):
+            bb = np.einsum('ij,ij->j', Ui, Ui)        # (k,) squared column norms of Ui
+            D += wi[:, None] * (bb - 2.0 * (Xi.T @ Ui))
+        labels = D.argmin(axis=1)
+        V = np.zeros((block_len, k))
+        V[np.arange(block_len), labels] = 1.0
+        return V, D
+
+
+    def _compute_objective(self, R, T, X_blk, w_blk, U, V):
+        loss = 0.0
+        for Ri, Ti, Xi, wi, Ui in zip(R, T, X_blk, w_blk, U):
+            wV = wi[:, None] * V                       # (block_len, k)
+            tmp1 = Ri + Xi @ V                         # (n_features_i, k)
+            tmp2 = Ti + V.T @ wV                       # (k, k)  symmetric
+            loss += (-2.0 * np.sum(Ui * tmp1)          # -2 * trace(Ui.T @ tmp1)
+                     + np.sum((Ui.T @ Ui) * tmp2)      # trace(Ui.T @ Ui @ tmp2)
+                     + self.alpha * np.sum(Ui ** 2))   # alpha * ||Ui||_F^2
+        return loss
+
+
+    def _opimc_python(self, Xs, ind):
+        num_mods = len(Xs)
+        total = Xs[0].shape[1]
+        num_block = int(np.ceil(total / self.batch_size))
+
+        W = [ind[:, i] for i in range(num_mods)]
+        U = [self.rng.random((Xi.shape[0], self.n_clusters)) for Xi in Xs]
+        R = [np.zeros((Xi.shape[0], self.n_clusters)) for Xi in Xs]
+        T = [np.zeros((self.n_clusters, self.n_clusters)) for _ in range(num_mods)]
+
+        label_total = np.zeros((self.num_passes, total), dtype=int)
+        D_full = np.zeros((total, self.n_clusters))
+
+        for pass_idx in range(self.num_passes):
+            if pass_idx > 0:
+                label_total[pass_idx] = label_total[pass_idx - 1]
+
+            for block_idx in range(num_block):
+                start = block_idx * self.batch_size
+                end = min(start + self.batch_size, total)
+                block_len = end - start
+
+                X_blk = [Xi[:, start:end] for Xi in Xs]
+                w_blk = [Wi[start:end] for Wi in W]
+
+                if pass_idx == 0:
+                    if block_idx == 0:
+                        U[:] = [self.rng.random(Ui.shape) for Ui in U]
+                        V = self.rng.random((block_len, self.n_clusters))
+                        V /= V.sum(axis=1, keepdims=True)
+                    else:
+                        V, _ = self._update_v(X_blk, w_blk, U)
+                    label_total[0, start:end] = V.argmax(axis=1)
+                else:
+                    V = np.zeros((block_len, self.n_clusters))
+                    V[np.arange(block_len), label_total[pass_idx, start:end]] = 1.0
+
+                log_out = self._compute_objective(R, T, X_blk, w_blk, U, V)
+
+                for iter_count in range(self.max_iter):
+                    if pass_idx != 0 and iter_count == 0:
+                        V_pre = np.zeros((block_len, self.n_clusters))
+                        V_pre[np.arange(block_len), label_total[pass_idx - 1, start:end]] = 1.0
+                        for Ti, Ri, Xi, wi in zip(T, R, X_blk, w_blk):
+                            Ti -= V_pre.T @ (wi[:, None] * V_pre)
+                            Ri -= Xi @ V_pre
+
+                    for i, (Ti, Ri, Xi, wi, Ui) in enumerate(zip(T, R, X_blk, w_blk, U)):
+                        wV = wi[:, None] * V
+                        VtWV = V.T @ wV
+                        TpVtWV = Ti + VtWV
+                        U_new = np.linalg.solve(
+                            (TpVtWV + self.alpha * np.eye(self.n_clusters)).T,
+                            (Ri + Xi @ V).T,
+                        ).T
+                        check = VtWV if (pass_idx == 0 and block_idx == 0) else TpVtWV
+                        zero_cols = np.where(np.diag(check) == 0)[0]
+                        if len(zero_cols):
+                            if pass_idx == 0 and block_idx == 0:
+                                U_new[:, zero_cols] = Xi.mean(axis=1, keepdims=True)
+                            else:
+                                U_new[:, zero_cols] = Ui[:, zero_cols]
+                        U[i] = U_new
+
+                    V, D = self._update_v(X_blk, w_blk, U)
+                    label_total[pass_idx, start:end] = V.argmax(axis=1)
+
+                    log_out_new = self._compute_objective(R, T, X_blk, w_blk, U, V)
+                    if log_out != 0.0 and abs((log_out_new - log_out) / log_out) < self.tol:
+                        break
+                    log_out = log_out_new
+
+                D_full[start:end] = D
+
+                for Ri, Ti, Xi, wi in zip(R, T, X_blk, w_blk):
+                    wV = wi[:, None] * V
+                    Ri += Xi @ V
+                    Ti += V.T @ wV
+
+        return label_total[self.num_passes - 1], D_full

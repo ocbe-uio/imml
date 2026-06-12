@@ -31,13 +31,17 @@ Change tags (adopted from `Scikit-learn
 - |API| : you will need to change your code to have the same effect in the future; or a feature will be removed in the future.
 
 
-Version 0.4.1
+Version 0.5.0
 -------------
-June 10, 2026
+June 11, 2026
 
 Updates in this release:
 
 - |Fix| Sphinx versions have been restricted to <9 for creating the documentation, as new versions do not work well.
+
+:mod:`imml.cluster`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Enhancement| Python engine has been implemented in :class:`~imml.cluster.PIMVC`.
 
 :mod:`imml.preprocessing`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

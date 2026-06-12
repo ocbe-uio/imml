@@ -1,4 +1,4 @@
-function V = UpdateV(X,W,U,V,viewNum,option)
+function [V,D] = UpdateV(X,W,U,V,viewNum,option)
 [n,r] = size(V);
 D = zeros(n,r); 
 for i = 1:viewNum
