@@ -88,8 +88,8 @@ task and check whether additional modules or dependencies are required.
    * - Clustering
      - :class:`~imml.cluster.OPIMC`
      - Numeric
-     - octave
-     - octave
+     -
+     -
    * - Clustering
      - :class:`~imml.cluster.OSLFIMVC`
      - Numeric
@@ -98,8 +98,8 @@ task and check whether additional modules or dependencies are required.
    * - Clustering
      - :class:`~imml.cluster.PIMVC`
      - Numeric
-     - octave
-     - octave
+     -
+     -
    * - Clustering
      - :class:`~imml.cluster.SIMCADC`
      - Numeric
@@ -123,13 +123,13 @@ task and check whether additional modules or dependencies are required.
    * - Decomposition
      - :class:`~imml.decomposition.JNMF`
      - Numeric
-     - r
-     - R, nnTensor
+     -
+     -
    * - Feature selection
      - :class:`~imml.feature_selection.JNMFFeatureSelector`
      - Numeric
-     - r
-     - R, nnTensor
+     -
+     -
    * - Impute
      - :class:`~imml.impute.DFMFImputer`
      - Numeric
@@ -143,8 +143,8 @@ task and check whether additional modules or dependencies are required.
    * - Impute
      - :class:`~imml.impute.JNMFImputer`
      - Numeric
-     - r
-     - R, nnTensor
+     -
+     -
    * - Retrieve
      - :class:`~imml.retrieve.MCR`
      - Image & Text

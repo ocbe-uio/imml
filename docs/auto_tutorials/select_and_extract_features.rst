@@ -208,7 +208,7 @@ Step 4: Apply feature selection and feature extraction
 .. code-block:: Python
 
 
-    n_components = 4
+    n_components = 5
     # Feature extraction
     pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                              JNMF(n_components=n_components, random_state=random_state))
@@ -940,30 +940,37 @@ We can identify and visualize the selected features.
       <tbody>
         <tr>
           <th>0</th>
-          <td>MDR1</td>
-          <td>3.512144</td>
-          <td>2</td>
+          <td>SIAT4c</td>
+          <td>3.470684</td>
+          <td>1</td>
           <td>Genes</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>Lpin</td>
-          <td>3.222102</td>
-          <td>3</td>
+          <td>CIDEA</td>
+          <td>3.028949</td>
+          <td>4</td>
           <td>Genes</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>C20.3n.6</td>
-          <td>3.188128</td>
-          <td>4</td>
-          <td>Lipids</td>
+          <td>GK</td>
+          <td>2.863240</td>
+          <td>3</td>
+          <td>Genes</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>L.FABP</td>
-          <td>3.089178</td>
-          <td>1</td>
+          <td>C22.5n.3</td>
+          <td>2.580094</td>
+          <td>5</td>
+          <td>Lipids</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>cHMGCoAS</td>
+          <td>2.402445</td>
+          <td>2</td>
           <td>Genes</td>
         </tr>
       </tbody>
@@ -1045,7 +1052,7 @@ We can also extract features and visualize the original features with the larges
 
     pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                              JNMFFeatureSelector(n_components = n_components, select_by="component",
-                                                 random_state=42, f_per_component=2))
+                                                 random_state=random_state, f_per_component=2))
     pipeline.fit(Xs)
     selected_features = get_contributions(Xs=Xs, selected_features= pipeline[-1].selected_features_,
                                          weights= pipeline[-1].weights_, components= pipeline[-1].component_,
@@ -1086,60 +1093,74 @@ We can also extract features and visualize the original features with the larges
       </thead>
       <tbody>
         <tr>
-          <th>3</th>
-          <td>L.FABP</td>
-          <td>3.089178</td>
-          <td>1</td>
-          <td>Genes</td>
-        </tr>
-        <tr>
-          <th>7</th>
-          <td>C18.1n.9</td>
-          <td>2.912200</td>
-          <td>1</td>
-          <td>Lipids</td>
-        </tr>
-        <tr>
           <th>0</th>
-          <td>MDR1</td>
-          <td>3.512144</td>
-          <td>2</td>
-          <td>Genes</td>
-        </tr>
-        <tr>
-          <th>4</th>
-          <td>Bcl.3</td>
-          <td>3.155568</td>
-          <td>2</td>
-          <td>Genes</td>
-        </tr>
-        <tr>
-          <th>1</th>
-          <td>Lpin</td>
-          <td>3.222102</td>
-          <td>3</td>
+          <td>SIAT4c</td>
+          <td>3.470684</td>
+          <td>1</td>
           <td>Genes</td>
         </tr>
         <tr>
           <th>5</th>
-          <td>CYP24</td>
-          <td>3.010873</td>
-          <td>3</td>
+          <td>i.FABP</td>
+          <td>2.970382</td>
+          <td>1</td>
+          <td>Genes</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>cHMGCoAS</td>
+          <td>2.402445</td>
+          <td>2</td>
+          <td>Genes</td>
+        </tr>
+        <tr>
+          <th>9</th>
+          <td>BACT</td>
+          <td>2.365262</td>
+          <td>2</td>
           <td>Genes</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>C20.3n.6</td>
-          <td>3.188128</td>
+          <td>GK</td>
+          <td>2.863240</td>
+          <td>3</td>
+          <td>Genes</td>
+        </tr>
+        <tr>
+          <th>7</th>
+          <td>L.FABP</td>
+          <td>2.721784</td>
+          <td>3</td>
+          <td>Genes</td>
+        </tr>
+        <tr>
+          <th>1</th>
+          <td>CIDEA</td>
+          <td>3.028949</td>
+          <td>4</td>
+          <td>Genes</td>
+        </tr>
+        <tr>
+          <th>6</th>
+          <td>C18.1n.9</td>
+          <td>2.948941</td>
           <td>4</td>
           <td>Lipids</td>
         </tr>
         <tr>
-          <th>6</th>
-          <td>CYP2c29</td>
-          <td>2.963534</td>
-          <td>4</td>
-          <td>Genes</td>
+          <th>3</th>
+          <td>C22.5n.3</td>
+          <td>2.580094</td>
+          <td>5</td>
+          <td>Lipids</td>
+        </tr>
+        <tr>
+          <th>8</th>
+          <td>C22.6n.3</td>
+          <td>2.428229</td>
+          <td>5</td>
+          <td>Lipids</td>
         </tr>
       </tbody>
     </table>
@@ -1178,7 +1199,7 @@ We can also extract features and visualize the original features with the larges
  .. code-block:: none
 
 
-    [Text(3, 0, 'C18.1n.9'), Text(3, 0, 'CYP2c29'), Text(3, 0, 'CYP24'), Text(3, 0, 'L.FABP'), Text(3, 0, 'Bcl.3'), Text(3, 0, 'C20.3n.6'), Text(3, 0, 'Lpin'), Text(3, 0, 'MDR1')]
+    [Text(3, 0, 'BACT'), Text(3, 0, 'cHMGCoAS'), Text(3, 0, 'C22.6n.3'), Text(3, 0, 'C22.5n.3'), Text(3, 0, 'L.FABP'), Text(3, 0, 'GK'), Text(3, 0, 'C18.1n.9'), Text(3, 0, 'i.FABP'), Text(3, 0, 'CIDEA'), Text(3, 0, 'SIAT4c')]
 
 
 
@@ -1308,35 +1329,35 @@ seeds to have robust results.
           <td>Feature extraction</td>
           <td>0</td>
           <td>0</td>
-          <td>0.900</td>
+          <td>1.000</td>
         </tr>
         <tr>
           <th>1</th>
           <td>Feature extraction</td>
           <td>0</td>
           <td>1</td>
-          <td>0.950</td>
+          <td>0.975</td>
         </tr>
         <tr>
           <th>2</th>
           <td>Feature extraction</td>
           <td>0</td>
           <td>2</td>
-          <td>1.000</td>
+          <td>0.975</td>
         </tr>
         <tr>
           <th>3</th>
           <td>Feature extraction</td>
           <td>0</td>
           <td>3</td>
-          <td>0.975</td>
+          <td>0.825</td>
         </tr>
         <tr>
           <th>4</th>
           <td>Feature extraction</td>
           <td>0</td>
           <td>4</td>
-          <td>0.900</td>
+          <td>0.975</td>
         </tr>
       </tbody>
     </table>
@@ -1402,7 +1423,7 @@ for your application.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 10.307 seconds)
+   **Total running time of the script:** (0 minutes 2.922 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_select_and_extract_features.py:

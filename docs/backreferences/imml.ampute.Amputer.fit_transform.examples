@@ -15,6 +15,48 @@ Examples using ``imml.ampute.Amputer.fit_transform``
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="A multi-modal dataset can be characterized beyond basic shape information. With iMML you can:">
+
+.. only:: html
+
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_multi_modal_data_statistics_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Statistics and interaction structure of a multi-modal dataset</div>
+    </div>
+
+
+.. only:: not html
+
+ * :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py`
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Evaluation and benchmarking of new algorithms or models under diverse conditions is essential to ensure their robustness, added value and generalizability. iMML simplifies this process by simulating incomplete multi-modal datasets with modality-wise missing data. This so-called data amputation process allows for controlled testing of methods by introducing missing data from various mechanisms that reflect real-world scenarios where different modalities may be partially observed or entirely missing.">
+
+.. only:: html
+
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_generate_missing_modalities_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Modality-wise missing data simulation (Amputation)</div>
+    </div>
+
+
+.. only:: not html
+
+ * :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py`
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to classify samples from an incomplete vision–language dataset using the iMML library. iMML supports robust classification even when some modalities (e.g., text or image) are missing, making it suitable for real‑world multi‑modal data where missingness is common.">
 
 .. only:: html

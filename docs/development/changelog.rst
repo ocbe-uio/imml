@@ -43,6 +43,10 @@ Updates in this release:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Enhancement| Python engine has been implemented in :class:`~imml.cluster.PIMVC`.
 
+:mod:`imml.decomposition`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Enhancement| Python engine has been implemented in :class:`~imml.decomposition.JNMF`.
+
 :mod:`imml.preprocessing`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Fix| :class:`~imml.preprocessing.select_complete_samples` and

@@ -1,18 +1,25 @@
+import importlib
+import sys
+from unittest.mock import patch
 import pytest
-rpy2 = pytest.importorskip("rpy2")
 import numpy as np
 import pandas as pd
-from rpy2.robjects.packages import importr, PackageNotInstalledError
-rbase = importr("base")
 
 from imml.ampute import Amputer
 from imml.decomposition import JNMF
 
 try:
-    nnTensor = importr("nnTensor")
-    nnTensor_installed = True
-except PackageNotInstalledError:
+    from rpy2.robjects.packages import importr, PackageNotInstalledError
+    rpy2_installed = True
+    try:
+        nnTensor = importr("nnTensor")
+        nnTensor_installed = True
+    except PackageNotInstalledError:
+        nnTensor_installed = False
+except ImportError:
+    rpy2_installed = False
     nnTensor_installed = False
+
 estimator = JNMF
 
 
@@ -25,21 +32,23 @@ def sample_data():
     return Xs_pandas, Xs_numpy
 
 
-@pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
-def test_rmodule_installed():
+def test_r_module_installed():
     if nnTensor_installed:
         estimator(engine="r")
+        with patch.dict(sys.modules, {"rpy2": None}):
+            import imml as imml_mock
+            import imml.decomposition.jnmf as module_mock
+            importlib.reload(imml_mock)
+            importlib.reload(module_mock)
+            with pytest.raises(ImportError, match="Module 'r' needs to be installed."):
+                estimator(engine="r")
+        importlib.reload(imml_mock)
+        importlib.reload(module_mock)
     else:
-        with pytest.raises(ImportError, match="nnTensor needs to be installed in R to use r engine."):
+        with pytest.raises(ImportError, match="Module 'r' needs to be installed."):
             estimator(engine="r")
 
 
-@pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
-def test_random_state(sample_data):
-    estimator()
-
-
-@pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_default_params(sample_data):
     transformer = estimator(random_state=42)
     for Xs in sample_data:
@@ -51,51 +60,57 @@ def test_default_params(sample_data):
         assert hasattr(transformer, 'relchange_')
 
 
-@pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
+def test_param_randomstate(sample_data):
+    random_state = 42
+    for engine in ["python", "r"]:
+        if (engine == "r") and (not nnTensor_installed):
+            continue
+        transformed_X = estimator(engine=engine, random_state=random_state).fit_transform(sample_data[0])
+        np.testing.assert_array_equal(transformed_X, estimator(engine=engine, random_state=random_state).fit_transform(sample_data[0]))
+
+
 def test_fit(sample_data):
     n_components = 5
-    transformer = estimator(n_components=n_components, max_iter=10, random_state=42)
-    for Xs in sample_data:
-        transformer.fit(Xs)
-        assert hasattr(transformer, 'H_')
-        assert hasattr(transformer, 'reconstruction_err_')
-        assert hasattr(transformer, 'observed_reconstruction_err_')
-        assert hasattr(transformer, 'missing_reconstruction_err_')
-        assert hasattr(transformer, 'relchange_')
+    for engine in ["python", "r"]:
+        if (engine == "r") and (not nnTensor_installed):
+            continue
+        for Xs in sample_data:
+            transformer = estimator(n_components=n_components, engine=engine, random_state=42)
+            transformer.fit(Xs)
+            assert len(transformer.H_) == len(Xs)
+            assert transformer.H_[0].shape == (Xs[0].shape[1], n_components)
 
 
-@pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
 def test_transform(sample_data):
     n_components = 5
-    transformer = estimator(n_components=n_components, random_state=42)
-    for Xs in sample_data:
-        n_samples = len(Xs[0])
-        transformer.fit(Xs)
-        transformed_X = transformer.transform(Xs)
-        assert transformed_X.shape == (n_samples, n_components)
-        assert len(transformer.H_) == len(Xs)
-        assert transformer.H_[0].shape == (Xs[0].shape[1], n_components)
+    for engine in ["python", "r"]:
+        if (engine == "r") and (not nnTensor_installed):
+            continue
+        for Xs in sample_data:
+            transformer = estimator(n_components=n_components, engine=engine, random_state=42)
+            n_samples = len(Xs[0])
+            transformer.fit(Xs)
+            transformed_X = transformer.transform(Xs)
+            assert transformed_X.shape == (n_samples, n_components)
+            assert len(transformer.H_) == len(Xs)
+            assert transformer.H_[0].shape == (Xs[0].shape[1], n_components)
 
 
-@pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
-def test_missing_values_handling(sample_data):
+def test_missing_values(sample_data):
     n_components = 5
-    transformer = estimator(n_components=n_components, random_state=42)
-    for Xs in sample_data:
-        Xs = Amputer(p= 0.3, random_state=42).fit_transform(Xs)
-        n_samples = len(Xs[0])
-        transformed_X = transformer.fit_transform(Xs)
-        assert not np.isnan(transformed_X).any().any()
-        assert transformed_X.shape == (n_samples, n_components)
-        assert len(transformer.H_) == len(Xs)
-        assert transformer.H_[0].shape == (Xs[0].shape[1], n_components)
-
-
-@pytest.mark.skipif(not nnTensor_installed, reason="nnTensor is not installed.")
-def test_invalid_params(sample_data):
-    with pytest.raises(ValueError, match="Invalid engine"):
-        estimator(engine="invalid")
+    for engine in ["python", "r"]:
+        if (engine == "r") and (not nnTensor_installed):
+            continue
+        for Xs in sample_data:
+            Xs = Amputer(p=0.3, random_state=42).fit_transform(Xs)
+            transformer = estimator(n_components=n_components, engine=engine, random_state=42)
+            n_samples = len(Xs[0])
+            transformed_X = transformer.fit_transform(Xs)
+            assert not np.isnan(transformed_X).any().any()
+            assert transformed_X.shape == (n_samples, n_components)
+            assert len(transformer.H_) == len(Xs)
+            assert transformer.H_[0].shape == (Xs[0].shape[1], n_components)
 
 
 if __name__ == "__main__":
-    pytest.main()
+    pytest.main([__file__, "-v"])

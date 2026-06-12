@@ -125,7 +125,7 @@ y.value_counts()
 # Step 4: Apply feature selection and feature extraction
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-n_components = 4
+n_components = 5
 # Feature extraction
 pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                          JNMF(n_components=n_components, random_state=random_state))
@@ -174,7 +174,7 @@ ax = selected_features.plot(kind= "bar", color= list(palette.values()), ylabel= 
 
 pipeline = make_pipeline(MMTransformer(MinMaxScaler().set_output(transform="pandas")),
                          JNMFFeatureSelector(n_components = n_components, select_by="component",
-                                             random_state=42, f_per_component=2))
+                                             random_state=random_state, f_per_component=2))
 pipeline.fit(Xs)
 selected_features = get_contributions(Xs=Xs, selected_features= pipeline[-1].selected_features_,
                                      weights= pipeline[-1].weights_, components= pipeline[-1].component_,

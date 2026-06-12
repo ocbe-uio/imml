@@ -156,7 +156,6 @@ available on `Hugging Face Datasets
 
  .. code-block:: none
 
-    Seed set to 42
 
     label
     dog    53
@@ -260,12 +259,6 @@ Create the loaders.
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
-
 
 
 
@@ -290,24 +283,7 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
 
  .. code-block:: none
 
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-
-      | Name      | Type             | Params | Mode 
-    -------------------------------------------------------
-    0 | model     | RAGPTModule      | 118 M  | train
-    1 | loss_fn   | CrossEntropyLoss | 0      | train
-    2 | get_probs | Softmax          | 0      | train
-    -------------------------------------------------------
-    7.2 M     Trainable params
-    111 M     Non-trainable params
-    118 M     Total params
-    472.956   Total estimated model params size (MB)
-    21        Modules in train mode
-    234       Modules in eval mode
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]`Trainer.fit` stopped: `max_epochs=2` reached.
-    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]
 
 
 
@@ -369,7 +345,7 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:03<00:00,  0.33it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:03<00:00,  0.33it/s]
 
 
 
@@ -449,31 +425,6 @@ For robust evaluation, we can use cross-validation. We use a stratified 5-fold c
 
 
 
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-    `Trainer.fit` stopped: `max_epochs=2` reached.
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-    `Trainer.fit` stopped: `max_epochs=2` reached.
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-    `Trainer.fit` stopped: `max_epochs=2` reached.
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-    `Trainer.fit` stopped: `max_epochs=2` reached.
-    GPU available: False, used: False
-    TPU available: False, using: 0 TPU cores
-    HPU available: False, using: 0 HPUs
-    `Trainer.fit` stopped: `max_epochs=2` reached.
 
 
 
@@ -568,7 +519,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (20 minutes 8.802 seconds)
+   **Total running time of the script:** (22 minutes 20.923 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:
