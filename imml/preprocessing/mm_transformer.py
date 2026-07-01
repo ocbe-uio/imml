@@ -100,5 +100,5 @@ class MMTransformer(BaseEstimator, TransformerMixin):
         """
 
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
-        tranformed_Xs = [self.transformer_list_[X_idx].transform(X) for X_idx, X in enumerate(Xs)]
-        return tranformed_Xs
+        transformed_Xs = [self.transformer_list_[X_idx].transform(X) for X_idx, X in enumerate(Xs)]
+        return transformed_Xs

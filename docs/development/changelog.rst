@@ -31,13 +31,25 @@ Change tags (adopted from `Scikit-learn
 - |API| : you will need to change your code to have the same effect in the future; or a feature will be removed in the future.
 
 
-Version 0.5.0
+Version 0.6.0
 -------------
-June 11, 2026
+July 10, 2026
+
+Updates in this release:
+
+:mod:`imml.preprocessing`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| :class:`~imml.preprocessing.UMTransformer` has been implemented.
+
+
+Version 0.5.1
+-------------
+June 13, 2026
 
 Updates in this release:
 
 - |Fix| Sphinx versions have been restricted to <9 for creating the documentation, as new versions do not work well.
+- |Efficiency| : R dependency has been removed for building the documentation.
 
 :mod:`imml.cluster`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
