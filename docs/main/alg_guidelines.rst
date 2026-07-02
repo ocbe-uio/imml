@@ -66,6 +66,11 @@ task and check whether additional modules or dependencies are required.
      - octave
      - octave
    * - Clustering
+     - :class:`~imml.cluster.MLMF`
+     - Numeric
+     -
+     -
+   * - Clustering
      - :class:`~imml.cluster.MONET`
      - Numeric
      -

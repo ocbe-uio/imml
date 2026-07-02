@@ -73,6 +73,16 @@ Multiple Kernel K-Means with Incomplete Kernels (MKKM-IK)
 .. minigallery:: imml.cluster.MKKMIK
    :add-heading: Tutorials
 
+Multi-layer matrix factorization (MLMF)
+-----------------------------------------------------
+
+.. autoclass:: MLMF
+   :members:
+   :show-inheritance:
+
+.. minigallery:: imml.cluster.MLMF
+   :add-heading: Tutorials
+
 Multi Omic Clustering by Non-Exhaustive Types (MONET)
 -----------------------------------------------------
 

@@ -18,7 +18,7 @@ if octavemodule_installed:
 
 class IMSR(BaseEstimator, ClusterMixin):
     r"""
-    Self-representation Subspace Clustering for Incomplete Multi-view Data (IMSR). [#imsrpaper]_ [#imscaglcode]_
+    Self-representation Subspace Clustering for Incomplete Multi-view Data (IMSR). [#imsrpaper]_ [#imsrcode]_
 
     IMSR performs feature extraction, imputation and self-representation learning to obtain a low-rank regularized
     consensus coefficient matrix.
@@ -58,7 +58,7 @@ class IMSR(BaseEstimator, ClusterMixin):
                      Multi-view Data. In Proceedings of the 29th ACM International Conference on Multimedia (MM '21).
                      Association for Computing Machinery, New York, NY, USA, 2726–2734.
                      https://doi.org/10.1145/3474085.3475379.
-    .. [#imscaglcode] https://github.com/liujiyuan13/IMSR-code_release
+    .. [#imsrcode] https://github.com/liujiyuan13/IMSR-code_release
 
     Example
     --------

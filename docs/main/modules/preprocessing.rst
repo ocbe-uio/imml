@@ -88,6 +88,16 @@ Multi-Modal Transformer
 .. minigallery:: imml.preprocessing.MMTransformer
    :add-heading: Tutorials
 
+Uni-Modal Transformer
+--------------------------------------------------
+
+.. autoclass:: UMTransformer
+   :members:
+   :show-inheritance:
+
+.. minigallery:: imml.preprocessing.UMTransformer
+   :add-heading: Tutorials
+
 Normalizer NaN
 --------------------------------------------------
 

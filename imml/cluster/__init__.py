@@ -16,3 +16,4 @@ from .monet import MONET
 from .imscagl import IMSCAGL
 from .mrgcn import MRGCN
 from .integrao import IntegrAO, IntegrAOModule
+from .mlmf import MLMF
