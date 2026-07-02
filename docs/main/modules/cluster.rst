@@ -73,7 +73,7 @@ Multiple Kernel K-Means with Incomplete Kernels (MKKM-IK)
 .. minigallery:: imml.cluster.MKKMIK
    :add-heading: Tutorials
 
-Multi-layer matrix factorization (MLMF)
+Multi-Layer Matrix Factorization (MLMF)
 -----------------------------------------------------
 
 .. autoclass:: MLMF

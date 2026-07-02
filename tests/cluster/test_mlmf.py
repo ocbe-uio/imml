@@ -67,6 +67,8 @@ def test_param_randomstate(sample_data):
 def test_invalid_params(sample_data):
     with pytest.raises(ValueError, match="Invalid engine."):
         estimator(engine='invalid')
+    with pytest.raises(ValueError, match="Invalid factorization."):
+        estimator(factorization='invalid')
     with pytest.raises(ValueError, match="Invalid n_clusters."):
         estimator(n_clusters='invalid')
     with pytest.raises(ValueError, match="Invalid n_clusters."):
@@ -77,6 +79,24 @@ def test_invalid_params(sample_data):
         estimator(lambda2=-0.5)
     with pytest.raises(ValueError, match="Invalid layers."):
         estimator(layers=[0, 2])
+    with pytest.raises(ValueError, match="Invalid layers."):
+        estimator(layers='invalid')
+    with pytest.raises(ValueError, match="Invalid layers."):
+        estimator(factorization="nonlinear", layers=[4, 3, 2])
+    with pytest.raises(ValueError, match="Invalid max_iter."):
+        estimator(max_iter=1.5)
+    with pytest.raises(ValueError, match="Invalid max_iter."):
+        estimator(max_iter=0)
+    with pytest.raises(ValueError, match="Invalid tol."):
+        estimator(tol=0)
+    with pytest.raises(ValueError, match="Invalid update_h."):
+        estimator(update_h=1)
+    with pytest.raises(ValueError, match="Invalid update_last_h."):
+        estimator(update_last_h=1)
+    with pytest.raises(ValueError, match="Invalid update_z."):
+        estimator(update_z=1)
+    with pytest.raises(ValueError, match="Invalid nonlinearity."):
+        estimator(nonlinearity="invalid")
 
 
 def test_fit_predict(sample_data):
@@ -133,6 +153,108 @@ def test_nonlinear_fit_predict(sample_data):
         assert not np.isnan(model.embedding_).any().any()
         assert model.embedding_.shape == (n_samples, n_clusters)
         assert model.n_iter_ > 0
+
+
+def test_python_initial_factors_and_helpers(monkeypatch):
+    Xs = (
+        np.array([[1., 2., 3., 4.], [2., 3., 4., 5.]]),
+        np.array([[2., 1., 4., 3.], [3., 2., 5., 4.]]),
+    )
+    layers = [3, 2]
+    init_z = [
+        [np.ones((2, 3)) * 0.2, np.ones((3, 2)) * 0.3],
+        [np.ones((2, 3)) * 0.4, np.ones((3, 2)) * 0.5],
+    ]
+    init_h = [
+        [np.ones((3, 4)) * 0.6, np.ones((2, 4)) * 0.7],
+        [np.ones((3, 4)) * 0.8, np.ones((2, 4)) * 0.9],
+    ]
+
+    model = estimator(
+        n_clusters=2, engine="python", layers=layers, init_z=init_z,
+        init_h=[[H.copy() for H in view] for view in init_h], random_state=42,
+        verbose=True
+    )
+
+    def raise_linalg_error(_):
+        raise np.linalg.LinAlgError("forced")
+
+    monkeypatch.setattr(np.linalg, "pinv", raise_linalg_error)
+    Hc, H, loss = model._mlmf_linear(Xs)
+    assert Hc.shape == (2, 4)
+    assert len(H) == len(Xs)
+    assert len(loss) == 20
+    assert np.isfinite(loss).all()
+
+    monkeypatch.undo()
+    model = estimator(
+        n_clusters=2, factorization="nonlinear", engine="python", layers=layers,
+        init_z=init_z, init_h=[[H.copy() for H in view] for view in init_h],
+        random_state=42
+    )
+    Hc, H, loss = model._mlmf_nonlinear(Xs)
+    assert Hc.shape == (2, 4)
+    assert len(H) == len(Xs)
+    assert len(loss) == 30
+    assert np.isfinite(loss).all()
+
+
+def test_python_private_numeric_branches(monkeypatch):
+    model = estimator(n_clusters=2, engine="python", random_state=42, verbose=True)
+    model.rng = np.random.default_rng(42)
+
+    Z, H, dnorm = model._seminmf(
+        np.ones((2, 2)),
+        2,
+        z0=np.ones((2, 2)),
+        h0=np.ones((2, 2)),
+        max_iter=1,
+        update_z=False,
+    )
+    assert Z.shape == (2, 2)
+    assert H.shape == (2, 2)
+    assert np.isfinite(dnorm)
+
+    def raise_linalg_error(_):
+        raise np.linalg.LinAlgError("forced")
+
+    monkeypatch.setattr(np.linalg, "pinv", raise_linalg_error)
+    Z, H, dnorm = model._seminmf(
+        np.ones((2, 2)),
+        2,
+        z0=np.ones((2, 2)),
+        h0=np.ones((2, 2)),
+        max_iter=1,
+        update_z=True,
+    )
+    assert Z.shape == (2, 2)
+    assert H.shape == (2, 2)
+    assert np.isfinite(dnorm)
+    monkeypatch.undo()
+
+    H_list, dnorm1 = model._gd_h(
+        X=np.zeros((2, 2)),
+        Z=[np.ones((2, 2))],
+        H=[np.ones((2, 2))],
+        c=-np.ones((2, 2)),
+        layer_idx=0,
+        g_inv=lambda x: x,
+        dnorm=0,
+        E=np.ones((2, 2)),
+        Hc_view=np.ones((2, 2)),
+    )
+    assert len(H_list) == 1
+    assert np.isfinite(dnorm1)
+
+    for nonlinearity, values in [
+        ("square", np.array([[1., 4.]])),
+        ("sigmoid", np.array([[0.25, 0.75]])),
+        ("softplus", np.array([[1., 2.]])),
+    ]:
+        g, g_inv, g_inv_diff = estimator._nonlinear_functions(nonlinearity)
+        assert np.isfinite(g(values)).all()
+        assert np.isfinite(g_inv(values)).all()
+        assert np.isfinite(g_inv_diff(values)).all()
 
 
 if __name__ == "__main__":
