@@ -1,14 +1,12 @@
 # License: BSD-3-Clause
 
-try:
+from .. import rmodule_installed, rmodule_error
+
+if rmodule_installed:
     import rpy2.robjects as ro
     from rpy2.robjects.packages import importr
     from rpy2.robjects import pandas2ri
     base = importr('base')
-    rmodule_installed = True
-except ImportError:
-    rmodule_installed = False
-    rmodule_error = "Module 'r' needs to be installed to use r engine. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
 
 
 def _convert_df_to_r_object(dataframe):

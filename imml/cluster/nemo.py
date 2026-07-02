@@ -298,15 +298,6 @@ class NEMO(BaseEstimator, ClusterMixin):
         return labels
 
 
-    def _apply_knn_threshold(self, row, neigh):
-        threshold = np.sort(row.values)[::-1][neigh - 1] if neigh <= len(row) else 0
-        row_filtered = row.copy()
-        row_filtered[row < threshold] = 0
-        row_sum = row_filtered.sum()
-        if row_sum > 0:
-            row_filtered[row >= threshold] = row_filtered[row >= threshold] / row_sum
-        return row_filtered
-
     def _apply_knn_threshold_vectorized(self, matrix, neigh):
         """Vectorized version of _apply_knn_threshold for numpy arrays."""
         n = matrix.shape[0]

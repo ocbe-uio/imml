@@ -5,17 +5,12 @@ import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from ..utils import check_Xs_y
+from .. import rmodule_installed, rmodule_error
 
-try:
+if rmodule_installed:
     from rpy2.robjects.packages import importr, PackageNotInstalledError
     from ..utils import _convert_df_to_r_object
     import rpy2.robjects as ro
-    rmodule_installed = True
-except ImportError:
-    rmodule_installed = False
-    rmodule_error = "Module 'r' needs to be installed to use r engine. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
-
-if rmodule_installed:
     rbase = importr("base")
     try:
         nnTensor = importr("nnTensor")

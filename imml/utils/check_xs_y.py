@@ -3,11 +3,10 @@
 import numpy as np
 import pandas as pd
 from sklearn.utils import check_array
+from .. import Tensor, deepmodule_installed
 
-try:
+if deepmodule_installed:
     import torch
-except ImportError:
-    torch = object
 
 
 def check_Xs_y(Xs: list, y = None, modalities : list = None, mod_types : list = None, copy=False,
@@ -95,7 +94,7 @@ def check_Xs_y(Xs: list, y = None, modalities : list = None, mod_types : list = 
                            index=X.index, columns=X.columns) for X_idx, X in enumerate(Xs)]
     elif isinstance(Xs[0], np.ndarray) or isinstance(Xs[0], list):
         Xs = [check_array(X, allow_nd=False, copy=copy, ensure_all_finite=ensure_all_finite, dtype=None) for X in Xs]
-    elif isinstance(Xs[0], torch.Tensor):
+    elif isinstance(Xs[0], Tensor):
         Xs = [torch.from_numpy(check_array(X, allow_nd=False, copy=copy, ensure_all_finite=ensure_all_finite, dtype=None))
               for X in Xs]
 

@@ -10,14 +10,14 @@ from imml.decomposition import JNMF
 
 try:
     from rpy2.robjects.packages import importr, PackageNotInstalledError
-    rpy2_installed = True
+    rmodule_installed = True
     try:
         nnTensor = importr("nnTensor")
         nnTensor_installed = True
     except PackageNotInstalledError:
         nnTensor_installed = False
 except ImportError:
-    rpy2_installed = False
+    rmodule_installed = False
     nnTensor_installed = False
 
 estimator = JNMF

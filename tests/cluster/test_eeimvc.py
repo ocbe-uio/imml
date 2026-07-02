@@ -120,5 +120,44 @@ def test_missing_values_handling(sample_data):
             assert model.n_iter_ > 0
 
 
+def test_python_eigensolver_without_random_state():
+    model = estimator(n_clusters=2, random_state=None)
+    K = np.array(
+        [
+            [1.0, 0.2, 0.3, 0.1],
+            [0.2, 1.1, 0.4, 0.2],
+            [0.3, 0.4, 1.2, 0.5],
+            [0.1, 0.2, 0.5, 1.3],
+        ]
+    )
+
+    H = model._my_kernal_kmeans(K, n_clusters=2)
+
+    assert H.shape == (4, 2)
+    assert not np.isnan(H).any()
+
+
+def test_python_initialization_without_random_state():
+    model = estimator(n_clusters=2, random_state=None)
+    K = np.array(
+        [
+            [1.0, 0.2, 0.3, 0.1],
+            [0.2, 1.1, 0.4, 0.2],
+            [0.3, 0.4, 1.2, 0.5],
+            [0.1, 0.2, 0.5, 1.3],
+        ]
+    )
+    KH = K[:, :, np.newaxis]
+    S = ({"indx": np.array([[4]])},)
+
+    HP, WP = model._my_initialization_Hp(KH, S, n_clusters=2)
+
+    assert HP.shape == (4, 2, 1)
+    assert WP.shape == (2, 2, 1)
+    assert not np.isnan(HP).any()
+    assert np.allclose(HP[3, :, 0], 0)
+    assert np.allclose(WP[:, :, 0], np.eye(2))
+
+
 if __name__ == "__main__":
     pytest.main()

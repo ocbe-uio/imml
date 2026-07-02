@@ -34,3 +34,12 @@ try:
 except ImportError:
     octavemodule_installed = False
     oct2py_module_error = "Module 'octave' needs to be installed. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
+
+
+try:
+    import rpy2
+    rmodule_installed = True
+    rmodule_error = None
+except ImportError:
+    rmodule_installed = False
+    rmodule_error = "Module 'r' needs to be installed to use r engine. See https://imml.readthedocs.io/stable/main/installation.html#optional-dependencies"
