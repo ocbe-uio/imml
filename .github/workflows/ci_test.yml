@@ -14,7 +14,6 @@ permissions:
 
 env:
   UV_SYSTEM_PYTHON: 1
-  PIP_BREAK_FLAG: ${{ runner.os == 'macOS' && (matrix.python-version == '3.13' || matrix.python-version == '3.14') && '--break-system-packages' || '' }}
 
 jobs:
   build:
@@ -25,6 +24,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    env:
+      PIP_BREAK_FLAG: ${{ matrix.os == 'macos-latest' && (matrix.python-version == '3.13' || matrix.python-version == '3.14') && '--break-system-packages' || '' }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
