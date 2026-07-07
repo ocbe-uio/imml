@@ -43,8 +43,8 @@ task and check whether additional modules or dependencies are required.
    * - Clustering
      - :class:`~imml.cluster.IMSCAGL`
      - Numeric
-     - octave
-     - octave
+     -
+     -
    * - Clustering
      - :class:`~imml.cluster.IMSR`
      - Numeric

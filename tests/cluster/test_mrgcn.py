@@ -48,7 +48,7 @@ def test_default_params(sample_data):
     train_data = MRGCNDataset(Xs=Xs)
     train_dataloader = DataLoader(dataset=train_data, batch_size=n_samples, shuffle=True)
     trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
-    model = estimator(Xs=Xs, n_clusters=n_clusters)
+    model = estimator(Xs=Xs, n_clusters=n_clusters, random_state=42)
     trainer.fit(model, train_dataloader)
     train_dataloader = DataLoader(dataset=train_data, batch_size=n_samples, shuffle=False)
     labels = trainer.predict(model, train_dataloader)[0]
@@ -97,7 +97,7 @@ def test_missing_values_handling(sample_data):
     train_data = MRGCNDataset(Xs=transformed_Xs)
     train_dataloader = DataLoader(dataset=train_data, batch_size=len(transformed_Xs[0]), shuffle=True)
     trainer = Trainer(max_epochs=2, logger=False, enable_checkpointing=False)
-    model = estimator(Xs=transformed_Xs, n_clusters=n_clusters)
+    model = estimator(Xs=transformed_Xs, n_clusters=n_clusters, random_state=42)
     trainer.fit(model, train_dataloader)
     train_dataloader = DataLoader(dataset=train_data, batch_size=len(transformed_Xs[0]), shuffle=False)
     labels = trainer.predict(model, train_dataloader)[0]

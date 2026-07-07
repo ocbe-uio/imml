@@ -31,10 +31,9 @@ def sample_data():
 def test_vocab_download():
     if os.path.exists(vocab_path):
         os.remove(vocab_path)
-    with patch('sys.stdin', new=io.StringIO('False')):
-        estimator(modalities=["text", "text"], vocab=[vocab_path, 50000, 2])
     with patch('sys.stdin', new=io.StringIO('True')):
         estimator(modalities=["text", "text"])
+    estimator(modalities=["text", "text"], vocab=[vocab_path, 50000, 2])
 
 
 def test_deepmodule_not_installed():

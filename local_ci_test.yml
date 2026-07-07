@@ -13,6 +13,7 @@ on:
 
 env:
   UV_SYSTEM_PYTHON: 1
+  PIP_BREAK_FLAG: ${{ runner.os == 'macOS' && (matrix.python-version == '3.13' || matrix.python-version == '3.14') && '--break-system-packages' || '' }}
 
 jobs:
   build-local:
@@ -53,10 +54,10 @@ jobs:
         PY
     - name: Install dependencies
       run: |
-        uv pip install .
+        uv pip install . $PIP_BREAK_FLAG
     - name: Install tests
       run: |
-        uv pip install ".[tests]"
+        uv pip install ".[tests]" $PIP_BREAK_FLAG
     - name: Prepare report directory
       run: |
         python - <<'PY'
@@ -111,14 +112,14 @@ jobs:
         brew install xquartz
     - name: Test r
       run: |
-        uv pip install ".[r]"
+        uv pip install ".[r]" $PIP_BREAK_FLAG
         uv run pytest --cov=imml \
                --cov-report=html:reports/htmlcov-r \
                --cov-report=xml:reports/coverage-r.xml
     - name: Test octave
       if: runner.os != 'Windows'
       run: |
-        uv pip install ".[octave]"
+        uv pip install ".[octave]" $PIP_BREAK_FLAG
         uv run pytest --cov=imml \
                --cov-report=term \
                --cov-report=html:reports/htmlcov-octave \
@@ -126,14 +127,14 @@ jobs:
     - name: Test deep
       if: runner.os != 'Windows'
       run: |
-        uv pip install ".[deep]"
+        uv pip install ".[deep]" $PIP_BREAK_FLAG
         uv run pytest --cov=imml \
                --cov-report=term \
                --cov-report=html:reports/htmlcov-deep \
                --cov-report=xml:reports/coverage-deep.xml
     - name: Test docs
       run: |
-        uv pip install ".[docs]"
+        uv pip install ".[docs]" $PIP_BREAK_FLAG
     - name: Upload coverage reports artifact
       uses: actions/upload-artifact@v4
       with:

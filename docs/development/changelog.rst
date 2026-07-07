@@ -31,6 +31,19 @@ Change tags (adopted from `Scikit-learn
 - |API| : you will need to change your code to have the same effect in the future; or a feature will be removed in the future.
 
 
+Version 0.6.1
+-------------
+July 10, 2026
+
+Updates in this release:
+
+- |Fix| Fix some errors in CI for mac-os.
+
+:mod:`imml.cluster`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Enhancement| Python engine has been implemented in :class:`~imml.cluster.IMSCAGL`.
+
+
 Version 0.6.0
 -------------
 July 07, 2026
