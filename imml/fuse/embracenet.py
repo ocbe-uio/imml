@@ -14,7 +14,7 @@ class EmbraceNet(Module):
         Value to use for missing data.
 
     References
-
+    ----------
     .. [#embracenetpaper] Choi JH, Lee JS. EmbraceNet: A robust deep learning architecture for multimodal
                           classification. Information Fusion. 2019 Nov 1;51:259-70.
     .. [#embracenetcode1] https://github.com/luisvalesilva/multisurv/tree/master

@@ -279,6 +279,7 @@ class JNMF(TransformerMixin, BaseEstimator):
         Xs : list of array-likes objects
             - Xs length: n_mods
             - Xs[i] shape: (n_samples_i, n_features_i)
+
             A list of different modalities.
         y : Ignored
             Not used, present here for API consistency by convention.

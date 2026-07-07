@@ -283,7 +283,7 @@ the `Lightning <https://lightning.ai/docs/pytorch/stable/starter/introduction.ht
 
  .. code-block:: none
 
-    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:21<00:00,  0.05it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:20<00:00,  0.05it/s]
+    Training: |          | 0/? [00:00<?, ?it/s]    Training:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]     Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0: 100%|██████████| 1/1 [00:19<00:00,  0.05it/s]    Epoch 0:   0%|          | 0/1 [00:00<?, ?it/s]            Epoch 1:   0%|          | 0/1 [00:00<?, ?it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]    Epoch 1: 100%|██████████| 1/1 [00:18<00:00,  0.05it/s]
 
 
 
@@ -345,7 +345,7 @@ After training, we can evaluate predictions and visualize the results.
 
  .. code-block:: none
 
-    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:03<00:00,  0.33it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:03<00:00,  0.33it/s]
+    Predicting: |          | 0/? [00:00<?, ?it/s]    Predicting:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0:   0%|          | 0/1 [00:00<?, ?it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]    Predicting DataLoader 0: 100%|██████████| 1/1 [00:02<00:00,  0.36it/s]
 
 
 
@@ -519,7 +519,7 @@ of significant modality incompleteness in vision-language datasets.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (22 minutes 20.923 seconds)
+   **Total running time of the script:** (20 minutes 51.043 seconds)
 
 
 .. _sphx_glr_download_auto_tutorials_classify_incomplete_vision_language.py:

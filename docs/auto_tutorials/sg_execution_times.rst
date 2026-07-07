@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:07.592** total execution time for 8 files **from auto_tutorials**:
+**21:26.602** total execution time for 8 files **from auto_tutorials**:
 
 .. container::
 
@@ -32,27 +32,27 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_auto_tutorials_survival_analysis_multisurv.py` (``survival_analysis_multisurv.py``)
-     - 00:07.592
-     - 0.0
    * - :ref:`sphx_glr_auto_tutorials_classify_incomplete_vision_language.py` (``classify_incomplete_vision_language.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_cluster_incomplete_mmd.py` (``cluster_incomplete_mmd.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_fuse_multi_modal_representations.py` (``fuse_multi_modal_representations.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py` (``generate_missing_modalities.py``)
-     - 00:00.000
-     - 0.0
-   * - :ref:`sphx_glr_auto_tutorials_impute_multi_modal_data.py` (``impute_multi_modal_data.py``)
-     - 00:00.000
+     - 20:51.043
      - 0.0
    * - :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py` (``multi_modal_data_statistics.py``)
-     - 00:00.000
+     - 00:20.720
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_fuse_multi_modal_representations.py` (``fuse_multi_modal_representations.py``)
+     - 00:03.406
      - 0.0
    * - :ref:`sphx_glr_auto_tutorials_select_and_extract_features.py` (``select_and_extract_features.py``)
-     - 00:00.000
+     - 00:03.294
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py` (``generate_missing_modalities.py``)
+     - 00:02.905
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_impute_multi_modal_data.py` (``impute_multi_modal_data.py``)
+     - 00:02.588
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_cluster_incomplete_mmd.py` (``cluster_incomplete_mmd.py``)
+     - 00:01.357
+     - 0.0
+   * - :ref:`sphx_glr_auto_tutorials_survival_analysis_multisurv.py` (``survival_analysis_multisurv.py``)
+     - 00:01.290
      - 0.0

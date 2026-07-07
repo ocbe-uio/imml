@@ -37,6 +37,8 @@ class MRGCN(LightningModule):
         Trade-off parameter to control the graph structure reconstruction.
     reg3 : float, default=1.
         Trade-off parameter to control the self-supervised learning mechanism.
+    random_state : int, default=None
+        Determines the randomness of KMeans. Use an int to make the randomness deterministic.
 
     Attributes
     ----------
@@ -72,7 +74,7 @@ class MRGCN(LightningModule):
     """
 
     def __init__(self, n_clusters: int = 8, Xs = None, k_num:int = 10, learning_rate:float = 0.001, reg2:float = 1.,
-                 reg3:float = 1.):
+                 reg3:float = 1., random_state:int = None):
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
         super().__init__()
@@ -103,7 +105,7 @@ class MRGCN(LightningModule):
         self.criterion = torch.nn.MSELoss(reduction='sum')
         self.n_clusters = n_clusters
         we = []
-        self.kmeans_ = KMeans(n_clusters=n_clusters, n_init="auto")
+        self.kmeans_ = KMeans(n_clusters=n_clusters, n_init="auto", random_state=random_state)
         self.reg2 = reg2
         self.reg3 = reg3
         self.gs = []

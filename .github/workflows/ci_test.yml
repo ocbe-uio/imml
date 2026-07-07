@@ -39,10 +39,10 @@ jobs:
         enable-cache: true
     - name: Install dependencies
       run: |
-        uv pip install .
+        uv pip install . ${{ runner.os == 'macOS' && matrix.python-version == '3.14' && '--break-system-packages' || '' }}
     - name: Install tests
       run: |
-        uv pip install ".[tests]"
+        uv pip install ".[tests]" ${{ runner.os == 'macOS' && matrix.python-version == '3.14' && '--break-system-packages' || '' }}
     - name: Test base
       run: |
         uv run pytest --cov=imml
@@ -87,21 +87,21 @@ jobs:
         brew install xquartz
     - name: Test r
       run: |
-        uv pip install ".[r]"
+        uv pip install ".[r]" ${{ runner.os == 'macOS' && matrix.python-version == '3.14' && '--break-system-packages' || '' }}
         uv run pytest --cov=imml
     - name: Test octave
       if: runner.os != 'Windows'
       run: |
-        uv pip install ".[octave]"
+        uv pip install ".[octave]" ${{ runner.os == 'macOS' && matrix.python-version == '3.14' && '--break-system-packages' || '' }}
         uv run pytest --cov=imml
     - name: Test deep
       if: runner.os != 'Windows'
       run: |
-        uv pip install ".[deep]"
+        uv pip install ".[deep]" ${{ runner.os == 'macOS' && matrix.python-version == '3.14' && '--break-system-packages' || '' }}
         uv run pytest --cov=imml --cov-report=term --cov-report json
     - name: Test docs
       run: |
-        uv pip install ".[docs]"
+        uv pip install ".[docs]" ${{ runner.os == 'macOS' && matrix.python-version == '3.14' && '--break-system-packages' || '' }}
     - name: Upload coverage reports to Codecov
       if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.13'
       uses: codecov/codecov-action@v5
