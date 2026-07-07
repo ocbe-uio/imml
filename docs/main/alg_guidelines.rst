@@ -135,6 +135,36 @@ task and check whether additional modules or dependencies are required.
      - Numeric
      -
      -
+   * - Attention fusion
+     - :class:`~imml.fuse.AttentionFusion`
+     - Numeric
+     - deep
+     -
+   * - Concat fusion
+     - :class:`~imml.fuse.ConcatFusion`
+     - Numeric
+     - deep
+     -
+   * - EmbraceNet
+     - :class:`~imml.fuse.EmbraceNet`
+     - Numeric
+     - deep
+     -
+   * - Max fusion
+     - :class:`~imml.fuse.MaxFusion`
+     - Numeric
+     - deep
+     -
+   * - Mean fusion
+     - :class:`~imml.fuse.MeanFusion`
+     - Numeric
+     - deep
+     -
+   * - Sum fusion
+     - :class:`~imml.fuse.SumFusion`
+     - Numeric
+     - deep
+     -
    * - Impute
      - :class:`~imml.impute.DFMFImputer`
      - Numeric
@@ -150,15 +180,15 @@ task and check whether additional modules or dependencies are required.
      - Numeric
      -
      -
-   * - Retrieve
-     - :class:`~imml.retrieve.MCR`
-     - Image & Text
-     - deep
-     -
    * - Statistics
      - :class:`~imml.statistics.pid`
      - Numeric
      -
+     -
+   * - Survival
+     - :class:`~imml.survival.MultiSurv`
+     - Numeric
+     - deep
      -
 
 How to install an additional module

@@ -3,6 +3,10 @@ import pandas as pd
 import pytest
 
 from imml.ampute import RemoveMods, remove_mods
+from imml import deepmodule_installed
+
+if deepmodule_installed:
+    import torch
 
 
 @pytest.fixture
@@ -10,8 +14,10 @@ def sample_data():
     X = np.random.default_rng(42).random((20, 10))
     X = pd.DataFrame(X)
     X1, X2, X3 = X.iloc[:, :3], X.iloc[:, 3:5], X.iloc[:, 5:]
-    Xs_pandas, Xs_numpy = [X1, X2, X3], [X1.values, X2.values, X3.values]
-    return Xs_pandas, Xs_numpy
+    output = [X1, X2, X3], [X1.values, X2.values, X3.values]
+    if deepmodule_installed:
+        output = (*output, [torch.from_numpy(X) for X in output[1]])
+    return output
 
 def test_remove_mods_transformer(sample_data):
     for Xs in sample_data:

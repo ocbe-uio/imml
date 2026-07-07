@@ -12,11 +12,13 @@ The package is split up into modules.
     decomposition
     explore
     feature_selection
+    fuse
     impute
     load
     model_selection
     preprocessing
     statistics
+    survival
     utils
     visualize
 

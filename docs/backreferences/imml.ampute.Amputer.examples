@@ -15,129 +15,24 @@ Examples using ``imml.ampute.Amputer``
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="A multi-modal dataset can be characterized beyond basic shape information. With iMML you can:">
+    <div class="sphx-glr-thumbcontainer" tooltip="Survival analysis models time-to-event outcomes, where some samples may be censored because the event was not observed during follow-up. In this tutorial, we show how to use MultiSurv with Lightning to train a small multi-modal survival model.">
 
 .. only:: html
 
-  .. image:: /auto_tutorials/images/thumb/sphx_glr_multi_modal_data_statistics_thumb.png
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_survival_analysis_multisurv_thumb.png
     :alt:
 
-  :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py`
+  :ref:`sphx_glr_auto_tutorials_survival_analysis_multisurv.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Statistics and interaction structure of a multi-modal dataset</div>
+      <div class="sphx-glr-thumbnail-title">Survival analysis with incomplete multi-modal data</div>
     </div>
 
 
 .. only:: not html
 
- * :ref:`sphx_glr_auto_tutorials_multi_modal_data_statistics.py`
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Evaluation and benchmarking of new algorithms or models under diverse conditions is essential to ensure their robustness, added value and generalizability. iMML simplifies this process by simulating incomplete multi-modal datasets with modality-wise missing data. This so-called data amputation process allows for controlled testing of methods by introducing missing data from various mechanisms that reflect real-world scenarios where different modalities may be partially observed or entirely missing.">
-
-.. only:: html
-
-  .. image:: /auto_tutorials/images/thumb/sphx_glr_generate_missing_modalities_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Modality-wise missing data simulation (Amputation)</div>
-    </div>
-
-
-.. only:: not html
-
- * :ref:`sphx_glr_auto_tutorials_generate_missing_modalities.py`
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Clustering involves grouping samples into distinct groups. In this tutorial, we show how to use iMML to perform clustering on a multi-modal dataset. We also demonstrate how to work with incomplete multi-modal data, where some samples are missing one or more modalities, and how to benchmark the impact of missingness.">
-
-.. only:: html
-
-  .. image:: /auto_tutorials/images/thumb/sphx_glr_cluster_incomplete_mmd_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_tutorials_cluster_incomplete_mmd.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Clustering a multi-modal dataset</div>
-    </div>
-
-
-.. only:: not html
-
- * :ref:`sphx_glr_auto_tutorials_cluster_incomplete_mmd.py`
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="When the learning algorithms cannot directly handle missing data, imputation methods become essential to allow their application. Thus, iMML has a module designed for filling missing data, which can be particularly useful when using external methods that are unable to handle missing values directly.">
-
-.. only:: html
-
-  .. image:: /auto_tutorials/images/thumb/sphx_glr_impute_multi_modal_data_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_tutorials_impute_multi_modal_data.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Impute modality- and feature-wise incomplete multi-modal data</div>
-    </div>
-
-
-.. only:: not html
-
- * :ref:`sphx_glr_auto_tutorials_impute_multi_modal_data.py`
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to classify samples from an incomplete vision–language dataset using the iMML library. iMML supports robust classification even when some modalities (e.g., text or image) are missing, making it suitable for real‑world multi‑modal data where missingness is common.">
-
-.. only:: html
-
-  .. image:: /auto_tutorials/images/thumb/sphx_glr_classify_incomplete_vision_language_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_tutorials_classify_incomplete_vision_language.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Classify an incomplete vision–language dataset (Oxford‑IIIT Pets) with deep learning</div>
-    </div>
-
-
-.. only:: not html
-
- * :ref:`sphx_glr_auto_tutorials_classify_incomplete_vision_language.py`
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="High-dimensional datasets can severely impact machine learning projects, by increasing computational demands, data-adquisition costs and reducing model interpretability. It can also degrade performance due to the curse of dimensionality, as well as the presence of correlated, noisy, or irrelevant features. Consequently, reducing the number of features is often critical. Dimensionality reduction addresses these challenges by enhancing computational efficiency, highlighting key features, reducing noise, and enabling better data visualization.">
-
-.. only:: html
-
-  .. image:: /auto_tutorials/images/thumb/sphx_glr_select_and_extract_features_thumb.png
-    :alt:
-
-  :ref:`sphx_glr_auto_tutorials_select_and_extract_features.py`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">Dimensionality reduction: Feature extraction and feature selection</div>
-    </div>
-
-
-.. only:: not html
-
- * :ref:`sphx_glr_auto_tutorials_select_and_extract_features.py`
+ * :ref:`sphx_glr_auto_tutorials_survival_analysis_multisurv.py`
 
 .. thumbnail-parent-div-close
 

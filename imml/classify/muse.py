@@ -117,6 +117,10 @@ class MUSE(LightningModule):
             raise ValueError(f"Invalid output_dim. It must be positive. {output_dim} was passed.")
         if extractors is not None and not isinstance(extractors, list):
             raise ValueError(f"Invalid extractors. It must be a list. A {type(extractors)} was passed.")
+        if extractors is not None and len(extractors) != len(modalities):
+            raise ValueError(f"Invalid extractors. It must have the same length as modalities. Got {len(extractors)} extractors and {len(modalities)} modalities")
+        if extractors is not None and not all(isinstance(extractor, Module) for extractor in extractors):
+            raise ValueError(f"Invalid extractors. All extractors must be PyTorch Modules. Got {type(extractors[0])}")
         if not isinstance(gnn_layers, int):
             raise ValueError(f"Invalid gnn_layers. It must be an integer. A {type(gnn_layers)} was passed.")
         if gnn_layers <= 0:

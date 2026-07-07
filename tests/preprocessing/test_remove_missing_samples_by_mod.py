@@ -2,7 +2,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from imml import deepmodule_installed
 from imml.preprocessing import RemoveMissingSamplesByMod, remove_missing_samples_by_mod
+
+if deepmodule_installed:
+    import torch
 
 
 @pytest.fixture
@@ -13,12 +17,14 @@ def sample_data():
     X1.loc[[2,4], :] = np.nan
     X2.loc[1, :] = np.nan
     X3.loc[5, 8:] = np.nan
-    Xs_pandas, Xs_numpy = [X1, X2, X3], [X1.values, X2.values, X3.values]
-    return Xs_pandas, Xs_numpy
+    output = [X1, X2, X3], [X1.values, X2.values, X3.values]
+    if deepmodule_installed:
+        output = (*output, [torch.from_numpy(X) for X in output[1]])
+    return output
 
 
 def test_remove_missing_sample_by_mod_class(sample_data):
-    for Xs in sample_data[:2]:
+    for Xs in sample_data:
         transformer = RemoveMissingSamplesByMod()
         transformed_Xs = transformer.fit_transform(Xs)
         expected_values = [18, 19, 20]
@@ -27,7 +33,7 @@ def test_remove_missing_sample_by_mod_class(sample_data):
 
 
 def test_remove_missing_sample_by_mod_function(sample_data):
-    for Xs in sample_data[:2]:
+    for Xs in sample_data:
         transformed_Xs = remove_missing_samples_by_mod(Xs)
         expected_values = [18, 19, 20]
         for transformed_X, expected_value in zip(transformed_Xs, expected_values):

@@ -26,6 +26,23 @@ Questions or feedback?
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="The imml.fuse module contains PyTorch modules for combining modality representations, even when not all modalities are available, after each modality has been encoded into a shared feature space. This tutorial shows common fusion strategies.">
+
+.. only:: html
+
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_fuse_multi_modal_representations_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_tutorials_fuse_multi_modal_representations.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Fusing incomplete multi-modal representations</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="A multi-modal dataset can be characterized beyond basic shape information. With iMML you can:">
 
 .. only:: html
@@ -55,6 +72,23 @@ Questions or feedback?
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Modality-wise missing data simulation (Amputation)</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Survival analysis models time-to-event outcomes, where some samples may be censored because the event was not observed during follow-up. In this tutorial, we show how to use MultiSurv with Lightning to train a small multi-modal survival model.">
+
+.. only:: html
+
+  .. image:: /auto_tutorials/images/thumb/sphx_glr_survival_analysis_multisurv_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_auto_tutorials_survival_analysis_multisurv.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Survival analysis with incomplete multi-modal data</div>
     </div>
 
 
@@ -136,8 +170,10 @@ Questions or feedback?
 .. toctree::
    :hidden:
 
+   /auto_tutorials/fuse_multi_modal_representations
    /auto_tutorials/multi_modal_data_statistics
    /auto_tutorials/generate_missing_modalities
+   /auto_tutorials/survival_analysis_multisurv
    /auto_tutorials/cluster_incomplete_mmd
    /auto_tutorials/impute_multi_modal_data
    /auto_tutorials/classify_incomplete_vision_language

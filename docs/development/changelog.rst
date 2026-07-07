@@ -33,17 +33,39 @@ Change tags (adopted from `Scikit-learn
 
 Version 0.6.0
 -------------
-July 10, 2026
+July 07, 2026
 
 Updates in this release:
 
-:mod:`imml.preprocessing`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- |Feature| :class:`~imml.preprocessing.UMTransformer` has been implemented.
+- |MajorFeature| We have created a new module :mod:`imml.fuse` to combine encoded representations from
+  multiple modaliies.
+- |MajorFeature| We have created a new module :mod:`imml.survival` for time-to-event data.
+- |Enhancement| Tutorials for time-to-event data analysis with incomplete multi-modal data and for showing
+  fusion strategies have been created.
 
 :mod:`imml.cluster`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Feature| :class:`~imml.preprocessing.MLMF` has been implemented.
+
+:mod:`imml.fuse`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| :class:`~imml.fuse.AttentionFusion`, :class:`~imml.fuse.ConcatFusion`,
+  :class:`~imml.fuse.EmbraceNet`, :class:`~imml.fuse.MaxFusion`,
+  :class:`~imml.fuse.MeanFusion`, and :class:`~imml.fuse.SumFusion` have been implemented.
+
+:mod:`imml.cluster`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| :class:`~imml.preprocessing.MLMF` has been implemented.
+
+:mod:`imml.preprocessing`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| :class:`~imml.preprocessing.UMTransformer` has been implemented.
+- |Enhancement| :class:`~imml.preprocessing.RemoveMissingSamplesByMod` now supports PyTorch tensors.
+- |Enhancement| :class:`~imml.preprocessing.RemoveIncomSamplesByMod` now supports PyTorch tensors.
+
+:mod:`imml.survival`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| :class:`~imml.survival.MultiSurv` has been implemented.
 
 
 Version 0.5.1
@@ -131,13 +153,13 @@ March 17, 2026
 
 Updates in this release:
 
-- |MajorFeature| We have created a new module :mod:`imml.model_selection`.
+- |MajorFeature| We have created a new module :mod:`imml.model_selection` for evaluation strategies.
 - |Enhancement| We have added a "See also" section to related classes.
 - |Enhancement| We have added a section to link tutorials with classes.
 - |Enhancement| `iMML` supports now Python 3.14.
 - |API| Matlab module and arguments were replaced by Octave to better reflect their usage.
 - |Efficiency| Imports of optional modules have been centralized.
-- |API| SimpleModImputer and simple_mod_imputer was removed. You can use  MMTransformer(transformer = SimpleImputer())
+- |API| SimpleModImputer and simple_mod_imputer were removed. You can use MMTransformer(transformer = SimpleImputer())
   instead.
 - |Efficiency| snfpy package was removed from the requirements.
 

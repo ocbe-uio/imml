@@ -137,6 +137,10 @@ class M3Care(LightningModule):
             raise ValueError(f"Invalid keep_prob. It must be between 0 and 1. {keep_prob} was passed.")
         if extractors is not None and not isinstance(extractors, list):
             raise ValueError(f"Invalid extractors. It must be a list. A {type(extractors)} was passed.")
+        if extractors is not None and len(extractors) != len(modalities):
+            raise ValueError(f"Invalid extractors. It must have the same length as modalities. Got {len(extractors)} extractors and {len(modalities)} modalities")
+        if extractors is not None and not all(isinstance(extractor, Module) for extractor in extractors):
+            raise ValueError(f"Invalid extractors. All extractors must be PyTorch Modules. Got {type(extractors[0])}")
         if vocab is None:
             vocab_folder = dirname(__file__)
             vocab_filename = "test.de-en.en"

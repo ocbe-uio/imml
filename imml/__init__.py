@@ -5,9 +5,8 @@ __version__ = "0.6.0"
 try:
     import torch
     from torch import nn
-    from torchvision import models as models
     import lightning as L
-    import torchvision.transforms as transforms
+    import torchvision
     from torch import Tensor
     from transformers import BertTokenizer, ViltModel, ViltImageProcessor
     LightningModule = L.LightningModule

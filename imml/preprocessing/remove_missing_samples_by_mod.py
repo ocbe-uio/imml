@@ -4,6 +4,10 @@ import numpy as np
 from sklearn.preprocessing import FunctionTransformer
 
 from ..utils import check_Xs_y
+from .. import deepmodule_installed, Tensor
+
+if deepmodule_installed:
+    import torch
 
 
 class RemoveMissingSamplesByMod(FunctionTransformer):
@@ -57,6 +61,9 @@ def remove_missing_samples_by_mod(Xs: list) -> list:
     >>> Xs = Amputer(p=0.2, mechanism="mcar", random_state=42).fit_transform(Xs)
     >>> remove_missing_samples_by_mod(Xs = Xs)
     """
-    Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
-    transformed_Xs = [X[np.isfinite(X).any(axis=1)] for X in Xs]
+    if isinstance(Xs[0], Tensor):
+        transformed_Xs = [X[~torch.isnan(X).all(axis=1)] for X in Xs]
+    else:
+        Xs = check_Xs_y(Xs=Xs, ensure_all_finite="allow-nan")
+        transformed_Xs = [X[~np.isnan(X).all(axis=1)] for X in Xs]
     return transformed_Xs
