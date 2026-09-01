@@ -8,16 +8,14 @@
 ![PyPI - Status](https://img.shields.io/pypi/status/imml)
 ![GitHub repo size](https://img.shields.io/github/repo-size/ocbe-uio/imml)
 [![GitHub License](https://img.shields.io/github/license/ocbe-uio/imml)](https://github.com/ocbe-uio/imml/blob/main/LICENSE)
-
-[//]: # ([![DOI]&#40;&#41;]&#40;&#41;)
-[//]: # ([![Paper]&#40;&#41;]&#40;&#41;)
+[![DOI:10.1038/s41467-026-77212-w](http://img.shields.io/badge/DOI-10.1101/2020.03.02.973073-B31B1B.svg)](https://doi.org/10.1038/s41467-026-77212-w)
 
 <p align="center">
   <img alt="iMML Logo" src="https://raw.githubusercontent.com/ocbe-uio/imml/refs/heads/main/docs/figures/logo_imml.png" width="150">
 </p>
 
-[**Overview**](#Overview) | [**Key features**](#Key-features) | [**Installation**](#installation) | 
-[**Usage**](#Usage) | [**Free software**](#Free-software) | [**Contribute**](#Contribute) | [**Help us**](#Help-us-grow)
+[**Overview**](#Overview) | [**Key features**](#Key-features) | [**Installation**](#Installation) | 
+[**Usage**](#Usage) | [**Free software**](#Free-software) | [**Contribute**](#Contribute) | [**Help us**](#Help-us-grow) | [**Citation**](#Citation)
 
 Overview
 ====================
@@ -101,7 +99,7 @@ Free software
 *iMML* is free software; you can redistribute it and/or modify it under the terms of the `BSD 3-Clause License`.
 
 Contribute
-------------
+====================
 
 Our vision is to establish *iMML* as a leading and reliable library for multi-modal learning across research and 
 applied settings. Our priorities include to broaden algorithmic coverage, improve performance and 
@@ -116,7 +114,7 @@ For the full contributing guide, please see:
 - Documentation: https://imml.readthedocs.io/stable/development/contributing.html
 
 Help us grow
-------------
+====================
 
 How you can help *iMML* grow:
 
@@ -124,3 +122,10 @@ How you can help *iMML* grow:
 - 🤝 Contribute if you are interested in building with us.
 - 🗣️ Share this project with colleagues who deal with multi-modal data.
 - 🌟 And of course… give the repo a star to support the project!
+
+Citation
+====================
+
+If you use our package, please cite the following paper:
+
+> López, A., Zobolas, J., Dumontier, T. et al. Multi-modal learning with incomplete data. Nat Commun (2026). https://doi.org/10.1038/s41467-026-77212-w
