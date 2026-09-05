@@ -1,3 +1,6 @@
+---
+<p align="center"><b>A Python package for integrating, processing, and analyzing incomplete multi-modal datasets</b></p>
+
 [![PyPI - Version](https://img.shields.io/pypi/v/imml)](https://pypi.org/project/imml/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/imml)
 [![Read the Docs](https://img.shields.io/readthedocs/imml)](https://imml.readthedocs.io)
@@ -8,17 +11,25 @@
 ![PyPI - Status](https://img.shields.io/pypi/status/imml)
 ![GitHub repo size](https://img.shields.io/github/repo-size/ocbe-uio/imml)
 [![GitHub License](https://img.shields.io/github/license/ocbe-uio/imml)](https://github.com/ocbe-uio/imml/blob/main/LICENSE)
-
-[![Google scholar](https://img.shields.io/badge/Google%20Scholar-4285F4?style=for-the-badge&logo=googlescholar&logoColor=white)](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=jxo3FisAAAAJ&sortby=pubdate&citation_for_view=jxo3FisAAAAJ:XAp-VaTZjjwC)
-[![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=researchgate&logoColor=white)](https://www.researchgate.net/publication/413783367_Multi-modal_learning_with_incomplete_data)
-[![DOI](https://img.shields.io/badge/DOI-0085CA?style=for-the-badge&logo=doi&logoColor=white)](https://doi.org/10.1038/s41467-026-77212-w)
+[![Cite](https://img.shields.io/badge/Cite-BibTeX-informational.svg)](https://github.com/ocbe-uio/imml#Citation)
 
 <p align="center">
   <img alt="iMML Logo" src="https://raw.githubusercontent.com/ocbe-uio/imml/refs/heads/main/docs/figures/logo_imml.png" width="150">
 </p>
 
-[**Overview**](#Overview) | [**Key features**](#Key-features) | [**Installation**](#Installation) | 
-[**Usage**](#Usage) | [**Free software**](#Free-software) | [**Contribute**](#Contribute) | [**Help us**](#Help-us-grow) | [**Citation**](#Citation)
+<p align="center">
+  <a href="https://doi.org/10.1038/s41467-026-77212-w"><b>Paper</b></a> &nbsp;·&nbsp;
+  <a href="#Overview"><b>Overview</b></a> &nbsp;·&nbsp;
+  <a href="#Key-features"><b>Key features</b></a> &nbsp;·&nbsp;
+  <a href="#Installation"><b>Installation</b></a> &nbsp;·&nbsp;
+  <a href="#Usage"><b>Usage</b></a> &nbsp;·&nbsp;
+  <a href="#Free-software"><b>Free software</b></a> &nbsp;·&nbsp;
+  <a href="#Contribute"><b>Contribute</b></a> &nbsp;·&nbsp;
+  <a href="#Help-us-grow"><b>Help us</b></a> &nbsp;·&nbsp;
+  <a href="#Citation"><b>Citation</b></a>
+</p>
+
+---
 
 Overview
 ====================
@@ -136,3 +147,14 @@ Citation
 If you use our package, please cite the following paper:
 
 > López, A., Zobolas, J., Dumontier, T. et al. Multi-modal learning with incomplete data. Nat Commun (2026). https://doi.org/10.1038/s41467-026-77212-w
+
+```
+@article{lopez2026multi,
+  title={Multi-modal learning with incomplete data},
+  author={López, Alberto and Zobolas, John and Dumontier, Tanguy and Aittokallio, Tero},
+  journal={Nature Communications},
+  year={2026},
+  publisher={Nature Publishing Group UK London},
+  DOI={https://doi.org/10.1038/s41467-026-77212-w}
+}
+```
