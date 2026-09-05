@@ -1,5 +1,8 @@
----
-<p align="center"><b>A Python package for integrating, processing, and analyzing incomplete multi-modal datasets</b></p>
+<p align="center">
+  <img alt="iMML Logo" src="https://raw.githubusercontent.com/ocbe-uio/imml/refs/heads/main/docs/figures/logo_imml.png" width="150">
+</p>
+
+<p align="center"><b>A Python package for integrating, processing, and analyzing incomplete multi-modal datasets.</b></p>
 
 [![PyPI - Version](https://img.shields.io/pypi/v/imml)](https://pypi.org/project/imml/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/imml)
@@ -12,10 +15,6 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/ocbe-uio/imml)
 [![GitHub License](https://img.shields.io/github/license/ocbe-uio/imml)](https://github.com/ocbe-uio/imml/blob/main/LICENSE)
 [![Cite](https://img.shields.io/badge/Cite-BibTeX-informational.svg)](https://github.com/ocbe-uio/imml#Citation)
-
-<p align="center">
-  <img alt="iMML Logo" src="https://raw.githubusercontent.com/ocbe-uio/imml/refs/heads/main/docs/figures/logo_imml.png" width="150">
-</p>
 
 <p align="center">
   <a href="https://doi.org/10.1038/s41467-026-77212-w"><b>Paper</b></a> &nbsp;·&nbsp;
