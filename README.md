@@ -8,7 +8,10 @@
 ![PyPI - Status](https://img.shields.io/pypi/status/imml)
 ![GitHub repo size](https://img.shields.io/github/repo-size/ocbe-uio/imml)
 [![GitHub License](https://img.shields.io/github/license/ocbe-uio/imml)](https://github.com/ocbe-uio/imml/blob/main/LICENSE)
-[![DOI:10.1038/s41467-026-77212-w](http://img.shields.io/badge/DOI-10.1101/2020.03.02.973073-B31B1B.svg)](https://doi.org/10.1038/s41467-026-77212-w)
+
+[![Google scholar](https://img.shields.io/badge/Google%20Scholar-4285F4?style=for-the-badge&logo=googlescholar&logoColor=white)](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=jxo3FisAAAAJ&sortby=pubdate&citation_for_view=jxo3FisAAAAJ:XAp-VaTZjjwC)
+[![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=researchgate&logoColor=white)](https://www.researchgate.net/publication/413783367_Multi-modal_learning_with_incomplete_data)
+[![DOI](https://img.shields.io/badge/DOI-0085CA?style=for-the-badge&logo=doi&logoColor=white)](https://doi.org/10.1038/s41467-026-77212-w)
 
 <p align="center">
   <img alt="iMML Logo" src="https://raw.githubusercontent.com/ocbe-uio/imml/refs/heads/main/docs/figures/logo_imml.png" width="150">
@@ -125,6 +128,10 @@ How you can help *iMML* grow:
 
 Citation
 ====================
+
+[![Google scholar](https://img.shields.io/badge/Google%20Scholar-4285F4?style=for-the-badge&logo=googlescholar&logoColor=white)](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=jxo3FisAAAAJ&sortby=pubdate&citation_for_view=jxo3FisAAAAJ:XAp-VaTZjjwC)
+[![ResearchGate](https://img.shields.io/badge/ResearchGate-00CCBB?style=for-the-badge&logo=researchgate&logoColor=white)](https://www.researchgate.net/publication/413783367_Multi-modal_learning_with_incomplete_data)
+[![DOI](https://img.shields.io/badge/DOI-0085CA?style=for-the-badge&logo=doi&logoColor=white)](https://doi.org/10.1038/s41467-026-77212-w)
 
 If you use our package, please cite the following paper:
 
