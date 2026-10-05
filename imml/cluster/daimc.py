@@ -13,6 +13,7 @@ from ..impute import get_observed_mod_indicator
 from ..preprocessing import MMTransformer
 from ..utils import check_Xs_y
 from .. import octavemodule_installed, oct2py_module_error
+from ..utils._formats import as_numpy_Xs
 
 if octavemodule_installed:
     import oct2py
@@ -129,10 +130,9 @@ class DAIMC(BaseEstimator, ClusterMixin):
         """
 
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
+        transformed_Xs, observed_mod_indicator = self._processing_xs(Xs)
 
         if self.engine=="octave":
-            transformed_Xs, observed_mod_indicator = self._processing_xs(Xs)
-
             w = tuple([self._oc.diag(missing_mod) for missing_mod in observed_mod_indicator.T])
             if self.random_state is not None:
                 self._oc.rand('seed', self.random_state)
@@ -146,7 +146,6 @@ class DAIMC(BaseEstimator, ClusterMixin):
                 self._clean_space()
 
         elif self.engine == "python":
-            transformed_Xs, observed_mod_indicator = self._processing_xs(Xs)
             w = tuple([np.diag(missing_mod) for missing_mod in observed_mod_indicator.T])
             u_0, v_0, b_0 = self._new_init(transformed_Xs, w, self.n_clusters, len(transformed_Xs))
             u, v, b, f = self._daimc(transformed_Xs, w, u_0, v_0, b_0, self.n_clusters,
@@ -457,10 +456,8 @@ class DAIMC(BaseEstimator, ClusterMixin):
 
     @staticmethod
     def _processing_xs(Xs):
-        if isinstance(Xs[0], pd.DataFrame):
-            transformed_Xs = [X.values for X in Xs]
-        elif isinstance(Xs[0], np.ndarray):
-            transformed_Xs = Xs
+        transformed_Xs = as_numpy_Xs(Xs)
+        transformed_Xs = [X.astype(np.float64) for X in transformed_Xs]
         observed_mod_indicator = get_observed_mod_indicator(transformed_Xs)
         imputer = MMTransformer(transformer=SimpleImputer(strategy="constant", fill_value=0))
         transformed_Xs = imputer.fit_transform(transformed_Xs)

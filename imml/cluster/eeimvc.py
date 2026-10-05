@@ -14,6 +14,7 @@ from numpy.linalg import svd
 from ..impute import get_observed_mod_indicator
 from ..utils import check_Xs_y
 from .. import octavemodule_installed, oct2py_module_error
+from ..utils._formats import as_numpy_Xs
 
 if octavemodule_installed:
     import oct2py
@@ -47,6 +48,8 @@ class EEIMVC(BaseEstimator, ClusterMixin):
     qnorm : float, default=2.
         Regularization parameter. The algorithm demonstrated stable performance across a wide range of
         this hyperparameter.
+    max_iter : int, default=100
+        Maximum number of iterations.
     random_state : int, default=None
         Determines the randomness. Use an int to make the randomness deterministic.
     engine : str, default=python
@@ -90,13 +93,17 @@ class EEIMVC(BaseEstimator, ClusterMixin):
     >>> labels = estimator.fit_predict(Xs)
     """
 
-    def __init__(self, n_clusters: int = 8, kernel: callable = None,
+    def __init__(self, n_clusters: int = 8, kernel: callable = None, max_iter: int = 100,
                  lambda_reg: float = 1., qnorm: float = 2., random_state: int = None,
                  engine: str ="python", verbose = False, clean_space: bool = True):
         if not isinstance(n_clusters, int):
             raise ValueError(f"Invalid n_clusters. It must be an int. A {type(n_clusters)} was passed.")
         if n_clusters < 2:
             raise ValueError(f"Invalid n_clusters. It must be an greater than 1. {n_clusters} was passed.")
+        if not isinstance(max_iter, int):
+            raise ValueError(f"Invalid max_iter. It must be an int. A {type(max_iter)} was passed.")
+        if max_iter < 1:
+            raise ValueError(f"Invalid max_iter. It must be an greater than 0. {max_iter} was passed.")
         engines_options = ["octave", "python"]
         if engine not in engines_options:
             raise ValueError(f"Invalid engine. Expected one of {engines_options}. {engine} was passed.")
@@ -110,6 +117,7 @@ class EEIMVC(BaseEstimator, ClusterMixin):
         self.qnorm = qnorm
         self.kernel = kernel
         self.lambda_reg = lambda_reg
+        self.max_iter = max_iter
         self.random_state = random_state
         self.engine = engine
         self.verbose = verbose
@@ -145,25 +153,15 @@ class EEIMVC(BaseEstimator, ClusterMixin):
         self :  Fitted estimator.
         """
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
+        transformed_Xs, s = self._process_Xs(Xs)
 
         if self.engine=="octave":
-            if isinstance(Xs[0], pd.DataFrame):
-                transformed_Xs = [X.values for X in Xs]
-            elif isinstance(Xs[0], np.ndarray):
-                transformed_Xs = Xs
-            observed_mod_indicator = get_observed_mod_indicator(transformed_Xs)
-            if isinstance(observed_mod_indicator, np.ndarray):
-                observed_mod_indicator = pd.DataFrame(observed_mod_indicator)
-            s = [modality[modality == 0].index.values for _,modality in observed_mod_indicator.items()]
-            transformed_Xs = [self.kernel(X) for X in transformed_Xs]
-            transformed_Xs = np.array(transformed_Xs).swapaxes(0, -1)
-            s = tuple([{"indx": i +1} for i in s])
-
             if self.random_state is not None:
                 self._oc.rand('seed', self.random_state)
             H_normalized,WP,HP,beta,obj = self._oc.incompleteLateFusionMKCOrthHp_lambda(transformed_Xs, s,
                                                                                         self.n_clusters, self.qnorm,
-                                                                                        self.lambda_reg, nout=5)
+                                                                                        self.lambda_reg, self.max_iter,
+                                                                                        nout=5)
             beta = beta[:,0]
             obj = obj[0]
 
@@ -171,17 +169,6 @@ class EEIMVC(BaseEstimator, ClusterMixin):
                 self._clean_space()
 
         elif self.engine=="python":
-            observed_mod_indicator = get_observed_mod_indicator(Xs)
-            if isinstance(observed_mod_indicator, pd.DataFrame):
-                observed_mod_indicator = observed_mod_indicator.reset_index(drop=True)
-            elif isinstance(observed_mod_indicator[0], np.ndarray):
-                observed_mod_indicator = pd.DataFrame(observed_mod_indicator)
-            s = [modality[modality == 0].index.values for _, modality in observed_mod_indicator.items()]
-            transformed_Xs = [self.kernel(X) for X in Xs]
-            transformed_Xs = np.array(transformed_Xs).swapaxes(0, -1)
-            transformed_Xs = np.nan_to_num(transformed_Xs, nan=0)
-            s = tuple([{"indx": i + 1} for i in s])
-
             H_normalized, WP, HP, beta, obj = self._incomplete_late_fusion_MKCOrthHp_lamba(transformed_Xs, s,
                                                                                       self.n_clusters,
                                                                                       self.qnorm, self.lambda_reg)
@@ -242,6 +229,18 @@ class EEIMVC(BaseEstimator, ClusterMixin):
         self._oc.exit()
         del self._oc
         return None
+
+
+    def _process_Xs(self, Xs):
+        transformed_Xs = as_numpy_Xs(Xs)
+        observed_mod_indicator = pd.DataFrame(get_observed_mod_indicator(transformed_Xs))
+        s = [modality[modality == 0].index.values for _, modality in observed_mod_indicator.items()]
+        transformed_Xs = [self.kernel(X) for X in transformed_Xs]
+        transformed_Xs = np.array(transformed_Xs).swapaxes(0, -1)
+        transformed_Xs = np.nan_to_num(transformed_Xs, nan=0)
+        s = tuple([{"indx": i + 1} for i in s])
+        return transformed_Xs, s
+
 
 
     def _my_initialization_Hp(self, KH, S, n_clusters):
@@ -496,7 +495,6 @@ class EEIMVC(BaseEstimator, ClusterMixin):
         """
         num = KH.shape[1]
         numker = KH.shape[2]
-        maxIter = 100
         HP, WP = self._my_initialization_Hp(KH, S, n_clusters)
         HP00 = HP
         beta = np.ones(shape=(numker, 1)) * (1/numker)**(1/qnorm)
@@ -529,7 +527,7 @@ class EEIMVC(BaseEstimator, ClusterMixin):
             RpHpwp_lambda = RpHpwp + (lambda_reg * H0)
             obj.append(np.real(np.trace(np.matmul(Hstar.T, RpHpwp_lambda))))
 
-            if (iter > 2) and (np.abs((obj[iter-1] - obj[iter-2]) / obj[iter-1])) < 1e-4 or (iter > maxIter):
+            if (iter > 2) and (np.abs((obj[iter-1] - obj[iter-2]) / obj[iter-1])) < 1e-4 or (iter > self.max_iter):
                 flag = 0
 
 

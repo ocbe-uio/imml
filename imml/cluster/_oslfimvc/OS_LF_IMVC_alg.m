@@ -62,6 +62,4 @@ while flag
         flag =0;
     end
 
-Y = Y ./ repmat(sqrt(sum(Y.^2, 2)), 1,k);
-
 end

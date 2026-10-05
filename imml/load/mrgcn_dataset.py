@@ -38,6 +38,11 @@ class MRGCNDataset(Dataset):
         if not deepmodule_installed:
             raise ImportError(deepmodule_error)
         Xs = check_Xs_y(Xs=Xs)
+        Xs = [
+            X.detach().clone().float() if isinstance(X, torch.Tensor)
+            else torch.as_tensor(X.values if hasattr(X, "values") else X, dtype=torch.float32)
+            for X in Xs
+        ]
 
         self.Xs = Xs
         self.transform = transform

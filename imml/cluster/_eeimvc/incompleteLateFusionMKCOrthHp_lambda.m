@@ -1,8 +1,7 @@
-function [H_normalized,WP,HP,beta,obj] = incompleteLateFusionMKCOrthHp_lambda(KH,S,k,qnorm,lambda)
+function [H_normalized,WP,HP,beta,obj] = incompleteLateFusionMKCOrthHp_lambda(KH,S,k,qnorm,lambda,maxIter)
 
 num = size(KH, 2); %the number of samples
 numker = size(KH, 3); %m represents the number of kernels
-maxIter = 100; %the number of iterations
 [HP,WP] = myInitializationHp(KH,S,k);
 HP00 = HP;
 beta = ones(numker,1)*(1/numker)^(1/qnorm);

@@ -3,10 +3,10 @@ import sys
 from unittest.mock import patch
 import pytest
 import numpy as np
-import pandas as pd
 
 from imml.ampute import Amputer
 from imml.cluster import NEMO
+from tests._sample_data import make_sample_data
 
 try:
     from rpy2.robjects.packages import importr, PackageNotInstalledError
@@ -25,15 +25,11 @@ else:
     snftool_installed = False
 
 estimator = NEMO
+ENGINES = ["python"]
+if rmodule_installed and snftool_installed:
+    ENGINES += ["r"]
 
-
-@pytest.fixture
-def sample_data():
-    X = np.random.default_rng(42).random((50, 20))
-    X = pd.DataFrame(X)
-    X1, X2, X3 = X.iloc[:, :10], X.iloc[:, 10:15], X.iloc[:, 15:]
-    Xs_pandas, Xs_numpy = [X1, X2, X3], [X1.values, X2.values, X3.values]
-    return Xs_pandas, Xs_numpy
+sample_data = make_sample_data(n_samples=50, n_features=20, splits=(10, 15))
 
 @pytest.mark.skipif(not snftool_installed, reason="SNFtool is not installed.")
 def test_rmodule_installed():
@@ -61,102 +57,96 @@ def test_r_dependencies_not_installed():
             with pytest.raises(ImportError, match="SNFtool needs to be installed in R to use r engine."):
                 estimator(engine="r")
 
-def test_param_randomstate(sample_data):
+@pytest.mark.parametrize("engine", ENGINES)
+@pytest.mark.parametrize("Xs", sample_data)
+def test_param_randomstate(Xs, engine):
     random_state = 42
-    for engine in ["r", "python"]:
-        if (engine == "r") and (not rmodule_installed or not snftool_installed):
-            continue
-        else:
-            labels = estimator(engine=engine, random_state=random_state).fit_predict(sample_data[0])
-            assert all(labels == estimator(engine=engine, random_state=random_state).fit_predict(sample_data[0]))
+    labels = estimator(engine=engine, random_state=random_state).fit_predict(Xs)
+    assert all(labels == estimator(engine=engine, random_state=random_state).fit_predict(Xs))
 
-def test_default_params(sample_data):
-    model = estimator(random_state=42)
-    for Xs in sample_data:
-        n_samples = len(Xs[0])
-        labels = model.fit_predict(Xs)
-        assert labels is not None
-        assert len(labels) == n_samples
-        assert len(np.unique(labels)) == model.n_clusters_
-        assert min(labels) == 0
-        assert max(labels) == (model.n_clusters - 1)
-        assert not np.isnan(labels).any()
+
+@pytest.mark.parametrize("engine", ENGINES)
+@pytest.mark.parametrize("Xs", sample_data)
+def test_default_params(Xs, engine):
+    model = estimator(random_state=42, engine=engine)
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert labels is not None
+    assert len(labels) == n_samples
+    assert len(np.unique(labels)) == model.n_clusters_
+    assert min(labels) == 0
+    assert max(labels) == (model.n_clusters - 1)
+    assert not np.isnan(labels).any()
+    if engine == "python":
         assert not np.isnan(model.embedding_).any().any()
         assert model.embedding_.shape == (n_samples, model.n_clusters_)
-        assert model.affinity_matrix_.shape == (n_samples, n_samples)
-        assert len(model.num_neighbors_) == len(Xs)
-        assert model.num_neighbors_[0] > 0
+    assert model.affinity_matrix_.shape == (n_samples, n_samples)
+    assert len(model.num_neighbors_) == len(Xs)
+    assert model.num_neighbors_[0] > 0
 
-def test_custom_parameters(sample_data):
-    for engine in ["r", "python"]:
-        if (engine == "r") and (not rmodule_installed or not snftool_installed):
-            continue
-        else:
-            model = estimator(n_clusters=list(range(2, 4)), num_neighbors=3, random_state=42, engine=engine)
-        for Xs in sample_data:
-            n_samples = len(Xs[0])
-            labels = model.fit_predict(Xs)
-            assert labels is not None
-            assert len(labels) == n_samples
-            assert len(np.unique(labels)) == model.n_clusters_
-            assert min(labels) == 0
-            assert max(labels) == (model.n_clusters_ - 1)
-            assert not np.isnan(labels).any()
-            if engine == "python":
-                assert model.embedding_.shape == (n_samples, model.n_clusters_)
-            assert model.affinity_matrix_.shape == (n_samples, n_samples)
-            assert len(model.num_neighbors_) == len(Xs)
-            assert model.num_neighbors_[0] > 0
+
+@pytest.mark.parametrize("Xs", sample_data)
+@pytest.mark.parametrize("engine", ENGINES)
+def test_custom_parameters(Xs, engine):
+    model = estimator(n_clusters=list(range(2, 4)), num_neighbors=3, random_state=42, engine=engine)
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert labels is not None
+    assert len(labels) == n_samples
+    assert len(np.unique(labels)) == model.n_clusters_
+    assert min(labels) == 0
+    assert max(labels) == (model.n_clusters_ - 1)
+    assert not np.isnan(labels).any()
+    if engine == "python":
+        assert model.embedding_.shape == (n_samples, model.n_clusters_)
+    assert model.affinity_matrix_.shape == (n_samples, n_samples)
+    assert len(model.num_neighbors_) == len(Xs)
+    assert model.num_neighbors_[0] > 0
     estimator(n_clusters=list(range(2, 4)), num_neighbors=[3, 3, 3], random_state=42).fit_predict(Xs)
     estimator(n_clusters=None)
 
-def test_invalid_params(sample_data):
+def test_invalid_params():
     with pytest.raises(ValueError, match="Invalid engine."):
         estimator(engine='invalid')
 
-def test_fit_predict(sample_data):
+@pytest.mark.parametrize("Xs", sample_data)
+@pytest.mark.parametrize("engine", ENGINES)
+def test_fit_predict(Xs, engine):
     n_clusters = 3
-    for engine in ["r", "python"]:
-        if (engine == "r") and (not rmodule_installed or not snftool_installed):
-            continue
-        else:
-            model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
-        for Xs in sample_data:
-            n_samples = len(Xs[0])
-            labels = model.fit_predict(Xs)
-            assert labels is not None
-            assert len(np.unique(labels)) == model.n_clusters_
-            assert min(labels) == 0
-            assert max(labels) == (n_clusters - 1)
-            assert not np.isnan(labels).any()
-            if engine == "python":
-                assert not np.isnan(model.embedding_).any().any()
-                assert model.embedding_.shape == (n_samples, model.n_clusters_)
-            assert model.affinity_matrix_.shape == (n_samples, n_samples)
-            assert len(model.num_neighbors_) == len(Xs)
-            assert model.num_neighbors_[0] > 0
+    model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert labels is not None
+    assert len(np.unique(labels)) == model.n_clusters_
+    assert min(labels) == 0
+    assert max(labels) == (n_clusters - 1)
+    assert not np.isnan(labels).any()
+    if engine == "python":
+        assert not np.isnan(model.embedding_).any().any()
+        assert model.embedding_.shape == (n_samples, model.n_clusters_)
+    assert model.affinity_matrix_.shape == (n_samples, n_samples)
+    assert len(model.num_neighbors_) == len(Xs)
+    assert model.num_neighbors_[0] > 0
 
-def test_missing_values_handling(sample_data):
+@pytest.mark.parametrize("engine", ENGINES)
+@pytest.mark.parametrize("Xs", sample_data)
+def test_missing_values_handling(Xs, engine):
     n_clusters = 3
-    for engine in ["r", "python"]:
-        if (engine == "r") and (not rmodule_installed or not snftool_installed):
-            continue
-        for Xs in sample_data:
-            model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
-            Xs = Amputer(p= 0.3, random_state=42).fit_transform(Xs)
-            n_samples = len(Xs[0])
-            labels = model.fit_predict(Xs)
-            assert labels is not None
-            assert len(np.unique(labels)) == model.n_clusters_
-            assert min(labels) == 0
-            assert max(labels) == (n_clusters - 1)
-            assert not np.isnan(labels).any()
-            if engine == "python":
-                assert not np.isnan(model.embedding_).any().any()
-                assert model.embedding_.shape == (n_samples, model.n_clusters_)
-            assert model.affinity_matrix_.shape == (n_samples, n_samples)
-            assert len(model.num_neighbors_) == len(Xs)
-            assert model.num_neighbors_[0] > 0
+    model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
+    Xs = Amputer(p=0.3, random_state=42).fit_transform(Xs)
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert labels is not None
+    assert len(np.unique(labels)) == model.n_clusters_
+    assert min(labels) == 0
+    assert max(labels) == (n_clusters - 1)
+    assert not np.isnan(labels).any()
+    if engine == "python":
+        assert not np.isnan(model.embedding_).any().any()
+        assert model.embedding_.shape == (n_samples, model.n_clusters_)
+    assert model.affinity_matrix_.shape == (n_samples, n_samples)
+    assert len(model.num_neighbors_) == len(Xs)
+    assert model.num_neighbors_[0] > 0
 
 
 if __name__ == "__main__":

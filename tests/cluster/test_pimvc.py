@@ -3,20 +3,15 @@ import importlib
 import sys
 from unittest.mock import patch
 import numpy as np
-import pandas as pd
 
 from imml.ampute import Amputer
 from imml.cluster import PIMVC as estimator
 from imml import octavemodule_installed
+from tests import ENGINES
+from tests._sample_data import make_sample_data
 
 
-@pytest.fixture
-def sample_data():
-    X = np.random.default_rng(42).random((10, 25))
-    X = pd.DataFrame(X)
-    X1, X2, X3 = X.iloc[:, :8], X.iloc[:, 8:16], X.iloc[:, 16:]
-    Xs_pandas, Xs_numpy = [X1, X2, X3], [X1.values, X2.values, X3.values]
-    return Xs_pandas, Xs_numpy
+sample_data = make_sample_data(n_samples=10, n_features=25, splits=(8, 16))
 
 
 def test_octave_not_installed():
@@ -36,36 +31,35 @@ def test_octave_not_installed():
             estimator(engine="octave")
 
 
-def test_default_params(sample_data):
-    model = estimator(random_state=42)
-    for Xs in sample_data:
-        n_samples = len(Xs[0])
-        labels = model.fit_predict(Xs)
-        assert labels is not None
-        assert len(labels) == n_samples
-        assert len(np.unique(labels)) == model.n_clusters
-        assert min(labels) == 0
-        assert max(labels) == (model.n_clusters - 1)
-        assert not np.isnan(labels).any()
-        assert not np.isnan(model.embedding_).any().any()
-        assert model.embedding_.shape[0] == n_samples
-        assert model.n_iter_ > 0
-        assert model.loss_ is not None
-        assert isinstance(model.loss_, np.ndarray)
-        assert (model.loss_.shape[0] == model.n_iter_)
-        assert isinstance(model.loss_[-1], float)
+@pytest.mark.parametrize("engine", ENGINES)
+@pytest.mark.parametrize("Xs", sample_data)
+def test_default_params(Xs, engine):
+    model = estimator(random_state=42, engine=engine)
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert labels is not None
+    assert len(labels) == n_samples
+    assert len(np.unique(labels)) == model.n_clusters
+    assert min(labels) == 0
+    assert max(labels) == (model.n_clusters - 1)
+    assert not np.isnan(labels).any()
+    assert not np.isnan(model.embedding_).any().any()
+    assert model.embedding_.shape[0] == n_samples
+    assert model.n_iter_ > 0
+    assert model.loss_ is not None
+    assert isinstance(model.loss_, np.ndarray)
+    assert (model.loss_.shape[0] == model.n_iter_)
+    assert isinstance(model.loss_[-1], float)
 
 
-def test_param_randomstate(sample_data):
+@pytest.mark.parametrize("engine", ENGINES)
+def test_param_randomstate(engine):
     random_state = 42
-    for engine in ["python", "octave"]:
-        if (engine == "octave") and not octavemodule_installed:
-            continue
-        labels = estimator(engine=engine, random_state=random_state).fit_predict(sample_data[0])
-        assert all(labels == estimator(engine=engine, random_state=random_state).fit_predict(sample_data[0]))
+    labels = estimator(engine=engine, random_state=random_state).fit_predict(sample_data[0])
+    assert all(labels == estimator(engine=engine, random_state=random_state).fit_predict(sample_data[0]))
 
 
-def test_invalid_params(sample_data):
+def test_invalid_params():
     with pytest.raises(ValueError, match="Invalid engine."):
         estimator(engine='invalid')
     with pytest.raises(ValueError, match="Invalid n_clusters."):
@@ -89,51 +83,47 @@ def test_invalid_params(sample_data):
         estimator(clean_space='invalid')
 
 
-def test_fit_predict(sample_data):
+@pytest.mark.parametrize("engine", ENGINES)
+@pytest.mark.parametrize("Xs", sample_data)
+def test_fit_predict(Xs, engine):
     n_clusters = 3
-    for engine in ["python", "octave"]:
-        if (engine == "octave") and not octavemodule_installed:
-            continue
-        for Xs in sample_data:
-            model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
-            n_samples = len(Xs[0])
-            labels = model.fit_predict(Xs)
-            assert len(labels) == n_samples
-            assert len(np.unique(labels)) == n_clusters
-            assert min(labels) == 0
-            assert max(labels) == (n_clusters - 1)
-            assert not np.isnan(labels).any()
-            assert not np.isnan(model.embedding_).any().any()
-            assert model.embedding_.shape == (n_samples, n_clusters)
-            assert model.n_iter_ > 0
-            assert model.loss_ is not None
-            assert isinstance(model.loss_, np.ndarray)
-            assert (model.loss_.shape[0] == model.n_iter_)
-            assert isinstance(model.loss_[-1], float)
+    model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert len(labels) == n_samples
+    assert len(np.unique(labels)) == n_clusters
+    assert min(labels) == 0
+    assert max(labels) == (n_clusters - 1)
+    assert not np.isnan(labels).any()
+    assert not np.isnan(model.embedding_).any().any()
+    assert model.embedding_.shape == (n_samples, n_clusters)
+    assert model.n_iter_ > 0
+    assert model.loss_ is not None
+    assert isinstance(model.loss_, np.ndarray)
+    assert (model.loss_.shape[0] == model.n_iter_)
+    assert isinstance(model.loss_[-1], (float, np.floating))
 
 
-def test_missing_values_handling(sample_data):
+@pytest.mark.parametrize("engine", ENGINES)
+@pytest.mark.parametrize("Xs", sample_data)
+def test_missing_values_handling(Xs, engine):
     n_clusters = 2
-    for engine in ["python", "octave"]:
-        if (engine == "octave") and not octavemodule_installed:
-            continue
-        for Xs in sample_data:
-            model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
-            Xs = Amputer(p= 0.3, random_state=42).fit_transform(Xs)
-            n_samples = len(Xs[0])
-            labels = model.fit_predict(Xs)
-            assert len(labels) == n_samples
-            assert len(np.unique(labels)) == n_clusters
-            assert min(labels) == 0
-            assert max(labels) == (n_clusters - 1)
-            assert not np.isnan(labels).any()
-            assert not np.isnan(model.embedding_).any().any()
-            assert model.embedding_.shape == (n_samples, n_clusters)
-            assert model.n_iter_ > 0
-            assert model.loss_ is not None
-            assert isinstance(model.loss_, np.ndarray)
-            assert (model.loss_.shape[0] == model.n_iter_)
-            assert isinstance(model.loss_[-1], float)
+    model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
+    Xs = Amputer(p=0.3, random_state=42).fit_transform(Xs)
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert len(labels) == n_samples
+    assert len(np.unique(labels)) == n_clusters
+    assert min(labels) == 0
+    assert max(labels) == (n_clusters - 1)
+    assert not np.isnan(labels).any()
+    assert not np.isnan(model.embedding_).any().any()
+    assert model.embedding_.shape == (n_samples, n_clusters)
+    assert model.n_iter_ > 0
+    assert model.loss_ is not None
+    assert isinstance(model.loss_, np.ndarray)
+    assert (model.loss_.shape[0] == model.n_iter_)
+    assert isinstance(model.loss_[-1], (float, np.floating))
 
 
 if __name__ == "__main__":

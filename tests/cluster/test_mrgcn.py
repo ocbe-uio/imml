@@ -5,6 +5,7 @@ import importlib
 import sys
 from unittest.mock import patch
 import numpy as np
+import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import FunctionTransformer
@@ -15,20 +16,14 @@ from imml.ampute import Amputer
 from imml.preprocessing import MMTransformer
 from imml.cluster import MRGCN
 from imml.load import MRGCNDataset
+from tests._sample_data import make_sample_data
 
+L.seed_everything(42)
 estimator = MRGCN
+sample_data = make_sample_data(n_samples=25, n_features=10, splits=(3, 5))
 
 
-@pytest.fixture
-def sample_data():
-    X = np.random.default_rng(42).random((25, 10))
-    X1, X2, X3 = X[:, :3], X[:, 3:5], X[:, 5:]
-    Xs_numpy = [X1, X2, X3]
-    Xs_torch = [torch.from_numpy(X.astype(np.float32)) for X in Xs_numpy]
-    return Xs_torch, Xs_numpy
-
-
-def test_deepmodule_not_installed(sample_data):
+def test_deepmodule_not_installed():
     estimator(Xs=sample_data[0])
     with patch.dict(sys.modules, {"torch": None}):
         import imml as imml_mock
@@ -41,9 +36,9 @@ def test_deepmodule_not_installed(sample_data):
     importlib.reload(module_mock)
 
 
-def test_default_params(sample_data):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_default_params(Xs):
     n_clusters = 3
-    Xs = sample_data[0]
     n_samples = len(Xs[0])
     train_data = MRGCNDataset(Xs=Xs)
     train_dataloader = DataLoader(dataset=train_data, batch_size=n_samples, shuffle=True)
@@ -62,7 +57,7 @@ def test_default_params(sample_data):
     assert len(embedding_) == n_samples
 
 
-def test_invalid_params(sample_data):
+def test_invalid_params():
     with pytest.raises(ValueError, match="Invalid n_clusters."):
         estimator(n_clusters='invalid', Xs=sample_data[0])
     with pytest.raises(ValueError, match="Invalid n_clusters."):
@@ -85,9 +80,9 @@ def test_invalid_params(sample_data):
         estimator(reg3="invalid", Xs=sample_data[0])
 
 
-def test_missing_values_handling(sample_data):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_missing_values_handling(Xs):
     n_clusters = 2
-    Xs = sample_data[1]
     n_samples = len(Xs[0])
     amputer = Amputer(p= 0.3, random_state=42)
     imputer = SimpleImputer(strategy="constant", fill_value=0.0).set_output(transform="pandas")

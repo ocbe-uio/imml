@@ -98,6 +98,12 @@ class MRGCN(LightningModule):
         if not isinstance(reg3, float):
             raise ValueError(f"Invalid reg3. It must be a float. A {type(reg3)} was passed.")
 
+        Xs = [
+            X.detach().clone().float() if isinstance(X, torch.Tensor)
+            else torch.as_tensor(X.values if hasattr(X, "values") else X, dtype=torch.float32)
+            for X in Xs
+        ]
+
         self.data = Xs
         self.n_features_ = [X.shape[1] for X in Xs]
         self.n_mods_ = len(Xs)
