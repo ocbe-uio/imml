@@ -12,9 +12,8 @@ from scipy.sparse.linalg import eigsh
 from numpy.linalg import svd
 
 from ..impute import get_observed_mod_indicator
-from ..utils import check_Xs_y
 from .. import octavemodule_installed, oct2py_module_error
-from ..utils._formats import as_numpy_Xs
+from ..utils import check_Xs_y, as_np_Xs
 
 if octavemodule_installed:
     import oct2py
@@ -232,7 +231,7 @@ class EEIMVC(BaseEstimator, ClusterMixin):
 
 
     def _process_Xs(self, Xs):
-        transformed_Xs = as_numpy_Xs(Xs)
+        transformed_Xs = as_np_Xs(Xs)
         observed_mod_indicator = pd.DataFrame(get_observed_mod_indicator(transformed_Xs))
         s = [modality[modality == 0].index.values for _, modality in observed_mod_indicator.items()]
         transformed_Xs = [self.kernel(X) for X in transformed_Xs]

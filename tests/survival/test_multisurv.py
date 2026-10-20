@@ -7,8 +7,7 @@ import numpy as np
 import pandas as pd
 from torch.utils.data import DataLoader
 
-from imml.fuse import ConcatFusion, MeanFusion
-from imml.load import MultiSurvDataset
+from imml.fuse import MeanFusion
 from imml.survival import MultiSurv as estimator
 
 

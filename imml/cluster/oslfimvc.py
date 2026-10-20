@@ -3,7 +3,6 @@
 import os
 from os.path import dirname
 import numpy as np
-import pandas as pd
 from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 from sklearn.gaussian_process import kernels
@@ -11,9 +10,8 @@ from scipy.sparse.linalg import eigsh
 from numpy.linalg import svd
 
 from ..impute import get_observed_mod_indicator
-from ..utils import check_Xs_y
+from ..utils import check_Xs_y, as_pd_indicator, as_np_Xs
 from .. import octavemodule_installed, oct2py_module_error
-from ..utils._formats import as_numpy_Xs
 
 if octavemodule_installed:
     import oct2py
@@ -134,9 +132,9 @@ class OSLFIMVC(BaseEstimator, ClusterMixin):
         """
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
-        observed_mod_indicator = indicator_to_frame(get_observed_mod_indicator(Xs))
+        observed_mod_indicator = as_pd_indicator(get_observed_mod_indicator(Xs))
         s = [modality[modality == 0].index.values for _, modality in observed_mod_indicator.items()]
-        Xs_numpy = as_numpy_Xs(Xs)
+        Xs_numpy = as_np_Xs(Xs)
         transformed_Xs = [self.kernel(X) for X in Xs_numpy]
         transformed_Xs = np.array(transformed_Xs).swapaxes(0, -1)
         s = tuple([{"indx": i + 1} for i in s])

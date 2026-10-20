@@ -18,6 +18,7 @@ Documentation
    main/alg_guidelines
    auto_tutorials/index
    main/modules/imml
+   main/citation
 
 .. toctree::
    :maxdepth: 1
@@ -32,6 +33,7 @@ Documentation
    :maxdepth: 1
    :caption: Links
 
+   Paper <https://doi.org/10.1038/s41467-026-77212-w>
    GitHub <https://github.com/ocbe-uio/imml>
    PyPI <https://pypi.org/project/imml/>
 

@@ -8,7 +8,7 @@ from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 from sklearn.gaussian_process import kernels
 
-from ..utils import check_Xs_y
+from ..utils import check_Xs_y, as_np_Xs
 from ..explore import get_missing_samples_by_mod
 from .. import octavemodule_installed, oct2py_module_error
 
@@ -143,10 +143,7 @@ class MKKMIK(BaseEstimator, ClusterMixin):
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
         if self.engine == "octave":
-            if isinstance(Xs[0], pd.DataFrame):
-                transformed_Xs = [X.values for X in Xs]
-            elif isinstance(Xs[0], np.ndarray):
-                transformed_Xs = Xs
+            transformed_Xs = as_np_Xs(Xs)
             s = get_missing_samples_by_mod(Xs=transformed_Xs, return_as_list=True)
             s = tuple([{"indx": pd.Series(i).add(1).to_list()} for i in s])
 

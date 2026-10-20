@@ -1,4 +1,5 @@
 import pytest
+oct2py = pytest.importorskip("oct2py")
 import importlib
 import sys
 from unittest.mock import patch
@@ -7,10 +8,10 @@ import numpy as np
 from imml.ampute import Amputer
 from imml.cluster import MKKMIK as estimator
 from imml import octavemodule_installed
-from tests import ENGINES
 from tests._sample_data import make_sample_data
 
 sample_data = make_sample_data(n_samples=8, n_features=10, splits=(5, 8))
+ENGINES = ["octave"]
 
 
 def test_octave_not_installed():

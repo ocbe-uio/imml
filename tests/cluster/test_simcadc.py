@@ -68,7 +68,8 @@ def test_invalid_params():
 
 
 @pytest.mark.parametrize("engine", ENGINES)
-def test_fit_predict(engine):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_fit_predict(Xs, engine):
     n_clusters = 3
     for Xs in sample_data:
         model = estimator(n_clusters=n_clusters, random_state=42)
@@ -89,7 +90,8 @@ def test_fit_predict(engine):
 
 
 @pytest.mark.parametrize("engine", ENGINES)
-def test_missing_values_handling(engine):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_missing_values_handling(Xs, engine):
     n_clusters = 3
     for Xs in sample_data:
         model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)

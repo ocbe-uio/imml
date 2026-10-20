@@ -35,18 +35,17 @@ def test_octave_not_installed():
 @pytest.mark.parametrize("Xs", sample_data)
 def test_default_params(Xs, engine):
     model = estimator(random_state=42, engine=engine)
-    for Xs in sample_data:
-        n_samples = len(Xs[0])
-        labels = model.fit_predict(Xs)
-        assert labels is not None
-        assert len(labels) == n_samples
-        assert len(np.unique(labels)) == model.n_clusters
-        assert min(labels) == 0
-        assert max(labels) == (model.n_clusters - 1)
-        assert not np.isnan(labels).any()
-        assert not np.isnan(model.embedding_).any().any()
-        assert model.embedding_.shape[0] == n_samples
-        assert model.n_iter_ > 0
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert labels is not None
+    assert len(labels) == n_samples
+    assert len(np.unique(labels)) == model.n_clusters
+    assert min(labels) == 0
+    assert max(labels) == (model.n_clusters - 1)
+    assert not np.isnan(labels).any()
+    assert not np.isnan(model.embedding_).any().any()
+    assert model.embedding_.shape[0] == n_samples
+    assert model.n_iter_ > 0
 
 
 @pytest.mark.parametrize("engine", ENGINES)
@@ -70,39 +69,39 @@ def test_invalid_params():
 
 
 @pytest.mark.parametrize("engine", ENGINES)
-def test_fit_predict(engine):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_fit_predict(Xs, engine):
     n_clusters = 3
-    for Xs in sample_data:
-        model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
-        n_samples = len(Xs[0])
-        labels = model.fit_predict(Xs)
-        assert len(labels) == n_samples
-        assert len(np.unique(labels)) == n_clusters
-        assert min(labels) == 0
-        assert max(labels) == (n_clusters - 1)
-        assert not np.isnan(labels).any()
-        assert not np.isnan(model.embedding_).any().any()
-        assert model.embedding_.shape == (n_samples, n_clusters)
-        assert model.n_iter_ > 0
+    model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
+    n_samples = len(Xs[0])
+    labels = model.fit_predict(Xs)
+    assert len(labels) == n_samples
+    assert len(np.unique(labels)) == n_clusters
+    assert min(labels) == 0
+    assert max(labels) == (n_clusters - 1)
+    assert not np.isnan(labels).any()
+    assert not np.isnan(model.embedding_).any().any()
+    assert model.embedding_.shape == (n_samples, n_clusters)
+    assert model.n_iter_ > 0
 
 
 @pytest.mark.parametrize("engine", ENGINES)
-def test_missing_values_handling(engine):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_missing_values_handling(Xs, engine):
     n_clusters = 2
-    for Xs in sample_data:
-        Xs = Amputer(p= 0.3, random_state=42).fit_transform(Xs)
-        model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
-        n_samples = len(Xs[0])
-        Xs = Amputer(p= 0.3, random_state=42).fit_transform(Xs)
-        labels = model.fit_predict(Xs)
-        assert len(labels) == n_samples
-        assert len(np.unique(labels)) == n_clusters
-        assert min(labels) == 0
-        assert max(labels) == (n_clusters - 1)
-        assert not np.isnan(labels).any()
-        assert not np.isnan(model.embedding_).any().any()
-        assert model.embedding_.shape == (n_samples, n_clusters)
-        assert model.n_iter_ > 0
+    Xs = Amputer(p= 0.3, random_state=42).fit_transform(Xs)
+    model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
+    n_samples = len(Xs[0])
+    Xs = Amputer(p= 0.3, random_state=42).fit_transform(Xs)
+    labels = model.fit_predict(Xs)
+    assert len(labels) == n_samples
+    assert len(np.unique(labels)) == n_clusters
+    assert min(labels) == 0
+    assert max(labels) == (n_clusters - 1)
+    assert not np.isnan(labels).any()
+    assert not np.isnan(model.embedding_).any().any()
+    assert model.embedding_.shape == (n_samples, n_clusters)
+    assert model.n_iter_ > 0
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 import pytest
+oct2py = pytest.importorskip("oct2py")
 import importlib
 import sys
 from unittest.mock import patch
@@ -7,11 +8,11 @@ import numpy as np
 from imml.ampute import Amputer
 from imml.cluster import OMVC as estimator
 from imml import octavemodule_installed
-from tests import ENGINES
 from tests._sample_data import make_sample_data
 
 
 sample_data = make_sample_data(n_samples=8, n_features=5, splits=(2, 4))
+ENGINES = ["octave"]
 
 
 def test_octave_not_installed():
@@ -60,7 +61,8 @@ def test_invalid_params():
 
 
 @pytest.mark.parametrize("engine", ENGINES)
-def test_fit_predict(engine):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_fit_predict(Xs, engine):
     n_clusters = 3
     for Xs in sample_data:
         model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)
@@ -82,7 +84,8 @@ def test_fit_predict(engine):
 
 
 @pytest.mark.parametrize("engine", ENGINES)
-def test_missing_values_handling(engine):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_missing_values_handling(Xs, engine):
     n_clusters = 2
     for Xs in sample_data:
         model = estimator(n_clusters=n_clusters, engine=engine, random_state=42)

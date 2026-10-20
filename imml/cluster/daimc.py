@@ -13,7 +13,7 @@ from ..impute import get_observed_mod_indicator
 from ..preprocessing import MMTransformer
 from ..utils import check_Xs_y
 from .. import octavemodule_installed, oct2py_module_error
-from ..utils._formats import as_numpy_Xs
+from ..utils import as_np_Xs
 
 if octavemodule_installed:
     import oct2py
@@ -456,7 +456,7 @@ class DAIMC(BaseEstimator, ClusterMixin):
 
     @staticmethod
     def _processing_xs(Xs):
-        transformed_Xs = as_numpy_Xs(Xs)
+        transformed_Xs = as_np_Xs(Xs)
         transformed_Xs = [X.astype(np.float64) for X in transformed_Xs]
         observed_mod_indicator = get_observed_mod_indicator(transformed_Xs)
         imputer = MMTransformer(transformer=SimpleImputer(strategy="constant", fill_value=0))

@@ -301,9 +301,9 @@ class RAGPTModule(Module):
         output = torch.cat([text_emb, image_emb], dim=1)
         N = embedding.shape[0]
         current_attention_mask = base_attention_mask
-        extended_attention_mask = self.vilt.get_extended_attention_mask(
-            current_attention_mask, output.shape[:2]
-        )
+        extended_attention_mask = current_attention_mask[:, None, None, :]
+        extended_attention_mask = extended_attention_mask.to(dtype=self.vilt.dtype)  # fp16/fp32 compatibility
+        extended_attention_mask = (1.0 - extended_attention_mask) * torch.finfo(self.vilt.dtype).min
         for i, layer_module in enumerate(self.encoder_layer):
             if i == self.prompt_position:
                 output = torch.cat([label_emb, t_prompt, i_prompt, output], dim=1)
@@ -311,9 +311,9 @@ class RAGPTModule(Module):
                                         dtype=current_attention_mask.dtype,
                                         device=pixel_values.device)
                 current_attention_mask = torch.cat([prompt_mask, current_attention_mask], dim=1)
-                extended_attention_mask = self.vilt.get_extended_attention_mask(
-                    current_attention_mask, output.shape[:2]
-                )
+                extended_attention_mask = current_attention_mask[:, None, None, :]
+                extended_attention_mask = extended_attention_mask.to(dtype=self.vilt.dtype)  # fp16/fp32 compatibility
+                extended_attention_mask = (1.0 - extended_attention_mask) * torch.finfo(self.vilt.dtype).min
             layer_outputs = layer_module(output, attention_mask=extended_attention_mask)
             output = layer_outputs[0]
         output = self.layernorm(output)

@@ -5,7 +5,6 @@ import importlib
 import sys
 from unittest.mock import patch
 import numpy as np
-import pandas as pd
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import FunctionTransformer
@@ -53,7 +52,7 @@ def test_default_params(Xs):
     assert min(labels) == 0
     assert max(labels) == (model.n_clusters - 1)
     assert not np.isnan(labels).any()
-    embedding_ = model._embedding(batch=Xs).detach().cpu().numpy()
+    embedding_ = model._embedding(batch=next(iter(train_dataloader))).detach().cpu().numpy()
     assert len(embedding_) == n_samples
 
 
@@ -102,7 +101,7 @@ def test_missing_values_handling(Xs):
     assert min(labels) == 0
     assert max(labels) == (model.n_clusters - 1)
     assert not np.isnan(labels).any()
-    embedding_ = model._embedding(batch=transformed_Xs).detach().cpu().numpy()
+    embedding_ = model._embedding(batch=next(iter(train_dataloader))).detach().cpu().numpy()
     assert not np.isnan(embedding_).any().any()
     assert len(embedding_) == n_samples
 

@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator, ClusterMixin
 from sklearn.cluster import KMeans
 
-from ..utils import check_Xs_y
+from ..utils import check_Xs_y, as_np_Xs
 from ..explore import get_missing_samples_by_mod
 from .. import octavemodule_installed, oct2py_module_error
 
@@ -139,13 +139,11 @@ class OMVC(BaseEstimator, ClusterMixin):
                       "decay": self.decay, "alpha": 1e-2*ones, "beta": 1e-7*ones,
                       "pass": self.n_pass}
 
-            if isinstance(Xs[0], pd.DataFrame):
-                transformed_Xs = [X.values for X in Xs]
-            elif isinstance(Xs[0], np.ndarray):
-                transformed_Xs = Xs
+            transformed_Xs = as_np_Xs(Xs)
             missing_samples_by_mod = get_missing_samples_by_mod(Xs=transformed_Xs, return_as_list=True)
             missing_samples_by_mod = tuple([np.array(missing_samples)+1 for missing_samples in missing_samples_by_mod])
-            transformed_Xs = [np.nan_to_num(np.clip(X, a_min=0, a_max=None), nan=0.0) for X in transformed_Xs]
+            transformed_Xs = [np.nan_to_num(np.clip(np.asarray(X, dtype=np.float64), a_min=0, a_max=None), nan=0.0)
+                              for X in transformed_Xs]
             transformed_Xs = [X/(X.sum().sum()) for X in transformed_Xs]
 
             if self.random_state is not None:
@@ -220,4 +218,3 @@ class OMVC(BaseEstimator, ClusterMixin):
         self._oc.exit()
         del self._oc
         return None
-

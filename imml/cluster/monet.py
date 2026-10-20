@@ -11,7 +11,7 @@ from ._monet._aux_monet import _best_samples_to_add, _which_sample_to_remove, _w
     _which_view_to_remove_from_module, _score_of_split_module, _weight_of_split_and_add_view, \
     _weight_of_split_and_remove_view, _weight_of_new_module, _top_samples_to_switch, \
     _weight_of_spreading_module, _weight_of_merged_modules, _Globals, _Sample, _Module, _View, _switch_2_samples
-from ..utils import check_Xs_y
+from ..utils import check_Xs_y, as_pd_Xs
 from ..preprocessing import remove_missing_samples_by_mod
 
 
@@ -107,6 +107,8 @@ class MONET(BaseEstimator, ClusterMixin):
         similarity_mode_opts = ["corr"]
         if similarity_mode not in similarity_mode_opts:
             raise ValueError(f"Invalid similarity_mode. Expected one of {similarity_mode_opts}. {similarity_mode} was passed.")
+        if (init_modules is not None) and (not isinstance(list(init_modules.values())[0][0], str)):
+            init_modules = {k:[str(i) for i in v] for k,v in init_modules.items()}
 
         self.n_clusters = n_clusters
         self.num_repeats = num_repeats
@@ -148,8 +150,7 @@ class MONET(BaseEstimator, ClusterMixin):
         self :  returns an instance of self.
         """
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
-        if not isinstance(Xs[0], pd.DataFrame):
-            Xs = [pd.DataFrame(X) for X in Xs]
+        Xs = as_pd_Xs(Xs)
         for X in Xs:
             X.index = X.index.astype(str)
         samples = Xs[0].index
