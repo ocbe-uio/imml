@@ -98,8 +98,8 @@ task and check whether additional modules or dependencies are required.
    * - Clustering
      - :class:`~imml.cluster.OSLFIMVC`
      - Numeric
-     - octave
-     - octave, octave-statistics
+     -
+     -
    * - Clustering
      - :class:`~imml.cluster.PIMVC`
      - Numeric
