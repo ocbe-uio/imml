@@ -26,6 +26,11 @@ task and check whether additional modules or dependencies are required.
      - deep
      -
    * - Classification
+     - :class:`~imml.classify.PAPPS`
+     - Numeric
+     - deep
+     -
+   * - Classification
      - :class:`~imml.classify.RAGPT`
      - Image & Text
      - deep
