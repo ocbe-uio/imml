@@ -448,6 +448,7 @@ class PAPPS(LightningModule):
                 selected = _make_progressive_mask(
                     class_ratios, pseudo_labels, self.max_epochs, self.current_epoch
                 ).to(device)
+                pseudo_labels = pseudo_labels.to(device)
                 current_labels = torch.zeros(len(idx), dtype=torch.long, device=device)
                 current_labels[labeled_positions] = y[idx[labeled_positions]]
                 current_labels[unlabeled_positions] = pseudo_labels

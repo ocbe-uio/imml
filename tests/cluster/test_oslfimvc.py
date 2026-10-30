@@ -10,7 +10,7 @@ from imml import octavemodule_installed
 from tests import ENGINES
 from tests._sample_data import make_sample_data
 
-sample_data = make_sample_data(n_samples=40, n_features=10, splits=(3, 5))
+sample_data = make_sample_data(n_samples=45, n_features=10, splits=(3, 5))
 
 
 def test_octave_not_installed():
