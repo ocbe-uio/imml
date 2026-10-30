@@ -3,25 +3,17 @@ torch = pytest.importorskip("torch")
 import importlib
 import sys
 from unittest.mock import patch
-import numpy as np
-import pandas as pd
 import pytest
+from tests._sample_data import make_sample_data
 
 from imml.cluster import IntegrAO
 from imml.load import IntegrAODataset
 
 
-@pytest.fixture
-def sample_data():
-    X = np.random.default_rng(42).random((25, 10))
-    X1, X2, X3 = X[:, :3], X[:, 3:5], X[:, 5:]
-    Xs_pandas = [pd.DataFrame(X1), pd.DataFrame(X2), pd.DataFrame(X3)]
-    Xs_numpy = [X1, X2, X3]
-    Xs_torch = [torch.from_numpy(X.astype(np.float32)) for X in Xs_numpy]
-    return Xs_torch, Xs_pandas, Xs_numpy
+sample_data = make_sample_data(n_samples=25, n_features=10)
 
 
-def test_deepmodule_not_installed(sample_data):
+def test_deepmodule_not_installed():
     n_clusters = 3
     Xs = sample_data[0]
     model = IntegrAO(Xs=Xs, n_clusters=n_clusters, random_state=42)
@@ -37,17 +29,17 @@ def test_deepmodule_not_installed(sample_data):
     importlib.reload(module_mock)
 
 
-def test_default_params(sample_data):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_default_params(Xs):
     n_clusters = 3
-    for Xs in sample_data:
-        model = IntegrAO(Xs=Xs, n_clusters=n_clusters, random_state=42)
-        dataset = IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
-        assert len(dataset) == len(Xs[0])
-        assert hasattr(dataset, 'Xs')
-        assert len(dataset.Xs) == len(Xs)
+    model = IntegrAO(Xs=Xs, n_clusters=n_clusters, random_state=42)
+    dataset = IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
+    assert len(dataset) == len(Xs[0])
+    assert hasattr(dataset, 'Xs')
+    assert len(dataset.Xs) == len(Xs)
 
 
-def test_invalid_params(sample_data):
+def test_invalid_params():
     n_clusters = 3
     model = IntegrAO(Xs=sample_data[0], n_clusters=n_clusters, random_state=42)
     with pytest.raises(ValueError, match="Invalid Xs."):
@@ -71,9 +63,9 @@ def test_invalid_params(sample_data):
                         neighbor_size=model.neighbor_size, networks="invalid_input")
 
 
-def test_getitem(sample_data):
+@pytest.mark.parametrize("Xs", sample_data)
+def test_getitem(Xs):
     n_clusters = 3
-    Xs = sample_data[0]
     model = IntegrAO(Xs=Xs, n_clusters=n_clusters, random_state=42)
     dataset = IntegrAODataset(Xs=Xs, neighbor_size=model.neighbor_size, networks=model.fused_networks_)
     sample = dataset[0]

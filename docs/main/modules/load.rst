@@ -33,6 +33,16 @@ MUSE Dataset Loader
 .. minigallery:: imml.load.MUSEDataset
    :add-heading: Tutorials
 
+PA-PPS Dataset Loader
+-------------------------------
+
+.. autoclass:: PAPPSDataset
+   :members:
+   :show-inheritance:
+
+.. minigallery:: imml.load.PAPPSDataset
+   :add-heading: Tutorials
+
 RAGPT Dataset Loader
 -------------------------------
 

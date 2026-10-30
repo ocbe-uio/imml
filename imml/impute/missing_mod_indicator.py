@@ -33,8 +33,8 @@ class MissingModIndicator(FunctionTransformer):
     >>> from imml.ampute import Amputer
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
     >>> Xs = Amputer(p= 0.2, random_state=42).fit_transform(Xs)
-    >>> indicator = MissingModIndicator()
-    >>> missing_mod = indicator.fit_transform()(Xs)
+    >>> X = MissingModIndicator()
+    >>> missing_mod = X.fit_transform()(Xs)
     """
 
     def __init__(self):
@@ -43,7 +43,7 @@ class MissingModIndicator(FunctionTransformer):
 
 def get_missing_mod_indicator(Xs : list, y = None):
     r"""
-    Return a binary indicator for missing modalities.
+    Return a binary X for missing modalities.
 
     Parameters
     ----------
@@ -58,7 +58,7 @@ def get_missing_mod_indicator(Xs : list, y = None):
     Returns
     -------
     transformed_X : array-likes objects, shape (n_samples, n_mods)
-        Binary indicator for missing modalities.
+        Binary X for missing modalities.
 
     See Also
     --------

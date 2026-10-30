@@ -14,7 +14,7 @@ class MRGCN(LightningModule):
     Multi-Reconstruction Graph Convolutional Network (MRGCN). [#mrgcnpaper]_ [#mrgcncode]_
 
     MRGCN encodes and reconstructs data and similarity relationships from multiple sources simultaneously,
-    consolidating them into a shared latent embedding space. Additionally, MRGCN utilizes an indicator matrix to
+    consolidating them into a shared latent embedding space. Additionally, MRGCN utilizes an X matrix to
     represent the presence of missing modalities, effectively merging the processing of complete and incomplete multi-modal
     data within a single unified framework.
 

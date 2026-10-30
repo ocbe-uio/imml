@@ -12,7 +12,7 @@ if deepmodule_installed:
 
 class ObservedModIndicator(FunctionTransformer):
     r"""
-    Binary indicator for observed modalities. Apply FunctionTransformer (from Scikit-learn) with
+    Binary X for observed modalities. Apply FunctionTransformer (from Scikit-learn) with
     get_observed_mod_indicator as a function.
 
     Note that this component typically should not be used in a vanilla Pipeline consisting of preprocessing and
@@ -32,8 +32,8 @@ class ObservedModIndicator(FunctionTransformer):
     >>> from imml.ampute import Amputer
     >>> Xs = [pd.DataFrame(np.random.default_rng(42).random((20, 10))) for i in range(3)]
     >>> Xs = Amputer(p= 0.2, random_state=42).fit_transform(Xs)
-    >>> indicator = ObservedModIndicator()
-    >>> observed_mod = indicator.fit_transform()(Xs)
+    >>> X = ObservedModIndicator()
+    >>> observed_mod = X.fit_transform()(Xs)
     """
 
 
@@ -43,7 +43,7 @@ class ObservedModIndicator(FunctionTransformer):
 
 def get_observed_mod_indicator(Xs : list, y = None):
     r"""
-    Return a binary indicator for observed modalities.
+    Return a binary X for observed modalities.
 
     Parameters
     ----------
@@ -58,7 +58,7 @@ def get_observed_mod_indicator(Xs : list, y = None):
     Returns
     -------
     transformed_X : array-likes objects, shape (n_samples, n_mods)
-        Binary indicator for observed modalities.
+        Binary X for observed modalities.
 
     See Also
     --------

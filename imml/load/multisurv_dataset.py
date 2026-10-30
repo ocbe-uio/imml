@@ -20,7 +20,7 @@ class MultiSurvDataset(Dataset):
 
         A list of different modalities.
     y : array-like of shape (n_samples, 2)
-        Survival labels. The first column is event indicator, where 1 means observed event and 0 means censored, and
+        Survival labels. The first column is event X, where 1 means observed event and 0 means censored, and
         the second column is survival time.        .
     transform : list of callable, default=None
         A list of transformations to apply to each modality sample.
@@ -30,7 +30,7 @@ class MultiSurvDataset(Dataset):
     Xs: list of tensors
         A list of modalities for one sample.
     y: tensor of shape (2,)
-        Event indicator and survival time for one sample.
+        Event X and survival time for one sample.
 
     See Also
     --------
@@ -76,7 +76,7 @@ class MultiSurvDataset(Dataset):
             raise ValueError(f"Invalid y. It must be array-like. A {type(y)} was passed.")
         y = y.float()
         if y[:, 0].gt(1).any() or y[:, 0].lt(0).any():
-            raise ValueError(f"Invalid y. The first column should be the event indicator: values shoud be 0 or 1.")
+            raise ValueError(f"Invalid y. The first column should be the event X: values shoud be 0 or 1.")
 
         if transform is not None:
             if not isinstance(transform, list):

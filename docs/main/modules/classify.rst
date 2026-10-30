@@ -23,6 +23,16 @@ MUtual-conSistEnt graph contrastive learning (MUSE)
 .. minigallery:: imml.classify.MUSE
    :add-heading: Tutorials
 
+Prototype Alignment and Progressive Pseudo-label Sampling (PA-PPS)
+-------------------------------------------------------------------------------
+
+.. autoclass:: PAPPS
+   :members:
+   :show-inheritance:
+
+.. minigallery:: imml.classify.PAPPS
+   :add-heading: Tutorials
+
 Retrieval-AuGmented dynamic Prompt Tuning (RAGPT)
 -------------------------------------------------------------------------------
 

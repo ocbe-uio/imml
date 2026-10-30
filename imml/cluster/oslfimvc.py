@@ -10,7 +10,7 @@ from scipy.sparse.linalg import eigsh
 from numpy.linalg import svd
 
 from ..impute import get_observed_mod_indicator
-from ..utils import check_Xs_y, as_pd_indicator, as_np_Xs
+from ..utils import check_Xs_y, as_pd_X, as_np_Xs
 from .. import octavemodule_installed, oct2py_module_error
 
 if octavemodule_installed:
@@ -132,7 +132,7 @@ class OSLFIMVC(BaseEstimator, ClusterMixin):
         """
         Xs = check_Xs_y(Xs, ensure_all_finite='allow-nan')
 
-        observed_mod_indicator = as_pd_indicator(get_observed_mod_indicator(Xs))
+        observed_mod_indicator = as_pd_X(get_observed_mod_indicator(Xs))
         s = [modality[modality == 0].index.values for _, modality in observed_mod_indicator.items()]
         Xs_numpy = as_np_Xs(Xs)
         transformed_Xs = [self.kernel(X) for X in Xs_numpy]

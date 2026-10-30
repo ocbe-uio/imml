@@ -34,7 +34,7 @@ class IMSCAGL(BaseEstimator, ClusterMixin):
     lambda2 : float, default=1000
         Penalty parameter for learning model of the multi-modal subspace clustering.
     lambda3 : float, default=100
-        Penalty parameter for learning the consensus representation from those cluster indicator matrices of all views.
+        Penalty parameter for learning the consensus representation from those cluster X matrices of all views.
     k : int, default=5
         Parameter k of KNN graph.
     neighbor_mode : str, default='KNN'

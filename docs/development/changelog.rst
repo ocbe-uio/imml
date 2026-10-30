@@ -30,6 +30,23 @@ Change tags (adopted from `Scikit-learn
 
 - |API| : you will need to change your code to have the same effect in the future; or a feature will be removed in the future.
 
+Version 0.7.0
+-------------
+October 30, 2026
+
+Updates in this release:
+
+- |Enhancement| `iMML` supports now Python 3.15.
+
+:mod:`imml.cluster`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| Added :class:`~imml.classify.PAPPS`, an implementation of the PA-PPS
+  classifier.
+
+:mod:`imml.load`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- |Feature| Added :class:`~imml.load.PAPPSDataset` for PA-PPS training.
+
 
 Version 0.6.1
 -------------

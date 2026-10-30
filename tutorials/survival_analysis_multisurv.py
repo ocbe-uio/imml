@@ -48,7 +48,7 @@ from imml.visualize import plot_missing_modality
 # Step 2: Generate a dataset
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^
 # ``Xs`` is a list of modalities. Each modality has shape ``(n_samples, n_features_i)`` and all modalities must be
-# aligned by row. ``y`` has two columns: event indicator (where 1 means the event was observed and 0 means the
+# aligned by row. ``y`` has two columns: event X (where 1 means the event was observed and 0 means the
 # sample was censored) and survival time. We will use the breast cancer dataset (Desmedt, C., Piette, F., Loi et al.)
 # from scikit-survival. For the two modalities, we will use the clinical and gene expression data.
 

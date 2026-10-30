@@ -42,7 +42,7 @@ class UnsupervisedSumoNMF(SumoSolver):
                 all samples instead of samples in given bin)
 
         Returns:
-            SumoNMFResults object (with result feature matrix / soft cluster indicator matrix (H array),
+            SumoNMFResults object (with result feature matrix / soft cluster X matrix (H array),
             and the list of result S matrices for each graph layer)
         """
         eps = np.spacing(1)  # epsilon
@@ -66,7 +66,7 @@ class UnsupervisedSumoNMF(SumoSolver):
         # randomize S matrices for each layer
         s = np.array([svd_si_init(self.graph.adj_matrices[i], k, self.random_state) for i in range(self.graph.layers)])
 
-        # randomize feature matrix / soft cluster indicator matrix
+        # randomize feature matrix / soft cluster X matrix
         h = svd_h_init(self.graph.adj_matrices[h_init] if h_init is not None else self.avg_adj, k)[sample_ids, :]
 
         # objective function
