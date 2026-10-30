@@ -36,8 +36,6 @@ October 30, 2026
 
 Updates in this release:
 
-- |Enhancement| `iMML` supports now Python 3.15.
-
 :mod:`imml.cluster`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - |Feature| Added :class:`~imml.classify.PAPPS`, an implementation of the PA-PPS
